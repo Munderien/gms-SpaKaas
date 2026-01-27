@@ -23,7 +23,7 @@ class getDataCalendar
 
     public function getData()
     {
-        session_start();
+        //session_start();
 
         // Test data
         $_SESSION['gebruikerid'] = 1;
@@ -150,6 +150,25 @@ class Calendar
         $html .= '</div>';
         $html .= '</div>';
         return $html;
+    }
+
+    public function oneMonthBack($date)
+    {
+        $timestamp = strtotime('-1 month', strtotime($date));
+        $this->active_year = date('Y', $timestamp);
+        $this->active_month = date('m', $timestamp);
+        $this->active_day = date('d', $timestamp);
+        $this->active_hour = date('h', $timestamp);
+        $this->active_minute = date('i', $timestamp);
+    }
+    public function oneMonthForward($date) 
+    {
+        $timestamp = strtotime('+1 month', strtotime($date));
+        $this->active_year = date('Y', $timestamp);
+        $this->active_month = date('m', $timestamp);
+        $this->active_day = date('d', $timestamp);
+        $this->active_hour = date('h', $timestamp);
+        $this->active_minute = date('i', $timestamp);
     }
 }
 ?>
