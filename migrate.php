@@ -22,6 +22,10 @@ $db->exec("
 $db->exec("USE `$dbname`");
 
 foreach (glob(__DIR__ . '/migrations/*.php') as $file) {
+    echo "Running " . basename($file) . "...\n";
+
     $migration = require $file;
     $migration($db);
 }
+
+echo "✔ Database & migrations klaar\n";

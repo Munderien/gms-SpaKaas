@@ -1,0 +1,1 @@
+om de migrations te runnen doe "php migrate.php" in de terminal
