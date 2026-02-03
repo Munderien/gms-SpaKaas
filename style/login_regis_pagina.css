@@ -1,0 +1,26 @@
+table{
+    margin-left:40px;
+    
+}
+.container {
+  display: flex;          
+  justify-content: center; 
+  gap: 50px;             
+  margin-top: 50px;
+}
+h1{
+    margin-left:25px;
+}
+.inlogkaart,
+.registratiekaart {
+  width: 500px;
+  height: 350px;
+  background-color: #8fcdbf; 
+  border-radius: 20px;
+}
+.logo {
+  display: block; 
+  margin: 20px auto; 
+  width: 200px;
+  height: 75px;
+}
