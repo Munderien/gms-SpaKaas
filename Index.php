@@ -5,11 +5,10 @@ if (!isset($_SESSION['calendar_date'])) {
     $_SESSION['calendar_date'] = date("Y-m-d");
 }
 
-if(array_key_exists('back', $_POST)) {
+if (array_key_exists('back', $_POST)) {
     $timestamp = strtotime('-1 month', strtotime($_SESSION['calendar_date']));
     $_SESSION['calendar_date'] = date("Y-m-d", $timestamp);
-}
-else if(array_key_exists('next', $_POST)) {
+} else if (array_key_exists('next', $_POST)) {
     $timestamp = strtotime('+1 month', strtotime($_SESSION['calendar_date']));
     $_SESSION['calendar_date'] = date("Y-m-d", $timestamp);
 }
@@ -17,7 +16,10 @@ else if(array_key_exists('next', $_POST)) {
 include 'Calendar.php';
 $calendar = new Calendar($_SESSION['calendar_date']);
 $getDataCalendar = new getDatacalendar();
-$data = $getDataCalendar->getData();
+$selectedLodgeType = isset($_GET['lodgetype']) ? $_GET['lodgetype'] : 'all';
+$lodgeTypes = $getDataCalendar->getLodgeTypes();
+
+$data = $getDataCalendar->getData($selectedLodgeType);
 foreach ($data as $events) {
     $calendar->addEvent(
         $events['afspraakid'],
@@ -42,6 +44,20 @@ foreach ($data as $events) {
 <body>
     <h1>Plain PHP MVC Starter</h1>
     <p>Dit is de eerste test! het werkte!</p>
+
+    <form action="" method="get">
+        <label for="lodgetype">Filter op lodgetype:</label>
+        <select name="lodgetype" id="lodgetype">
+            <option value="all">Alle lodge types</option>
+            <?php foreach ($lodgeTypes as $type): ?>
+                <?php $safeType = htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>
+                <option value="<?php echo $safeType; ?>" <?php echo $selectedLodgeType === $type ? 'selected' : ''; ?>>
+                    <?php echo $safeType; ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit">Toepassen</button>
+    </form>
     <?= $calendar ?>
 
     <div class="nav-buttons">
@@ -52,14 +68,18 @@ foreach ($data as $events) {
         function navigateCalendar(direction) {
             const data = new FormData();
             data.append(direction, '1');
-            fetch(window.location.href, { method: 'POST', body: data })
+            fetch(window.location.href, {
+                    method: 'POST',
+                    body: data
+                })
                 .then(() => window.location.reload())
                 .catch(console.error);
         }
     </script>
     <?php
-    //echo '<a href="maakAfspraak.php" class="add-appointment-button">Nieuwe afspraak</a>';
+    echo '<a href="maakAfspraak.php" class="add-appointment-button">Nieuwe afspraak</a>';
     //echo '<a href="planneritem.php" class="view-appointments-button">Bekijk afspraken</a>';
     ?>
 </body>
+
 </html>

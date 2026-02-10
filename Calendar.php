@@ -21,30 +21,59 @@ class getDataCalendar
         }
     }
 
-    public function getData()
+    public function getData($lodgeType = null)
     {
         //session_start();
 
         // Test data
         $_SESSION['gebruikerid'] = 1;
-        $_SESSION['rol'] = 2; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
+        $_SESSION['rol'] = 3; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
 
         $userId = $_SESSION['gebruikerid'];
         $role = $_SESSION['rol'];
 
-        if ($role === 3) { // should be 2
-            $v = $this->db->prepare("SELECT * FROM afspraak");
-            $v->execute();
+        $params = [];
+
+        if ($role === 3) { // should be 3
+            $sql = "SELECT a.*, lt.naam AS lodgetype
+                    FROM afspraak a
+                    INNER JOIN lodgetype lt ON lt.typeid = a.lodgeid";
+
+            if (!empty($lodgeType) && $lodgeType !== 'all') {
+                $sql .= " WHERE lt.naam = :lodgetype";
+                $params[':lodgetype'] = $lodgeType;
+            }
         } else {
-            $sql = "SELECT a.*
-        FROM afspraak a
-        WHERE a.gebruikerid = :gebruikerid";
-            $v = $this->db->prepare($sql);
-            $v->bindParam(':gebruikerid', $userId, PDO::PARAM_INT);
-            $v->execute();
+            $sql = "SELECT a.*, lt.naam AS lodgetype
+                    FROM afspraak a
+                    INNER JOIN lodgetype lt ON lt.typeid = a.lodgeid
+                    WHERE a.gebruikerid = :gebruikerid";
+            $params[':gebruikerid'] = $userId;
+
+            if (!empty($lodgeType) && $lodgeType !== 'all') {
+                $sql .= " AND lt.naam = :lodgetype";
+                $params[':lodgetype'] = $lodgeType;
+            }
         }
 
+        $v = $this->db->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            $paramType = $key === ':gebruikerid' ? PDO::PARAM_INT : PDO::PARAM_STR;
+            $v->bindValue($key, $value, $paramType);
+        }
+
+        $v->execute();
+
         return $v->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getLodgeTypes()
+    {
+        $stmt = $this->db->prepare("SELECT naam FROM lodgetype ORDER BY naam ASC");
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }
 
@@ -129,7 +158,7 @@ class Calendar
                     $descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8]; 
                     $priorityClass = 'priority-' . strtolower($event[9]);
                     // afspraakId, titel, toelichting, begintijd, eindtijd
-                    $html .= "<a href='planneritem.php?id={$event[0]}'>
+                    $html .= "<a href='Planneritem.php?id={$event[0]}'>
                     <div class='event {$priorityClass}'>
                         {$event[3]}, {$descriptionTrimmed}<br> 
                         {$event[4]} | {$event[5]}
