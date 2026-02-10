@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lodgeId = intval($_POST['lodgeid']);
 
     //$beginDateTime = date('Y-m-d H:i:s', strtotime("$date $beginTime"));
-    //$endDateTime   = date('Y-m-d H:i:s', strtotime("$date $endTime"));
+    //$endDateTime   = date('Y-m-d H:i:s', strtotime("$date $endTime")); Nahhh twin we sliding to opps in o-block
 
     $today = date('Y-m-d');
     if ($beginTime < $today) {
