@@ -3,6 +3,7 @@
 onderhoudid
 lodgeid
 monteurid
+prioriteit
 omschrijving
 status
 */
@@ -13,6 +14,7 @@ return function (PDO $db) {
             onderhoudid INT(11) AUTO_INCREMENT PRIMARY KEY,
             lodgeid INT(11),
             monteurid INT(11),
+            prioriteit VARCHAR(50),
             omschrijving VARCHAR(80),
             status VARCHAR(30),
         

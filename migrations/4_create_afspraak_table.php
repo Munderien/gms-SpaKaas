@@ -8,7 +8,6 @@ starttijd
 eindtijd
 status
 toelichting
-prioriteit
 aantalmensen
 */
 
@@ -23,7 +22,6 @@ return function (PDO $db) {
             eindtijd DATETIME,
             status VARCHAR(30),
             toelichting VARCHAR(80),
-            prioriteit VARCHAR(50),
             aantalmensen INT(11),
 
             CONSTRAINT fk_afspraak_gebruiker

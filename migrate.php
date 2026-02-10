@@ -1,11 +1,10 @@
 <?php
 
 $host = "localhost";
-$dbname = "testspakaas";
+$dbname = "dms-spakaas";
 $user = "root";
 $pass = "";
 
-// 1️⃣ Connect ZONDER database
 $db = new PDO(
     "mysql:host=$host;charset=utf8mb4",
     $user,
