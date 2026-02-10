@@ -78,7 +78,6 @@ foreach ($data as $events) {
     </script>
     <?php
     echo '<a href="maakAfspraak.php" class="add-appointment-button">Nieuwe afspraak</a>';
-    //echo '<a href="planneritem.php" class="view-appointments-button">Bekijk afspraken</a>';
     ?>
 </body>
 
