@@ -1,6 +1,5 @@
 <?php
 include ("config.php");
-include ("library.php");
 session_start();
 
 if (trim($gebruikermail) == '') {

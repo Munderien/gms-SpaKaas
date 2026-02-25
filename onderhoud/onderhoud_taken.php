@@ -29,6 +29,8 @@ foreach ($result as $rij) {
     echo "<p>omschrijving: <br>" . $rij['omschrijving'] . "</p>";
     echo "<p>status:<br> " . $rij['status'] . "</p>";
     echo "<p>prioriteit:<br> " . $rij['prioriteit'] . "</p>";
+    echo "<Br><button class='edit-button' onClick=\"window.location.href='onderhoud_bewerken.php?id=" . $rij['onderhoudid'] . "'\">Bewerken</button>";
+    echo "<button class='delete-button' onClick=\"window.location.href='onderhoud_verwijder_functie.php?id=" . $rij['onderhoudid'] . "'\">Verwijderen</button>";
     echo "</div>";
 }
 ?>
