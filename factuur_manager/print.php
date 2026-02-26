@@ -1,5 +1,5 @@
 <?php
-require '../config.php'; 
+require '../inlog/config.php'; 
 
 if (!isset($_GET['factuurid'])) {
     die('Geen factuur opgegeven.');

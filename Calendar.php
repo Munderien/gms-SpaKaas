@@ -20,7 +20,6 @@ class getDataCalendar
             echo $ex->getMessage();
         }
     }
-
     public function getData()
     {
         session_start();

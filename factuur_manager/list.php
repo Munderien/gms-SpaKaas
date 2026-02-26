@@ -1,5 +1,5 @@
 <?php
-require '../config.php';
+require '../inlog/config.php';
 
 if (isset($_GET['action'], $_GET['factuurid'])) {
     $action = $_GET['action'];
@@ -145,6 +145,8 @@ $result = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
     </style>
 </head>
 <body>
+
+<?php include '../navbar.php'; ?>
 
 <h1>Factuuroverzicht</h1>
 
