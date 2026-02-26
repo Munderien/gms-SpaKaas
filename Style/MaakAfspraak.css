@@ -1,0 +1,33 @@
+.combo-box {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+}
+
+.combo-input {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.combo-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background: #fff;
+    z-index: 1000;
+    display: none;
+}
+
+.combo-options div {
+    padding: 6px;
+    cursor: pointer;
+}
+
+.combo-options div:hover {
+    background: #f0f0f0;
+}

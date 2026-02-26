@@ -1,6 +1,5 @@
 <?php
 include("config.php");
-include("library.php");
 session_start();
 $two_factor = @htmlspecialchars($_POST['two_factor']);
 $sql = "UPDATE gebruiker SET 
