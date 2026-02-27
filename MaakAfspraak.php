@@ -1,4 +1,5 @@
 <?php
+session_start();
 $host = 'localhost';
 $db   = 'dms-spakaas';
 $user = 'root';
@@ -9,11 +10,19 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+$_SESSION['rol'];
+
 
 $message = '';
 // get all klanten
 $gebruikers = [];
-$result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 3 ORDER BY naam ASC");
+if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
+    // Als gebruiker krijg je alleen de ingelogde gebruiker
+    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
+} else {
+    // Anders alle gebruikers 
+    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
+}
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $gebruikers[] = $row;
@@ -22,10 +31,26 @@ if ($result && $result->num_rows > 0) {
 
 // get all lodges
 $lodges = [];
-$result = $conn->query("SELECT lodgeid FROM lodge");
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+$lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
+               FROM lodge l
+               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+               ORDER BY l.lodgeid ASC";
+$lodgeResult = $conn->query($lodgeQuery);
+if ($lodgeResult && $lodgeResult->num_rows > 0) {
+    while ($row = $lodgeResult->fetch_assoc()) {
         $lodges[] = $row;
+    }
+}
+
+$lodgeTypeName = '';
+if (!empty($item['lodgeid'])) {
+    $ltQuery = "SELECT lt.naam FROM lodge l
+               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+               WHERE l.lodgeid = " . intval($item['lodgeid']);
+    $ltResult = $conn->query($ltQuery);
+    if ($ltResult && $ltResult->num_rows > 0) {
+        $ltRow = $ltResult->fetch_assoc();
+        $lodgeTypeName = $ltRow['naam'] ?? $item['lodgeid'];
     }
 }
 
@@ -41,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lodgeId = intval($_POST['lodgeid']);
 
     //$beginDateTime = date('Y-m-d H:i:s', strtotime("$date $beginTime"));
-    //$endDateTime   = date('Y-m-d H:i:s', strtotime("$date $endTime")); Nahhh twin we sliding to opps in o-block
+    //$endDateTime   = date('Y-m-d H:i:s', strtotime("$date $endTime"));
 
     $today = date('Y-m-d');
     if ($beginTime < $today) {
@@ -87,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             lodges.forEach(l => {
                 const opt = document.createElement('option');
                 opt.value = l.lodgeid;
-                opt.textContent = l.lodgeid;
+                opt.textContent = l.lodgetype_naam || l.lodgeid;
                 lodgeSelect.appendChild(opt);
             });
         });
@@ -119,18 +144,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         <br> <br>
 
+        <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
+        <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
         <label for="gebruikerSelect">Select gebruiker:</label>
         <select id="gebruikerSelect" name="gebruikerid" required>
             <option value="">-- Select --</option>
         </select>
         <br> <br>
+        <?php else: ?>
+        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+        <?php endif; ?>
 
         <label for="lodgeSelect">Select Lodge:</label>
         <select id="lodgeSelect" name="lodgeid" required>
-            <option value="">-- Select --</option>
+            <option value="">-- Select Lodge --</option>
         </select>
         <br> <br>
-        
+
         <label for="aantalmensen">aantal mensen:</label><br>
         <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
 
