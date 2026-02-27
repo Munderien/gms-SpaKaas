@@ -25,8 +25,8 @@ class getDataCalendar
     {
         //session_start();
 
-        // Test data
-        $_SESSION['gebruikerid'] = 1;
+        // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
+        $_SESSION['gebruikerid'] = 1; 
         $_SESSION['rol'] = 3; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
 
         $userId = $_SESSION['gebruikerid'];
@@ -158,7 +158,7 @@ class Calendar
                     $descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8]; 
                     $priorityClass = 'priority-' . strtolower($event[9]);
                     // afspraakId, titel, toelichting, begintijd, eindtijd
-                    $html .= "<a href='Planneritem.php?id={$event[0]}'>
+                    $html .= "<a href='planneritem.php?id={$event[0]}'>
                     <div class='event {$priorityClass}'>
                         {$event[3]}, {$descriptionTrimmed}<br> 
                         {$event[4]} | {$event[5]}
