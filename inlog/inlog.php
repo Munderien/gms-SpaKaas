@@ -4,6 +4,7 @@ if(isset($_SESSION['gebruikerId'])){
         echo "<script>window.location.href='home.php'</script>";
 
 }
+
 ?>
 <link rel='stylesheet' href="style/login_regis_pagina.css">
 <Form action="inlogFunctie.php" method="post">

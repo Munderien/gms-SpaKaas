@@ -12,7 +12,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['gebruikerId'])) {
-    header("Location: inlog.php");
+    //header("Location: inlog.php");
     exit();
 }
 echo $_SESSION['gebruikerId'];
