@@ -14,7 +14,7 @@ $rol = 0;
 
 if (trim($mail) === "" || trim($password) === "" || trim($adress) === "" || trim($phone) === "" || trim($name) === "") {
     echo "Vul alle gegevens in";
-    header("refresh:1;url=inlog.php");
+    header("refresh:1;url=../pages/inlog.php");
     exit();
 }
 
@@ -23,7 +23,7 @@ $v = $db->prepare("SELECT * FROM gebruiker WHERE email = ?");
 $v->execute([$mail]);
 if ($v->rowCount() > 0) {
     echo "E-mail bestaat al";
-    header("refresh:1;url=inlog.php");
+    header("refresh:1;url=../pages/inlog.php");
     exit();
 }
 
@@ -32,7 +32,7 @@ $x = $v->execute([$mail, $password,0,0,0, $adress, $name,$plaats,$phone]);
 
 if (!$x) {
     echo "INSERT failed: " . implode(" ", $v->errorInfo());
-    header("refresh:1;url=inlog.php");
+    header("refresh:1;url=../pages/inlog.php");
     exit();
 }
 $r = $db->prepare("SELECT * FROM gebruiker WHERE email = ?");
@@ -46,11 +46,11 @@ if ($user) {
   $_SESSION['two_factor'] = $user['is2faingeschakeld'];
     // Redirect to home page
     //sendCustomMail($gebruikerId, 'Welkom bij APKaas', 'Bedankt voor uw registratie bij APKaas! We zijn verheugd u aan boord te hebben. Mocht u vragen hebben, aarzel dan niet om contact met ons op te nemen.', true);
-    header("Location: home.php");
+    header("Location: ../pages/home.php");
     exit();
 } else {
     echo "Registratie mislukt";
-    header("refresh:1;url=inlog.php");
+    header("refresh:1;url=../pages/inlog.php");
     exit();
 }
 ?>

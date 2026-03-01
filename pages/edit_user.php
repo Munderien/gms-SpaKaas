@@ -1,6 +1,7 @@
 <?php
 include("config.php");
-session_start();
+// include navigation bar for consistency
+require_once __DIR__ . '/navbar.php';
 $two_factor = $_SESSION['two_factor'];
 ?>
 <form action ="update_2fa.php" method="post">

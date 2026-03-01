@@ -3,7 +3,7 @@ include ("config.php");
 session_start();
 
 if (trim($gebruikermail) == '') {
- header("Location: inlog.php; refresh=1;");
+ header("Location: ../pages/inlog.php; refresh=1;");
 }
 
 $code = rand(100000, 999999);

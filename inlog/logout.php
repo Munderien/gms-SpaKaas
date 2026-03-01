@@ -1,6 +1,6 @@
 <?php
 session_start();
 session_destroy();
-header("Location: inlog.php");
+header("Location: ../pages/inlog.php");
 exit();
 ?>

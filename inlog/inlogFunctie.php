@@ -8,7 +8,7 @@ if (trim($mail) === "" or trim($password) === "") {
     echo "$('#error').html('Uw gebruikersnaam en wachtwoord mogen niet leeg zijn.').show();";
     echo '<script>
   setTimeout(function(){
-    window.location.href = "inlog.php";
+    window.location.href = "../pages/inlog.php";
   }, 3000); 
 </script>';
 die();
@@ -33,13 +33,13 @@ if($d>0)
       header("Location: 2fa_login.php");
       exit();
   }
-  echo "<script>window.location.href='home.php'</script>";
+  echo "<script>window.location.href='../pages/home.php'</script>";
   } 
   else{
     echo"u heeft verkeerde gegevens ingevoerd";
    /* echo '<script>
     setTimeout(function(){
-    window.location.href = "inlog.php";
+    window.location.href = "../pages/inlog.php";
     }, 3000); 
   </script>';*/
   die();
