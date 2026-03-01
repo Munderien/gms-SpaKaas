@@ -1,9 +1,9 @@
 <?php
-require '../../inlog/config.php';
+require '../../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/inlog/inlog.php');
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -69,6 +69,11 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
             color: #f39c12;
             font-weight: 600;
         }
+
+        .status-schoonmaak {
+            color: #8e44ad;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -132,6 +137,9 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
                                         <option value="onderhoud" <?php if ($l['status'] === 'onderhoud')
                                             echo 'selected'; ?>>
                                             Onderhoud</option>
+                                        <option value="schoonmaak" <?php if ($l['status'] === 'schoonmaak')
+                                            echo 'selected'; ?>>
+                                            Aan de schoonmaak</option>
                                     </select>
                                     <button type="submit" class="btn btn-warning btn-sm">Opslaan</button>
                                 </form>

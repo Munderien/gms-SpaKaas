@@ -1,10 +1,10 @@
 <?php
-require '../inlog/config.php';
+require '../pages/config.php';
 session_start();
 
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/inlog/inlog.php');
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -436,7 +436,8 @@ $prijsData = $stmt3->fetchAll(PDO::FETCH_ASSOC);
                             <div style="display:flex;align-items:center;gap:8px;">
                                 <div class="progress" style="flex:1;">
                                     <div class="progress-bar"
-                                        style="width:<?php echo $percentage; ?>%;background:<?php echo $barKleur; ?>;"></div>
+                                        style="width:<?php echo $percentage; ?>%;background:<?php echo $barKleur; ?>;">
+                                    </div>
                                 </div>
                                 <strong style="color:<?php echo $barKleur; ?>;min-width:38px;">
                                     <?php echo $percentage; ?>%

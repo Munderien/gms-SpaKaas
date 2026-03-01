@@ -1,8 +1,8 @@
 <?php
-require '../inlog/config.php';
+require '../pages/config.php';
 session_start();
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/inlog/inlog.php');
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -21,7 +21,8 @@ $perType = $db->query("
            COUNT(l.lodgeid) AS totaal,
            SUM(CASE WHEN l.status = 'vrij' THEN 1 ELSE 0 END) AS vrij,
            SUM(CASE WHEN l.status = 'bezet' THEN 1 ELSE 0 END) AS bezet,
-           SUM(CASE WHEN l.status = 'onderhoud' THEN 1 ELSE 0 END) AS onderhoud
+           SUM(CASE WHEN l.status = 'onderhoud' THEN 1 ELSE 0 END) AS onderhoud,
+           SUM(CASE WHEN l.status = 'schoonmaak' THEN 1 ELSE 0 END) AS schoonmaak
     FROM lodgetype lt
     LEFT JOIN lodge l ON l.lodgetypeid = lt.typeid
     GROUP BY lt.typeid, lt.naam
@@ -50,6 +51,7 @@ $totLodges = array_sum(array_column($perType, 'totaal'));
 $totVrij = array_sum(array_column($perType, 'vrij'));
 $totBezet = array_sum(array_column($perType, 'bezet'));
 $totOnderhoud = array_sum(array_column($perType, 'onderhoud'));
+$totSchoonmaak = array_sum(array_column($perType, 'schoonmaak'));
 
 $maxBoekingen = max(array_column($perMaand, 'aantal_afspraken') ?: [1]);
 
@@ -60,6 +62,7 @@ if (!in_array($ditJaar, $jaren)) {
 ?>
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,6 +75,7 @@ if (!in_array($ditJaar, $jaren)) {
             gap: 16px;
             margin: 24px 0;
         }
+
         .stat-card {
             background: #fff;
             border-radius: 10px;
@@ -91,6 +95,10 @@ if (!in_array($ditJaar, $jaren)) {
 
         .stat-card.oranje {
             border-color: #f39c12;
+        }
+
+        .stat-card.paars {
+            border-color: #8e44ad;
         }
 
         .stat-card .getal {
@@ -230,6 +238,12 @@ if (!in_array($ditJaar, $jaren)) {
                 </div>
                 <div class="label">In onderhoud</div>
             </div>
+            <div class="stat-card paars">
+                <div class="getal">
+                    <?php echo $totSchoonmaak; ?>
+                </div>
+                <div class="label">Schoonmaak</div>
+            </div>
             <div class="stat-card">
                 <div class="getal">
                     <?php echo count($perType); ?>
@@ -311,6 +325,7 @@ if (!in_array($ditJaar, $jaren)) {
                     <th>Vrij</th>
                     <th>Bezet</th>
                     <th>Onderhoud</th>
+                    <th>Schoonmaak</th>
                     <th>Bezettingsgraad</th>
                 </tr>
             </thead>
@@ -333,6 +348,9 @@ if (!in_array($ditJaar, $jaren)) {
                         </td>
                         <td style="color:#f39c12;font-weight:600;">
                             <?php echo $t['onderhoud']; ?>
+                        </td>
+                        <td style="color:#8e44ad;font-weight:600;">
+                            <?php echo $t['schoonmaak']; ?>
                         </td>
                         <td>
                             <div style="display:flex;align-items:center;gap:8px;">
