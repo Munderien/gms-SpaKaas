@@ -16,4 +16,4 @@ $db = new PDO(
 // Database verwijderen
 $db->exec("DROP DATABASE IF EXISTS `$dbname`");
 
-echo "🗑 Database `$dbname` is volledig verwijderd\n";
+echo "Database `$dbname` is volledig verwijderd\n";

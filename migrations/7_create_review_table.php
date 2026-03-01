@@ -5,6 +5,7 @@ gebruikerid
 datum
 rating
 opmerking
+illustratie
 */
 
 return function (PDO $db) {
@@ -15,6 +16,7 @@ return function (PDO $db) {
             datum DATETIME,
             rating DECIMAL(10,0),
             opmerking VARCHAR(80),
+            illustratie LONGBLOB,
 
             CONSTRAINT fk_review_gebruiker
                 FOREIGN KEY (gebruikerid)
