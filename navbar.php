@@ -47,6 +47,10 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                     class="nav-link <?php echo $huidigePagina === 'rapportage_omzet.php' ? 'active' : ''; ?>">
                     Omzetrapport
                 </a>
+                <a href="/dms-spakaas/gms-SpaKaas/manager/rapportage_personeel.php"
+                    class="nav-link <?php echo $huidigePagina === 'rapportage_personeel.php' ? 'active' : ''; ?>">
+                    Personeelrapport
+                </a>
             <?php endif; ?>
         </div>
 
