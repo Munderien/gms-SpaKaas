@@ -27,4 +27,4 @@ foreach (glob(__DIR__ . '/migrations/*.php') as $file) {
     $migration($db);
 }
 
-echo "✔ Database & migrations klaar\n";
+echo "Database & migrations klaar\n";
