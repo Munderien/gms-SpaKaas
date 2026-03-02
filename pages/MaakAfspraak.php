@@ -178,7 +178,7 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                         <?php echo $message; ?>
                     </p>
                 <?php endif; ?>
-                <span class="popup-close" title="Close" onclick="window.location.href='home.php'">
+                <span class="popup-close" title="Close" onclick="window.location.href='Lodges.php'">
                     &times;
                 </span>
                 <form method="post">

@@ -277,8 +277,8 @@ if ($isLoggedIn) {
             
             <!-- Only show these if logged in -->
             <?php if ($isLoggedIn): ?>
-                <a href="<?= $base ?>/pages/MaakAfspraak.php"
-                    class="nav-link <?php echo $huidigePagina === 'MaakAfspraak.php' ? 'active' : ''; ?>">
+                <a href="<?= $base ?>/pages/lodges.php"
+                    class="nav-link <?php echo $huidigePagina === 'lodges.php' ? 'active' : ''; ?>">
                     Boekingen
                 </a>
                 <a href="<?= $base ?>/pages/edit_user.php"

@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 
 // Get all lodges with their lodge type details
 $lodges = [];
-$query = "SELECT l.lodgeid, lt.typeid, lt.naam, lt.beschrijving, lt.capiciteit, lt.prijs
+$query = "SELECT l.lodgeid, lt.typeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
           FROM lodge l
           INNER JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
           ORDER BY lt.naam ASC";
@@ -30,7 +30,7 @@ if ($result && $result->num_rows > 0) {
 <html>
 
 <head>
-    <link rel="stylesheet" href="Style/Lodges.css">
+    <link rel="stylesheet" href="../Style/Lodges.css">
 </head>
 
 <body>
@@ -55,8 +55,8 @@ if ($result && $result->num_rows > 0) {
                                 <p><?php echo htmlspecialchars($lodge['beschrijving']); ?></p>
                             </div>
                             <div class="detail-item">
-                                <label>Capiciteit:</label>
-                                <p><?php echo htmlspecialchars($lodge['capiciteit']); ?> personen</p>
+                                <label>capaciteit:</label>
+                                <p><?php echo htmlspecialchars($lodge['capaciteit']); ?> personen</p>
                             </div>
                             <div class="detail-item">
                                 <label>Prijs:</label>
