@@ -47,7 +47,7 @@ while($row = $result->fetch_assoc()) {
 
     $bar = new GanttBar($rowIndex, $lodgeName, $startDate, $endDate);
 
-    // Op basis van status, wordt de bar veranderd van kleur
+    // Op basis van status (van de afspraak), wordt de bar veranderd van kleur
     switch($row['status']) {
         case "Vrij":
             $bar->SetFillColor("green");

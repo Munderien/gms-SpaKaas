@@ -119,55 +119,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="popup-overlay" id="planneritem-popup">
-        <div class="popup-panel" id="main-panel">
-            <span class="popup-close" title="Close">&times;</span>
-            <h1>Nieuwe afspraak toevoegen</h1>
-            <?php if ($message) echo "<p>$message</p>"; ?>
-            <form method="post">
-                <div class="popup-field">
-                    <label for="titel">Titel:</label><br>
-                    <input type="text" id="titel" name="titel" required>
-                </div>
-                <div class="popup-field">
-                    <label for="starttijd">Begintijd:</label><br>
-                    <input type="date" id="starttijd" name="starttijd" required>
-                </div>
-                <div class="popup-field">
-                    <label for="eindtijd">Eindtijd:</label><br>
-                    <input type="date" id="eindtijd" name="eindtijd" required>
-                </div>
-                <div class="popup-field">
-                    <label for="toelichting">Beschrijving:</label><br>
-                    <input type="text" id="toelichting" name="toelichting" required>
-                </div>
-
-                <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
-                <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+    <div class="form-grid">
+        <div class="popup-overlay" id="planneritem-popup">
+            <div class="popup-panel" id="main-panel">
+                <h1>Nieuwe afspraak toevoegen</h1>
+                <?php if ($message) echo "<p>$message</p>"; ?>
+                <span class="popup-close" title="Close"
+                    onclick="window.location.href='Index.php'">
+                    &times;
+                </span>
+                <form method="post">
                     <div class="popup-field">
-                        <label for="gebruikerSelect">Select gebruiker:</label>
-                        <select id="gebruikerSelect" name="gebruikerid" required>
-                            <option value="">-- Select --</option>
+                        <label for="titel">Titel:</label><br>
+                        <input type="text" id="titel" name="titel" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="starttijd">Begintijd:</label><br>
+                        <input type="date" id="starttijd" name="starttijd" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="eindtijd">Eindtijd:</label><br>
+                        <input type="date" id="eindtijd" name="eindtijd" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="toelichting">Beschrijving:</label><br>
+                        <input type="text" id="toelichting" name="toelichting" required>
+                    </div>
+
+                    <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
+                    <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+                        <div class="popup-field">
+                            <label for="gebruikerSelect">Select gebruiker:</label>
+                            <select id="gebruikerSelect" name="gebruikerid" required>
+                                <option value="">-- Select --</option>
+                            </select>
+                        </div>
+                    <?php else: ?>
+                        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+                    <?php endif; ?>
+
+                    <div class="popup-field">
+                        <label for="lodgeSelect">Select Lodge:</label>
+                        <select id="lodgeSelect" name="lodgeid" required>
+                            <option value="">-- Select Lodge --</option>
                         </select>
                     </div>
-                <?php else: ?>
-                    <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
-                <?php endif; ?>
-                
-                <div class="popup-field">
-                <label for="lodgeSelect">Select Lodge:</label>
-                <select id="lodgeSelect" name="lodgeid" required>
-                    <option value="">-- Select Lodge --</option>
-                </select>
-                </div>
-                
-                <div class="popup-field">
-                <label for="aantalmensen">aantal mensen:</label><br>
-                <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
-                </div>
-                
-                <input type="submit" value="Toevoegen">
-            </form>
+
+                    <div class="popup-field">
+                        <label for="aantalmensen">aantal mensen:</label><br>
+                        <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
+                    </div>
+
+                    <input type="submit" value="Toevoegen">
+                </form>
+            </div>
         </div>
     </div>
 </body>
