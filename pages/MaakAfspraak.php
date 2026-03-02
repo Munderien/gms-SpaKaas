@@ -64,24 +64,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId    = intval($_POST['gebruikerid']);
     $lodgeId = intval($_POST['lodgeid']);
 
-    //$beginDateTime = date('Y-m-d H:i:s', strtotime("$date $beginTime"));
-    //$endDateTime   = date('Y-m-d H:i:s', strtotime("$date $endTime"));
-
     $today = date('Y-m-d');
     if ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
     } else {
-        $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, titel, starttijd, eindtijd,
-        status, toelichting, aantalmensen)
-                VALUES ('$userId', '$lodgeId', '$titel', '$beginTime', '$endTime', 
-                '$status', '$desc', '$aantalmensen')";
+        // Kijkt of er een afspraak is op de lodge die overlapped met dezelfde datum
+        $conflictQuery = "SELECT COUNT(*) as count FROM afspraak 
+                         WHERE lodgeid = $lodgeId 
+                         AND ((starttijd <= '$beginTime' AND eindtijd > '$beginTime')
+                              OR (starttijd < '$endTime' AND eindtijd >= '$endTime')
+                              OR (starttijd >= '$beginTime' AND eindtijd <= '$endTime'))";
+        $conflictResult = $conn->query($conflictQuery);
+        $conflictRow = $conflictResult->fetch_assoc();
 
-        if ($conn->query($sql) === TRUE) {
-            $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
+        if ($conflictRow['count'] > 0) {
+            $message = "Deze lodge heeft al een afspraak in deze periode.";
         } else {
-            $message = "Fout bij toevoegen: " . $conn->error;
+            $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, titel, starttijd, eindtijd,
+            status, toelichting, aantalmensen)
+                    VALUES ('$userId', '$lodgeId', '$titel', '$beginTime', '$endTime', 
+                    '$status', '$desc', '$aantalmensen')";
+            if ($conn->query($sql) === TRUE) {
+                $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
+            } else {
+                $message = "Fout bij toevoegen: " . $conn->error;
+            }
         }
     }
 }
@@ -119,55 +128,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="popup-overlay" id="planneritem-popup">
-        <div class="popup-panel" id="main-panel">
-            <span class="popup-close" title="Close">&times;</span>
-            <h1>Nieuwe afspraak toevoegen</h1>
-            <?php if ($message) echo "<p>$message</p>"; ?>
-            <form method="post">
-                <div class="popup-field">
-                    <label for="titel">Titel:</label><br>
-                    <input type="text" id="titel" name="titel" required>
-                </div>
-                <div class="popup-field">
-                    <label for="starttijd">Begintijd:</label><br>
-                    <input type="date" id="starttijd" name="starttijd" required>
-                </div>
-                <div class="popup-field">
-                    <label for="eindtijd">Eindtijd:</label><br>
-                    <input type="date" id="eindtijd" name="eindtijd" required>
-                </div>
-                <div class="popup-field">
-                    <label for="toelichting">Beschrijving:</label><br>
-                    <input type="text" id="toelichting" name="toelichting" required>
-                </div>
-
-                <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
-                <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+    <div class="form-grid">
+        <div class="popup-overlay" id="planneritem-popup">
+            <div class="popup-panel" id="main-panel">
+                <h1>Nieuwe afspraak toevoegen</h1>
+                <?php if ($message): ?>
+                    <p class="<?php echo (str_contains($message, 'succesvol')) ? 'success-message' : 'error-message'; ?>">
+                        <?php echo $message; ?>
+                    </p>
+                <?php endif; ?>
+                <span class="popup-close" title="Close"
+                    onclick="window.location.href='Index.php'">
+                    &times;
+                </span>
+                <form method="post">
                     <div class="popup-field">
-                        <label for="gebruikerSelect">Select gebruiker:</label>
-                        <select id="gebruikerSelect" name="gebruikerid" required>
-                            <option value="">-- Select --</option>
+                        <label for="titel">Titel:</label><br>
+                        <input type="text" id="titel" name="titel" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="starttijd">Begintijd:</label><br>
+                        <input type="date" id="starttijd" name="starttijd" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="eindtijd">Eindtijd:</label><br>
+                        <input type="date" id="eindtijd" name="eindtijd" required>
+                    </div>
+                    <div class="popup-field">
+                        <label for="toelichting">Beschrijving:</label><br>
+                        <input type="text" id="toelichting" name="toelichting" required>
+                    </div>
+
+                    <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
+                    <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+                        <div class="popup-field">
+                            <label for="gebruikerSelect">Select gebruiker:</label>
+                            <select id="gebruikerSelect" name="gebruikerid" required>
+                                <option value="">-- Select --</option>
+                            </select>
+                        </div>
+                    <?php else: ?>
+                        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+                    <?php endif; ?>
+
+                    <div class="popup-field">
+                        <label for="lodgeSelect">Select Lodge:</label>
+                        <select id="lodgeSelect" name="lodgeid" required>
+                            <option value="">-- Select Lodge --</option>
                         </select>
                     </div>
-                <?php else: ?>
-                    <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
-                <?php endif; ?>
-                
-                <div class="popup-field">
-                <label for="lodgeSelect">Select Lodge:</label>
-                <select id="lodgeSelect" name="lodgeid" required>
-                    <option value="">-- Select Lodge --</option>
-                </select>
-                </div>
-                
-                <div class="popup-field">
-                <label for="aantalmensen">aantal mensen:</label><br>
-                <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
-                </div>
-                
-                <input type="submit" value="Toevoegen">
-            </form>
+
+                    <div class="popup-field">
+                        <label for="aantalmensen">aantal mensen:</label><br>
+                        <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
+                    </div>
+
+                    <input type="submit" value="Toevoegen">
+                </form>
+            </div>
         </div>
     </div>
 </body>

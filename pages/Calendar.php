@@ -9,7 +9,6 @@ class getDataCalendar
     public static $startDatumTijd;
     public static $eindDatumTijd;
     public static $status;
-    public static $toelichting;
     public static $aantalMensen;
 
     public function __construct()
@@ -97,11 +96,11 @@ class Calendar
 
     // Adds everything to the event from the database + some default values
 
-    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $prioriteit = 'low', $aantalMensen, $color = ' ', $days = 1)
+    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $aantalMensen, $color = ' ', $days = 1)
     {
         $color = $color ? ' ' . $color : $color;
         //$this->events[] = [$txt, $date, $time, $days, $color];
-        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $prioriteit, $aantalMensen, $days];
+        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $aantalMensen, $days];
     }
 
     public function __toString()

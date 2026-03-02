@@ -30,7 +30,6 @@ foreach ($data as $events) {
         $events['eindtijd'],
         $events['status'],
         $events['toelichting'],
-        $events['prioriteit'] ?? 'low',
         $events['aantalmensen'],
     );
 }
