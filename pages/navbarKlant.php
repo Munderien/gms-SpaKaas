@@ -297,18 +297,7 @@ if ($isLoggedIn) {
                 Reviews
             </a>
 
-            <?php if ($isLoggedIn && isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
-                <span class="nav-divider"></span>
-                <a href="<?= $base ?>/manager/addRole.php"
-                    class="nav-link <?php echo $huidigePagina === 'addRole.php' ? 'active' : ''; ?>">
-                    Gebruikers
-                </a>
-                <a href="<?= $base ?>/manager/rapportage.php"
-                    class="nav-link <?php echo $huidigePagina === 'rapportage.php' ? 'active' : ''; ?>">
-                    Rapporten
-                </a>
-            <?php endif; ?>
-        </div>
+            </div>
 
         <div class="nav-user">
             <?php if ($isLoggedIn): ?>

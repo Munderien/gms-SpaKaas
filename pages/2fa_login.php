@@ -1,11 +1,19 @@
+
 <?php
 include ("config.php");
 session_start();
-
 $code = rand(100000, 999999);
 if (!isset($_SESSION['2fa_code']) || trim($_SESSION['2fa_code']) == '') {
     $_SESSION['2fa_code'] = $code; 
 }
+    ?>
+    <script>
+        function alertcode() {
+            console.log("Uw 2FA code is: " + <?php echo json_encode($_SESSION['2fa_code']); ?>);
+        }
+        alertcode();
+        </script>
+    <?php
 
 // Only send email if not already sent
 if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false) {
@@ -91,4 +99,4 @@ if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false
     </table>
   </div>
 </div>
-</form>
+</form>-->

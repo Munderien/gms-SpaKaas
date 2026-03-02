@@ -13,7 +13,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // include navbar after fetching user; pages/navbar.php now uses a separate
 // variable to avoid clobbering $user
-require_once __DIR__ . '/navbar.php';
 $two_factor = $_SESSION['two_factor'];
 ?>
 <link rel="stylesheet" href="../style/login.css">
