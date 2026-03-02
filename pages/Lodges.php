@@ -34,6 +34,8 @@ if ($result && $result->num_rows > 0) {
 </head>
 
 <body>
+    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    
     <div class="lodges-container">
         <h1>Onze Lodges</h1>
         <div class="lodges-grid">
