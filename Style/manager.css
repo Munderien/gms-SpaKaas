@@ -152,3 +152,89 @@ body {
 .modal-box h3 { margin-bottom: 12px; color: #2c3e50; }
 .modal-box p  { margin-bottom: 22px; color: #555; font-size: 0.95rem; }
 .modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+/* lodge cards layout styled like onderhoud_taken */
+.lodges-container {
+    width: 720px;
+    height: 500px;
+    gap: 10px;
+    margin-top: 20px;
+    border: 2px solid black;
+    border-radius: 8px;
+    display: flex;
+    overflow: visible;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.lodge-card {
+    border: 1px solid #004080;
+    border-radius: 8px;
+    width: 700px;
+    height: 130px;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background-color: #9e9e9e;
+}
+
+.lodge-header {
+    margin: 0 0 5px 0;
+    width: 100%;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.lodge-details {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+}
+
+.lodge-details p {
+    margin: 0;
+    width: 25%;
+}
+
+.lodge-actions,
+.lodge-actions button {
+    margin-top: 8px;
+}
+
+.lodge-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.lodge-actions button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* header bar for manager pages */
+.top-bar-manager {
+    background: #2c3e50; /* match table header background */
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 20px;
+}
+.top-bar-manager h1 {
+    color: #fff;
+    margin-bottom: 12px;
+}
+.top-bar-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

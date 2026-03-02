@@ -15,7 +15,7 @@
 </div>
 <div class="taken-container">
 <?php
-include("../inlog/config.php");
+include("../config.php");
 
 $sql = "
     SELECT onderhoud.*, lodge.huisnummer AS lodgenaam
@@ -34,13 +34,10 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($result as $rij) {
     echo "<div class='taak-item'>";
-    // lodge number header at top of card
     echo "<h3 class='lodge-header'>Lodge: " . $rij['lodgenaam'] . "</h3>";
     echo "<div class='taak-details'>";
     echo "<p>medewerker: <br>" . $rij['monteurid'] .  "</p>";
-    // make omschrijving text itself clickable; show actual description in alert
     $omschrijving = $rij['omschrijving'];
-    // hide only the label paragraph; keep the clickable span visible
     echo "<p style='display:none;'>omschrijving:<br></p>";
     echo "<input id='omschrijving-" . $rij['onderhoudid'] . "' type='hidden' value='" . htmlspecialchars($omschrijving) . "'>";
     echo "<span class='clickable-description' onclick=\"showDescription(document.getElementById('omschrijving-" . $rij['onderhoudid'] . "').value)\">omschrijving</span><br>";
@@ -57,7 +54,6 @@ foreach ($result as $rij) {
 </div>
 
 <script>
-// shows a constant notification when description is clicked
 function showDescription(text) {
     alert(text);
 }

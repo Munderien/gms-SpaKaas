@@ -1,5 +1,5 @@
 <?php
-include("../inlog/config.php");
+include("../config.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lodgeid = $_POST['lodgeid'];

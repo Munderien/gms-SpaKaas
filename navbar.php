@@ -3,51 +3,60 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// determine application root dynamically (up to gms-SpaKaas folder)
+$script = $_SERVER['SCRIPT_NAME'];
+if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
+    $base = $m[1];
+} else {
+    // fallback to empty string so links become relative
+    $base = '';
+}
+
 $huidigePagina = basename($_SERVER['PHP_SELF']);
 ?>
 <nav class="spakaas-nav">
     <div class="nav-inner">
-        <a href="/dms-spakaas/gms-SpaKaas/home.php" class="nav-brand">
+        <a href="<?= $base ?>/pages/home.php" class="nav-brand">
             SpaKaas
         </a>
 
         <div class="nav-links">
-            <a href="/dms-spakaas/gms-SpaKaas/home.php"
+            <a href="<?= $base ?>/pages/home.php"
                 class="nav-link <?php echo $huidigePagina === 'home.php' ? 'active' : ''; ?>">
                 Home
             </a>
-            <a href="/dms-spakaas/gms-SpaKaas/Calendar.php"
+            <a href="<?= $base ?>/Calendar.php"
                 class="nav-link <?php echo $huidigePagina === 'Calendar.php' ? 'active' : ''; ?>">
                 Agenda
             </a>
-            <a href="/dms-spakaas/gms-SpaKaas/factuur_manager/list.php"
+            <a href="<?= $base ?>/factuur_manager/list.php"
                 class="nav-link <?php echo $huidigePagina === 'list.php' ? 'active' : ''; ?>">
                 Facturen
             </a>
 
             <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
                 <span class="nav-divider"></span>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/addRole.php"
+                <a href="<?= $base ?>/manager/addRole.php"
                     class="nav-link <?php echo $huidigePagina === 'addRole.php' ? 'active' : ''; ?>">
                     Gebruikers
                 </a>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/lodge/type_overzicht.php"
+                <a href="<?= $base ?>/manager/lodge/type_overzicht.php"
                     class="nav-link <?php echo $huidigePagina === 'type_overzicht.php' ? 'active' : ''; ?>">
                     Lodgetypes
                 </a>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/lodge/overzicht.php"
+                <a href="<?= $base ?>/manager/lodge/overzicht.php"
                     class="nav-link <?php echo $huidigePagina === 'overzicht.php' ? 'active' : ''; ?>">
                     Lodges
                 </a>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/rapportage_lodges.php"
+                <a href="<?= $base ?>/manager/rapportage_lodges.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_lodges.php' ? 'active' : ''; ?>">
                     Lodgerapport
                 </a>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/rapportage_omzet.php"
+                <a href="<?= $base ?>/manager/rapportage_omzet.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_omzet.php' ? 'active' : ''; ?>">
                     Omzetrapport
                 </a>
-                <a href="/dms-spakaas/gms-SpaKaas/manager/rapportage_personeel.php"
+                <a href="<?= $base ?>/manager/rapportage_personeel.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_personeel.php' ? 'active' : ''; ?>">
                     Personeelrapport
                 </a>
@@ -59,9 +68,9 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 <?php if (isset($_SESSION['naam'])): ?>
                     <span class="nav-username"><?php echo htmlspecialchars($_SESSION['naam']); ?></span>
                 <?php endif; ?>
-                <a href="/dms-spakaas/gms-SpaKaas/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+                <a href="<?= $base ?>/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
             <?php else: ?>
-                <a href="/dms-spakaas/gms-SpaKaas/inlog/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
+                <a href="<?= $base ?>/inlog/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
             <?php endif; ?>
         </div>
     </div>

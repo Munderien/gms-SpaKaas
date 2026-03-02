@@ -4,6 +4,7 @@ include("config.php");
 require_once __DIR__ . '/navbar.php';
 $two_factor = $_SESSION['two_factor'];
 ?>
+
 <form action ="update_2fa.php" method="post">
                 <h6>2 factor authenticatie</h6>
 

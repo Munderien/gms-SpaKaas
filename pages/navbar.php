@@ -17,8 +17,16 @@ if (!isset($_SESSION['gebruikerId'])) {
             isset($_SESSION['gebruikermail']) ? $_SESSION['gebruikermail'] : 'Profile'
         ); ?> &#x25BC;</button>
         <div class="dropdown-content">
-            <a href="edit_user.php">Edit Profile</a>
-            <a href="logout.php">Logout</a>
+            <?php
+            if(isset($_SESSION['gebruikerId'])) {
+                echo"<a href='edit_user.php'>Edit Profile</a>";
+                echo"<a href='logout.php'>Logout</a>";
+            }
+            else {
+                echo"<a href='inlog.php'>Login</a>";
+            }
+
+            ?>
         </div>
     </div>
 </nav>

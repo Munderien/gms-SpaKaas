@@ -67,7 +67,7 @@ if (!in_array($ditJaar, $jaren)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapportage Lodges – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .stat-grid {
             display: grid;
