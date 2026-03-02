@@ -93,7 +93,7 @@ $prijsData = $stmt3->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapportage Omzet – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .stat-grid {
             display: grid;

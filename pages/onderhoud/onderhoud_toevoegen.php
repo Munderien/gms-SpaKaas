@@ -1,5 +1,5 @@
 <?php
-include("../inlog/config.php");
+include("../config.php");
 ?>
 
 
