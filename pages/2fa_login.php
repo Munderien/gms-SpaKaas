@@ -62,7 +62,7 @@ if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
                 
                 <div class="form-footer">
                     
-                        click voor nieuwe code? <button type="button" class="toggle-form" onclick="location.href='verwerk_2fa.php?nieuwe_code=true'">Nieuwe code</button>
+                        click voor nieuwe code? <button type="button" class="toggle-form" onclick="location.href='nieuw_2fa_code.php'">Nieuwe code</button>
                     </div>
 <!--<div class="container">
   <div class="inlogkaart">
