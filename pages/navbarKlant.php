@@ -22,8 +22,9 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
 include("config.php");
 $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
 $stmt->execute([$_SESSION['gebruikerId']]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-$gebruikersnaam = $user ? $user['naam'] : 'Gebruiker';
+// avoid clobbering a generic $user variable used by pages that include this navbar
+$navUser = $stmt->fetch(PDO::FETCH_ASSOC);
+$gebruikersnaam = $navUser ? $navUser['naam'] : 'Gebruiker';
 $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
 ?>
 
@@ -292,7 +293,7 @@ $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
         <div class="nav-user">
             <div class="user-avatar"><?php echo $userInitial; ?></div>
             <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
-            <a href="<?= $base ?>/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+            <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
         </div>
     </div>
 </nav>

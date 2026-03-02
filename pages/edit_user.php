@@ -1,19 +1,112 @@
 <?php
 include("config.php");
+session_start();
 // include navigation bar for consistency
+<<<<<<< HEAD
 require_once __DIR__ . '/navbarKlant.php';
+=======
+$sql="select * from gebruiker where gebruikerid = ?";
+$stmt=$db->prepare($sql);
+$stmt->execute([$_SESSION['gebruikerId']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// debug: inspect loaded user data (disabled for production)
+// echo '<pre>'; var_dump($user); echo '</pre>';
+
+// include navbar after fetching user; pages/navbar.php now uses a separate
+// variable to avoid clobbering $user
+require_once __DIR__ . '/navbar.php';
+>>>>>>> 364fcf5c77b41ea3d6ddd03f2bc2c1971e980ac4
 $two_factor = $_SESSION['two_factor'];
 ?>
+<link rel="stylesheet" href="../style/login.css">
 
-<form action ="update_2fa.php" method="post">
-                <h6>2 factor authenticatie</h6>
+<div class="forms-container">
+    <div class="forms-wrapper">
+        <!-- User edit card -->
+        <form class="form-card active" action="update_user.php" method="post">
+            <h1>Gegevens bijwerken</h1>
+            <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['gebruikerId']) ?>">
 
-<select class="form_select" name="two_factor" style="width: 29%;">
-    <option value="0" <?php echo ($two_factor === '0') ? 'selected' : ''; ?>>Nee</option>
-    <option value="1" <?php echo ($two_factor === '1') ? 'selected' : ''; ?>>Ja</option>
-</select>
-        <button id="save" style="width: 100px;">Opslaan</button>
-</form>
-<button id="uitloggen" onClick="window.location.href='logout.php'">Uitloggen</button>
 
-</table>
+            <div class="form-group">
+                <label for="mail">Email</label>
+                <input type="email" id="mail" name="mail" value="<?= htmlspecialchars(
+                    $user['email'] ?? ''
+                ) ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Wachtwoord</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Laat leeg om niet te wijzigen">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">Tonen</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="adres">Adres</label>
+                <input type="text" id="adres" name="adres" value="<?= htmlspecialchars(
+                    $user['adres'] ?? ''
+                ) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="postcode">Postcode</label>
+                <input type="text" id="postcode" name="postcode" value="<?= htmlspecialchars(
+                    $user['postcode'] ?? ''
+                ) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="plaats">Plaats</label>
+                <input type="text" id="plaats" name="plaats" value="<?= htmlspecialchars(
+                    $user['plaats'] ?? ''
+                ) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="naam">Naam</label>
+                <input type="text" id="naam" name="naam" value="<?= htmlspecialchars(
+                    $user['naam'] ?? ''
+                ) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="telefoonnummer">Telefoon</label>
+                <input type="tel" id="telefoonnummer" name="telefoonnummer" value="<?= htmlspecialchars(
+                    $user['telefoonnummer'] ?? ''
+                ) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="two_factor">Twee-factor authenticatie</label>
+                <select id="two_factor" name="two_factor" class="form_select">
+                    <option value="0" <?= ($two_factor === '0') ? 'selected' : '' ?>>Nee</option>
+                    <option value="1" <?= ($two_factor === '1') ? 'selected' : '' ?>>Ja</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="registratieButton">Opslaan</button>
+            </div>
+        </form>
+        
+    
+    </div>
+</div>
+
+<script>
+function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    const button = event.target.closest('.password-toggle');
+    if (field.type === 'password') {
+        field.type = 'text';
+        button.textContent = 'Verbergen';
+    } else {
+        field.type = 'password';
+        button.textContent = 'Tonen';
+    }
+}
+</script>
+
