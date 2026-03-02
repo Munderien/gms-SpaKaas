@@ -25,6 +25,42 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 Facturen
             </a>
 
+            <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0): ?>
+                <span class="nav-divider"></span>
+                <a href="/dms-spakaas/gms-SpaKaas/klant/facturen.php"
+                    class="nav-link <?php echo $huidigePagina === 'facturen.php' ? 'active' : ''; ?>">
+                    Mijn Facturen
+                </a>
+                <a href="/dms-spakaas/gms-SpaKaas/klant/vakanties.php"
+                    class="nav-link <?php echo $huidigePagina === 'vakanties.php' ? 'active' : ''; ?>">
+                    Mijn Vakanties
+                </a>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 3)): ?>
+                <span class="nav-divider"></span>
+                <a href="/dms-spakaas/gms-SpaKaas/balie/uitchecken.php"
+                    class="nav-link <?php echo $huidigePagina === 'uitchecken.php' ? 'active' : ''; ?>">
+                    Uitchecken
+                </a>
+                <a href="/dms-spakaas/gms-SpaKaas/balie/lodge_overzicht.php"
+                    class="nav-link <?php echo $huidigePagina === 'lodge_overzicht.php' ? 'active' : ''; ?>">
+                    Beschikbaarheid
+                </a>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 2 || $_SESSION['rol'] == 3)): ?>
+                <span class="nav-divider"></span>
+                <a href="/dms-spakaas/gms-SpaKaas/onderhoud/problemen.php"
+                    class="nav-link <?php echo $huidigePagina === 'problemen.php' ? 'active' : ''; ?>">
+                    Problemen
+                </a>
+                <a href="/dms-spakaas/gms-SpaKaas/onderhoud/rapportage.php"
+                    class="nav-link <?php echo $huidigePagina === 'rapportage.php' ? 'active' : ''; ?>">
+                    Onderhoudsrapport
+                </a>
+            <?php endif; ?>
+
             <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
                 <span class="nav-divider"></span>
                 <a href="/dms-spakaas/gms-SpaKaas/manager/addRole.php"
