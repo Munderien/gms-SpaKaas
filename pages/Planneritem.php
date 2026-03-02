@@ -11,7 +11,6 @@ try {
 $message = '';
 // Handle update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
-    $titel     = $mysqli->real_escape_string($_POST['titel'] ?? '');
     $beginTime = $mysqli->real_escape_string($_POST['starttijd'] ?? '');
     $endTime   = $mysqli->real_escape_string($_POST['eindtijd'] ?? '');
     $status = $mysqli->real_escape_string($_POST['status'] ?? '');
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
             $message = "Deze lodge heeft al een afspraak in deze periode.";
         } else {
             $update = "UPDATE afspraak 
-                   SET lodgeid = '$lodgeId', titel = '$titel', starttijd = '$beginTime',
+                   SET lodgeid = '$lodgeId', starttijd = '$beginTime',
                    eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
                    WHERE afspraakId=$afspraakId";
 
@@ -70,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 $afspraakId = isset($_GET['id']) ? intval($_GET['id']) : 1;
 
 // Get afspraak data - filter by gebruikerid if user is customer (rol 0)
-$afspraakQuery = "SELECT afspraakId, lodgeid, titel, starttijd, eindtijd, status, toelichting, aantalmensen 
+$afspraakQuery = "SELECT afspraakId, lodgeid, starttijd, eindtijd, status, toelichting, aantalmensen 
                   FROM afspraak WHERE afspraakId = $afspraakId";
 if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // If user is customer, only show their own appointments
@@ -153,10 +152,6 @@ if (!empty($item['lodgeid'])) {
                 <div class="popup-value"><?php echo htmlspecialchars($lodgeTypeName ?: $item['lodgeid'] ?? ''); ?></div>
             </div>
             <div class="popup-field">
-                <label>titel</label>
-                <div class="popup-value"><?php echo nl2br(htmlspecialchars($item['titel'] ?? '')); ?></div>
-            </div>
-            <div class="popup-field">
                 <label>starttijd</label>
                 <div class="popup-value"><?php echo htmlspecialchars($item['starttijd'] ?? ''); ?></div>
             </div>
@@ -224,10 +219,6 @@ if (!empty($item['lodgeid'])) {
                     </select>
                 </div>
 
-                <div class="popup-field">
-                    <label>titel</label>
-                    <input type="text" name="titel" value="<?php echo htmlspecialchars($item['titel'] ?? ''); ?>" required>
-                </div>
                 <div class="popup-field">
                     <label>starttijd</label>
                     <input type="date" name="starttijd" value="<?php echo htmlspecialchars($item['starttijd'] ?? ''); ?>" required>
@@ -303,11 +294,6 @@ if (!empty($item['lodgeid'])) {
         <div class="popup-field">
             <label>Rol</label>
             <div class="popup-value"><?php echo htmlspecialchars($userData['rol']); ?></div>
-        </div>
-
-        <div class="popup-field">
-            <label>Actief</label>
-            <div class="popup-value"><?php echo htmlspecialchars($userData['isactief']); ?></div>
         </div>
 
         <div class="popup-field">
