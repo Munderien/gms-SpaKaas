@@ -19,7 +19,7 @@ return function (PDO $db) {
             factuurid INT(11) AUTO_INCREMENT PRIMARY KEY,
             afspraakid INT(11),
             gebruikerid INT(11),
-            lodgetypeid INT(11),
+            typeid INT(11),
             factuurdatum DATE,
             aantalmensen INT(11),
             totaalbedragexbtw DECIMAL(20,0),
@@ -41,8 +41,8 @@ return function (PDO $db) {
                 ON UPDATE CASCADE,
 
             CONSTRAINT fk_factuur_lodgetype
-                FOREIGN KEY (lodgetypeid)
-                REFERENCES lodgetype(lodgetypeid)
+                FOREIGN KEY (typeid)
+                REFERENCES lodgetype(typeid)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
         )
