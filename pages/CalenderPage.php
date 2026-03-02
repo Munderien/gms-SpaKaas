@@ -25,7 +25,6 @@ foreach ($data as $events) {
         $events['afspraakid'],
         $events['gebruikerid'],
         $events['lodgeid'],
-        $events['titel'],
         $events['starttijd'],
         $events['eindtijd'],
         $events['status'],
