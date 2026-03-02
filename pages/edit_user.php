@@ -2,9 +2,7 @@
 include("config.php");
 session_start();
 // include navigation bar for consistency
-<<<<<<< HEAD
 require_once __DIR__ . '/navbarKlant.php';
-=======
 $sql="select * from gebruiker where gebruikerid = ?";
 $stmt=$db->prepare($sql);
 $stmt->execute([$_SESSION['gebruikerId']]);
@@ -15,8 +13,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // include navbar after fetching user; pages/navbar.php now uses a separate
 // variable to avoid clobbering $user
-require_once __DIR__ . '/navbar.php';
->>>>>>> 364fcf5c77b41ea3d6ddd03f2bc2c1971e980ac4
 $two_factor = $_SESSION['two_factor'];
 ?>
 <link rel="stylesheet" href="../style/login.css">
