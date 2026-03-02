@@ -60,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $endTime   = $conn->real_escape_string($_POST['eindtijd']);
     $status = 'Afwachten';
     $desc      = $conn->real_escape_string($_POST['toelichting']);
-    $prioriteit = $conn->real_escape_string($_POST['prioriteit']);
     $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
     $userId    = intval($_POST['gebruikerid']);
     $lodgeId = intval($_POST['lodgeid']);
@@ -75,9 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Eindtijd moet later zijn dan begintijd.";
     } else {
         $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, titel, starttijd, eindtijd,
-        status, toelichting, prioriteit, aantalmensen)
+        status, toelichting, aantalmensen)
                 VALUES ('$userId', '$lodgeId', '$titel', '$beginTime', '$endTime', 
-                '$status', '$desc', '$prioriteit', '$aantalmensen')";
+                '$status', '$desc', '$aantalmensen')";
 
         if ($conn->query($sql) === TRUE) {
             $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
@@ -141,15 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="popup-field">
                     <label for="toelichting">Beschrijving:</label><br>
                     <input type="text" id="toelichting" name="toelichting" required>
-                </div>
-                <div class="popup-field">
-                    <label for="prioriteit">Prioriteit</label>
-                    <select name="prioriteit" id="prioriteit" required>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                        <option value="urgent">Urgent</option>
-                    </select>
                 </div>
 
                 <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->

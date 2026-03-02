@@ -71,16 +71,3 @@ while($row = $result->fetch_assoc()) {
 $graph->Stroke();
 
 ?>
-<html>
-
-<head>
-
-</head>
-
-
-
-<body>
-    
-</body>
-
-</html>

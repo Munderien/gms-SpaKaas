@@ -42,43 +42,60 @@ foreach ($data as $events) {
 </head>
 
 <body>
-    <h1>Plain PHP MVC Starter</h1>
-    <p>Dit is de eerste test! het werkte!</p>
+    <div class="calendar">
+        <h1>Plain PHP MVC Starter</h1>
+        <p>Dit is de eerste test! het werkte!</p>
+        <div class="calendar-header">
+            <div class="nav-left">
+                <button type="button" class="btn-nav" onclick="navigateCalendar('back')">
+                    ← Previous
+                </button>
+            </div>
 
-    <form action="" method="get">
-        <label for="lodgetype">Filter op lodgetype:</label>
-        <select name="lodgetype" id="lodgetype">
-            <option value="all">Alle lodge types</option>
-            <?php foreach ($lodgeTypes as $type): ?>
-                <?php $safeType = htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>
-                <option value="<?php echo $safeType; ?>" <?php echo $selectedLodgeType === $type ? 'selected' : ''; ?>>
-                    <?php echo $safeType; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <button type="submit">Toepassen</button>
-    </form>
-    <?= $calendar ?>
+            <div class="nav-right">
+                <button type="button" class="btn-nav" onclick="navigateCalendar('next')">
+                    Next →
+                </button>
 
-    <div class="nav-buttons">
-        <button type="button" class="button" onclick="navigateCalendar('back')">back</button>
-        <button type="button" class="button" onclick="navigateCalendar('next')">next</button>
-    </div>
-    <script>
-        function navigateCalendar(direction) {
-            const data = new FormData();
-            data.append(direction, '1');
-            fetch(window.location.href, {
-                    method: 'POST',
-                    body: data
-                })
-                .then(() => window.location.reload())
-                .catch(console.error);
-        }
-    </script>
-    <?php
-    echo '<a href="maakAfspraak.php" class="add-appointment-button">Nieuwe afspraak</a>';
-    ?>
+                <button type="button" class="btn-primary"
+                    onclick="window.location.href='maakAfspraak.php'">
+                    + New Appointment
+                </button>
+            </div>
+        </div>
+        <div class="calendar-toolbar">
+            <form action="" method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="lodgetype">Filter op lodgetype:</label>
+                    <select name="lodgetype" id="lodgetype">
+                        <option value="all">Alle lodge types</option>
+                        <?php foreach ($lodgeTypes as $type): ?>
+                            <?php $safeType = htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>
+                            <option value="<?php echo $safeType; ?>" <?php echo $selectedLodgeType === $type ? 'selected' : ''; ?>>
+                                <?php echo $safeType; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn-filter">Toepassen</button>
+            </form>
+        </div>
+        <?= $calendar ?>
+
+        <script>
+            function navigateCalendar(direction) {
+                const data = new FormData();
+                data.append(direction, '1');
+                fetch(window.location.href, {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(() => window.location.reload())
+                    .catch(console.error);
+            }
+        </script>
+
+        
 </body>
 
 </html>

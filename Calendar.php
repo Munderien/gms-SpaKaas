@@ -26,7 +26,7 @@ class getDataCalendar
         //session_start();
 
         // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
-        $_SESSION['gebruikerid'] = 1; 
+        $_SESSION['gebruikerid'] = 1;
         $_SESSION['rol'] = 3; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
 
         $userId = $_SESSION['gebruikerid'];
@@ -140,8 +140,12 @@ class Calendar
 
         for ($i = 1; $i <= $numdays; $i++) {
             $selected = '';
-            if ($i == $this->active_day) {
-                // By the $selected, there was 'selected first' this was changed due to the current day bug 
+
+            if (
+                $i == date('j') &&
+                $this->active_month == date('n') &&
+                $this->active_year == date('Y')
+            ) {
                 $selected = ' current_Day';
             }
             $html .= '<div class="day_num' . $selected . '">';
@@ -155,7 +159,7 @@ class Calendar
 
                 // the if prevents it from showing all events on all days
                 if ($currentDate >= $eventDate && $currentDate <= $eventDateLast) {
-                    $descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8]; 
+                    $descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8];
                     $priorityClass = 'priority-' . strtolower($event[9]);
                     // afspraakId, titel, toelichting, begintijd, eindtijd
                     $html .= "<a href='planneritem.php?id={$event[0]}'>
@@ -190,7 +194,7 @@ class Calendar
         $this->active_hour = date('h', $timestamp);
         $this->active_minute = date('i', $timestamp);
     }
-    public function oneMonthForward($date) 
+    public function oneMonthForward($date)
     {
         $timestamp = strtotime('+1 month', strtotime($date));
         $this->active_year = date('Y', $timestamp);
@@ -200,4 +204,3 @@ class Calendar
         $this->active_minute = date('i', $timestamp);
     }
 }
-?>
