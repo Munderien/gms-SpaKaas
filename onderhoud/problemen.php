@@ -227,11 +227,11 @@ foreach ($problemen as $p) {
                                         <option value="open" <?php if ($p['status'] == 'open')
                                             echo 'selected'; ?>>Open</option>
                                         <option value="in_progress" <?php if ($p['status'] == 'in_progress')
-                                            echo 'selected'; ?>
-                                            >In behandeling</option>
+                                            echo 'selected'; ?>>
+                                            In behandeling</option>
                                         <option value="gesloten" <?php if ($p['status'] == 'gesloten')
-                                            echo 'selected'; ?>
-                                            >Gesloten</option>
+                                            echo 'selected'; ?>>
+                                            Gesloten</option>
                                     </select>
                                     <button type="submit" class="btn btn-warning btn-sm">Opslaan</button>
                                 </form>
