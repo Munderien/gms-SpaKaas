@@ -20,7 +20,7 @@ if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // Als gebruiker krijg je alleen de ingelogde gebruiker
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
 } else {
-    // Anders alle gebruikers 
+    // Anders alle gebruikers  
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
