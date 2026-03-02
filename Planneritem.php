@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
     $endTime   = $mysqli->real_escape_string($_POST['eindtijd'] ?? '');
     $status = $mysqli->real_escape_string($_POST['status'] ?? '');
     $desc      = $mysqli->real_escape_string($_POST['toelichting'] ?? '');
-    $prioriteit = $mysqli->real_escape_string($_POST['prioriteit'] ?? '');
     $aantalmensen = $mysqli->real_escape_string($_POST['aantalmensen'] ?? '');
     $lodgeId = intval($_POST['lodgeid'] ?? 0);
     $afspraakId = intval($_POST['afspraakId'] ?? 0);
@@ -29,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
     } else {
         $update = "UPDATE afspraak 
                SET lodgeid = '$lodgeId', titel = '$titel', starttijd = '$beginTime',
-               eindtijd = '$endTime', status = '$status', toelichting = '$desc', prioriteit = '$prioriteit',
-               aantalmensen = '$aantalmensen'
+               eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
                WHERE afspraakId=$afspraakId";
 
         if ($mysqli->query($update) === TRUE) {
@@ -58,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 $afspraakId = isset($_GET['id']) ? intval($_GET['id']) : 1;
 
 // Get afspraak data - filter by gebruikerid if user is customer (rol 0)
-$afspraakQuery = "SELECT afspraakId, lodgeid, titel, starttijd, eindtijd, status, toelichting, prioriteit, aantalmensen 
+$afspraakQuery = "SELECT afspraakId, lodgeid, titel, starttijd, eindtijd, status, toelichting, aantalmensen 
                   FROM afspraak WHERE afspraakId = $afspraakId";
 if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // If user is customer, only show their own appointments
@@ -158,11 +156,6 @@ if (!empty($item['lodgeid'])) {
                 <div class="popup-value"><?php echo nl2br(htmlspecialchars($item['toelichting'] ?? '')); ?></div>
             </div>
             <div class="popup-field">
-                <!-- prioriteit moet later weg -->
-                <label>prioriteit</label>
-                <div class="popup-value"><?php echo nl2br(htmlspecialchars($item['prioriteit'] ?? '')); ?></div>
-            </div>
-            <div class="popup-field">
                 <label>aantal mensen</label>
                 <div class="popup-value"><?php echo nl2br(htmlspecialchars($item['aantalmensen'] ?? '')); ?></div>
             </div>
@@ -231,10 +224,6 @@ if (!empty($item['lodgeid'])) {
                 <div class="popup-field">
                     <label>toelichting</label>
                     <input type="text" name="toelichting" value="<?php echo htmlspecialchars($item['toelichting'] ?? ''); ?>" required>
-                </div>
-                <div class="popup-field">
-                    <label>prioriteit</label>
-                    <input type="text" name="prioriteit" value="<?php echo htmlspecialchars($item['prioriteit'] ?? ''); ?>" required>
                 </div>
                 <div class="popup-field">
                     <label>aantal mensen</label>
