@@ -1,7 +1,7 @@
 <?php
 session_start();
 $host = 'localhost';
-$db   = 'dms-spakaas';
+$db = 'dms-spakaas';
 $user = 'root';
 $pass = '';
 
@@ -55,13 +55,13 @@ if (!empty($item['lodgeid'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titel     = $conn->real_escape_string($_POST['titel']);
+    $titel = $conn->real_escape_string($_POST['titel']);
     $beginTime = $conn->real_escape_string($_POST['starttijd']);
-    $endTime   = $conn->real_escape_string($_POST['eindtijd']);
+    $endTime = $conn->real_escape_string($_POST['eindtijd']);
     $status = 'Afwachten';
-    $desc      = $conn->real_escape_string($_POST['toelichting']);
+    $desc = $conn->real_escape_string($_POST['toelichting']);
     $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
-    $userId    = intval($_POST['gebruikerid']);
+    $userId = intval($_POST['gebruikerid']);
     $lodgeId = intval($_POST['lodgeid']);
 
     $today = date('Y-m-d');
@@ -88,6 +88,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     '$status', '$desc', '$aantalmensen')";
             if ($conn->query($sql) === TRUE) {
                 $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
+                require_once __DIR__ . '/email/emailService.php';
+                
+                $loggedInUser = null;
+                if (isset($_SESSION['gebruikerid'])) {
+                    $userQuery = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']);
+                    $userResult = $conn->query($userQuery);
+                    if ($userResult && $userResult->num_rows > 0) {
+                        $loggedInUser = $userResult->fetch_assoc();
+                    }
+                }
+
+                try {
+                    $emailService = new EmailService();
+                    $emailService->sendEmail(
+                        $loggedInUser['email'],
+                        'Bevestiging boeking',
+                        'Beste ' . $loggedInUser['naam'] . '
+
+Uw afspraak is succesvol aangemaakt.
+
+Details:
+- Naam: ' . $titel . '
+- Starttijd: ' . $beginTime . '
+- Eindtijd: ' . $endTime . '
+- Toelichting: ' . $desc . '
+- Aantal mensen: ' . $aantalmensen . '
+
+Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
+                    );
+                } catch (Exception $e) {
+                    echo 'Error: ' . htmlspecialchars($e->getMessage());
+                }
             } else {
                 $message = "Fout bij toevoegen: " . $conn->error;
             }
@@ -137,8 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php echo $message; ?>
                     </p>
                 <?php endif; ?>
-                <span class="popup-close" title="Close"
-                    onclick="window.location.href='home.php'">
+                <span class="popup-close" title="Close" onclick="window.location.href='home.php'">
                     &times;
                 </span>
                 <form method="post">
@@ -168,7 +199,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </select>
                         </div>
                     <?php else: ?>
-                        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+                        <input type="hidden" id="gebruikerSelect" name="gebruikerid"
+                            value="<?php echo intval($_SESSION['gebruikerid']); ?>">
                     <?php endif; ?>
 
                     <div class="popup-field">

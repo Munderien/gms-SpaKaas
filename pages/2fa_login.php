@@ -11,11 +11,22 @@ if (!isset($_SESSION['2fa_code']) || trim($_SESSION['2fa_code']) == '') {
     $_SESSION['2fa_code'] = $code; 
 }
 
-require_once __DIR__ . '/email/emailFuncties.php';
-
 $_SESSION['2fa_email_sent']= false;
 if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['userid'])!='') {
-    send2faMail($gebruikermail, $code);
+   
+require_once __DIR__ . '/email/EmailService.php';
+
+try {
+    $emailService = new EmailService();
+    $emailService->sendEmail(
+        $_SESSION['gebruikermail'],
+        '2FA Code',
+        "Uw 2FA code is: $code"
+    );
+} catch (Exception $e) {
+    echo 'Error: ' . htmlspecialchars($e->getMessage());
+}
+
     $_SESSION['2fa_email_sent'] = true;
 }
 ?>

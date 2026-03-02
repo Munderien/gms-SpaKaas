@@ -1,7 +1,7 @@
 <?php
 include("config.php");
 // include navigation bar for consistency
-require_once __DIR__ . '/navbar.php';
+require_once __DIR__ . '/navbarKlant.php';
 $two_factor = $_SESSION['two_factor'];
 ?>
 

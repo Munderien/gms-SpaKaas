@@ -41,7 +41,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbar.php'; ?>
+    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
 
     <main class="home-container">
         <!-- Welcome Card -->
