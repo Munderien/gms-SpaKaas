@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <title>Afspraak toevoegen</title>
-    <link rel="stylesheet" href="/GMS-SPAKAAS/Style/MaakAfspraak.css">
+    <link rel="stylesheet" href="../Style/MaakAfspraak.css">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gebruikers = <?php echo json_encode($gebruikers); ?>;
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </p>
                 <?php endif; ?>
                 <span class="popup-close" title="Close"
-                    onclick="window.location.href='Index.php'">
+                    onclick="window.location.href='home.php'">
                     &times;
                 </span>
                 <form method="post">
