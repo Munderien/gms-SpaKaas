@@ -21,7 +21,7 @@ class getDataCalendar
 
     public function getData($lodgeType = null)
     {
-        //session_start();
+        //session_start(); wat is er allemaal aan de hand met github
 
         // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
         $_SESSION['gebruikerid'];
