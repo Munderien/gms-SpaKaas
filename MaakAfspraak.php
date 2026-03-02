@@ -20,7 +20,7 @@ if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // Als gebruiker krijg je alleen de ingelogde gebruiker
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
 } else {
-    // Anders alle gebruikers  
+    // Anders alle gebruikers 
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
@@ -55,7 +55,6 @@ if (!empty($item['lodgeid'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titel     = $conn->real_escape_string($_POST['titel']);
     $beginTime = $conn->real_escape_string($_POST['starttijd']);
     $endTime   = $conn->real_escape_string($_POST['eindtijd']);
     $status = 'Afwachten';
@@ -82,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($conflictRow['count'] > 0) {
             $message = "Deze lodge heeft al een afspraak in deze periode.";
         } else {
-            $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, titel, starttijd, eindtijd,
+            $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, starttijd, eindtijd,
             status, toelichting, aantalmensen)
-                    VALUES ('$userId', '$lodgeId', '$titel', '$beginTime', '$endTime', 
+                    VALUES ('$userId', '$lodgeId', '$beginTime', '$endTime', 
                     '$status', '$desc', '$aantalmensen')";
             if ($conn->query($sql) === TRUE) {
                 $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
@@ -114,12 +113,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const params = new URLSearchParams(window.location.search);
             const urlLodgeId = params.get('lodgeid');
 
-            gebruikers.forEach(g => {
-                const opt = document.createElement('option');
-                opt.value = g.gebruikerid;
-                opt.textContent = g.naam;
-                gebruikerSelect.appendChild(opt);
-            });
+            // Only populate gebruiker dropdown if it's actually a select element (not hidden input)
+            if (gebruikerSelect && gebruikerSelect.tagName === 'SELECT') {
+                gebruikers.forEach(g => {
+                    const opt = document.createElement('option');
+                    opt.value = g.gebruikerid;
+                    opt.textContent = g.naam;
+                    gebruikerSelect.appendChild(opt);
+                });
+            }
 
             lodges.forEach(l => {
                 const opt = document.createElement('option');
@@ -140,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="form-grid">
         <div class="popup-overlay" id="planneritem-popup">
             <div class="popup-panel" id="main-panel">
-                <h1>Nieuwe afspraak toevoegen</h1>
+                <h1>Nieuwe afspraak toevoegen test</h1>
                 <?php if ($message): ?>
                     <p class="<?php echo (str_contains($message, 'succesvol')) ? 'success-message' : 'error-message'; ?>">
                         <?php echo $message; ?>
@@ -151,10 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     &times;
                 </span>
                 <form method="post">
-                    <div class="popup-field">
-                        <label for="titel">Titel:</label><br>
-                        <input type="text" id="titel" name="titel" required>
-                    </div>
                     <div class="popup-field">
                         <label for="starttijd">Begintijd:</label><br>
                         <input type="date" id="starttijd" name="starttijd" required>

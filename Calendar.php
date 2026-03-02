@@ -5,7 +5,6 @@ class getDataCalendar
     public static $afspraakId;
     public static $gebruikerId;
     public static $lodgeId;
-    public static $titel;
     public static $startDatumTijd;
     public static $eindDatumTijd;
     public static $status;
@@ -25,8 +24,8 @@ class getDataCalendar
         //session_start();
 
         // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
-        $_SESSION['gebruikerid'] = 1;
-        $_SESSION['rol'] = 3; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
+        $_SESSION['gebruikerid'];
+        $_SESSION['rol']; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
 
         $userId = $_SESSION['gebruikerid'];
         $role = $_SESSION['rol'];
@@ -97,11 +96,11 @@ class Calendar
 
     // Adds everything to the event from the database + some default values
 
-    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $aantalMensen, $color = ' ', $days = 1)
+    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $aantalMensen, $color = ' ', $days = 1)
     {
         $color = $color ? ' ' . $color : $color;
         //$this->events[] = [$txt, $date, $time, $days, $color];
-        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $titel, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $aantalMensen, $days];
+        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $aantalMensen, $days];
     }
 
     public function __toString()
@@ -152,19 +151,19 @@ class Calendar
             // Adds every event to the day that matches the date
             $html .= '<span>' . $i . '</span>';
             foreach ($this->events as $event) {
-                $eventDate   = date('Y-m-d', strtotime($event[4])); // event date
-                $eventDateLast = date('Y-m-d', strtotime($event[5])); // event date from last
+                $eventDate   = date('Y-m-d', strtotime($event[3])); // event date
+                $eventDateLast = date('Y-m-d', strtotime($event[4])); // event date from last
                 $currentDate = date('Y-m-d', strtotime($this->active_year . '-' . $this->active_month . '-' . $i)); // calendar day
 
                 // the if prevents it from showing all events on all days
                 if ($currentDate >= $eventDate && $currentDate <= $eventDateLast) {
-                    $descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8];
-                    $priorityClass = 'priority-' . strtolower($event[9]);
+                    //$descriptionTrimmed = (mb_strlen($event[8]) > 20) ? mb_substr($event[8], 0, 10) . '...' : $event[8];
+                    //$priorityClass = 'priority-' . strtolower($event[9]);
                     // afspraakId, titel, toelichting, begintijd, eindtijd
                     $html .= "<a href='planneritem.php?id={$event[0]}'>
-                    <div class='event {$priorityClass}'>
-                        {$event[3]}, {$descriptionTrimmed}<br> 
-                        {$event[4]} | {$event[5]}
+                    <div class='event'>
+                        {$event[3]}<br> 
+                        {$event[4]}
                     </div>
                   </a>";
                 }
