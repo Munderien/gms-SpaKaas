@@ -20,7 +20,7 @@ if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // Als gebruiker krijg je alleen de ingelogde gebruiker
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
 } else {
-    // Anders alle gebruikers 
+    // Anders alle gebruikers  
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
@@ -142,6 +142,10 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
             const gebruikerSelect = document.getElementById('gebruikerSelect');
             const lodgeSelect = document.getElementById('lodgeSelect');
 
+            // krijgt lodgeid van lodges.php
+            const params = new URLSearchParams(window.location.search);
+            const urlLodgeId = params.get('lodgeid');
+
             gebruikers.forEach(g => {
                 const opt = document.createElement('option');
                 opt.value = g.gebruikerid;
@@ -155,6 +159,11 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                 opt.textContent = l.lodgetype_naam || l.lodgeid;
                 lodgeSelect.appendChild(opt);
             });
+
+            // als er een lodgeid is geselecteerd voordat je de pagina opent, dan wordt die automatisch gekozen
+            if (urlLodgeId) {
+                lodgeSelect.value = urlLodgeId;
+            }
         });
     </script>
 </head>

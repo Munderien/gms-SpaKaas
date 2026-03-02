@@ -3,11 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['gebruikerId'])) {
-    header("Location: inlog.php");
-    exit();
-}
-
 // Determine application root dynamically
 $script = $_SERVER['SCRIPT_NAME'];
 if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
@@ -17,15 +12,20 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
 }
 
 $huidigePagina = basename($_SERVER['PHP_SELF']);
+$isLoggedIn = isset($_SESSION['gebruikerId']);
 
-// Get user name from database using gebruikerid
-include("config.php");
-$stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
-$stmt->execute([$_SESSION['gebruikerId']]);
-// avoid clobbering a generic $user variable used by pages that include this navbar
-$navUser = $stmt->fetch(PDO::FETCH_ASSOC);
-$gebruikersnaam = $navUser ? $navUser['naam'] : 'Gebruiker';
-$userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
+// Get user name from database if logged in
+$gebruikersnaam = 'Gebruiker';
+$userInitial = 'U';
+
+if ($isLoggedIn) {
+    include("config.php");
+    $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
+    $stmt->execute([$_SESSION['gebruikerId']]);
+    $navUser = $stmt->fetch(PDO::FETCH_ASSOC);
+    $gebruikersnaam = $navUser ? $navUser['naam'] : 'Gebruiker';
+    $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
+}
 ?>
 
 <style>
@@ -186,6 +186,16 @@ $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
         box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
     }
 
+    .nav-btn-in {
+        background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%);
+        color: #fff;
+    }
+
+    .nav-btn-in:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(63, 168, 168, 0.3);
+    }
+
     /* Add padding to body to account for fixed navbar */
     html {
         scroll-behavior: smooth;
@@ -264,20 +274,30 @@ $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
                 class="nav-link <?php echo $huidigePagina === 'home.php' ? 'active' : ''; ?>">
                 Home
             </a>
-            <a href="<?= $base ?>/pages/MaakAfspraak.php"
-                class="nav-link <?php echo $huidigePagina === 'MaakAfspraak.php' ? 'active' : ''; ?>">
-                Boekingen
+            
+            <!-- Only show these if logged in -->
+            <?php if ($isLoggedIn): ?>
+                <a href="<?= $base ?>/pages/MaakAfspraak.php"
+                    class="nav-link <?php echo $huidigePagina === 'MaakAfspraak.php' ? 'active' : ''; ?>">
+                    Boekingen
+                </a>
+                <a href="<?= $base ?>/pages/edit_user.php"
+                    class="nav-link <?php echo $huidigePagina === 'edit_user.php' ? 'active' : ''; ?>">
+                    Profiel
+                </a>
+            <?php endif; ?>
+
+            <a href="<?= $base ?>/pages/overOns.php"
+                class="nav-link <?php echo $huidigePagina === 'overOns.php' ? 'active' : ''; ?>">
+                Over ons
             </a>
+
             <a href="<?= $base ?>/pages/review.php"
                 class="nav-link <?php echo $huidigePagina === 'review.php' ? 'active' : ''; ?>">
                 Reviews
             </a>
-            <a href="<?= $base ?>/pages/edit_user.php"
-                class="nav-link <?php echo $huidigePagina === 'edit_user.php' ? 'active' : ''; ?>">
-                Profiel
-            </a>
 
-            <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
+            <?php if ($isLoggedIn && isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
                 <span class="nav-divider"></span>
                 <a href="<?= $base ?>/manager/addRole.php"
                     class="nav-link <?php echo $huidigePagina === 'addRole.php' ? 'active' : ''; ?>">
@@ -291,9 +311,13 @@ $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
         </div>
 
         <div class="nav-user">
-            <div class="user-avatar"><?php echo $userInitial; ?></div>
-            <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
-            <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+            <?php if ($isLoggedIn): ?>
+                <div class="user-avatar"><?php echo $userInitial; ?></div>
+                <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
+                <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+            <?php else: ?>
+                <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
+            <?php endif; ?>
         </div>
     </div>
 </nav>
