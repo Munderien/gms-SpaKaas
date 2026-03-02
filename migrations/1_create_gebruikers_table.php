@@ -4,7 +4,6 @@ gebruikerid
 email
 wachtwoord
 rol
-isactief    
 is2faingeschakeld
 adres
 naam
@@ -20,7 +19,6 @@ return function (PDO $db) {
             email VARCHAR(150) UNIQUE,
             wachtwoord VARCHAR(255),
             rol INT(11) DEFAULT 0,
-            isactief TINYINT(1) NOT NULL DEFAULT 1,
             is2faingeschakeld TINYINT(1) NOT NULL DEFAULT 0,
             adres VARCHAR(50),
             naam VARCHAR(30),
