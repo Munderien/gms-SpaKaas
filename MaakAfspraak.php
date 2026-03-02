@@ -110,6 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const gebruikerSelect = document.getElementById('gebruikerSelect');
             const lodgeSelect = document.getElementById('lodgeSelect');
 
+            // krijgt lodgeid van lodges.php
+            const params = new URLSearchParams(window.location.search);
+            const urlLodgeId = params.get('lodgeid');
+
             gebruikers.forEach(g => {
                 const opt = document.createElement('option');
                 opt.value = g.gebruikerid;
@@ -123,6 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 opt.textContent = l.lodgetype_naam || l.lodgeid;
                 lodgeSelect.appendChild(opt);
             });
+
+            // als er een lodgeid is geselecteerd voordat je de pagina opent, dan wordt die automatisch gekozen
+            if (urlLodgeId) {
+                lodgeSelect.value = urlLodgeId;
+            }
         });
     </script>
 </head>
