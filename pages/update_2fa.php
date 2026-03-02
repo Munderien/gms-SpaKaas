@@ -1,7 +1,8 @@
 <?php
 include("config.php");
 session_start();
-$two_factor = @htmlspecialchars($_POST['two_factor']);
+$two_factor = @htmlspecialchars($_POST['two_factor']);]
+$gebruikersId = $_SESSION['gebruikerId'];
 $sql = "UPDATE gebruiker SET 
             is2faingeschakeld = ?
         WHERE

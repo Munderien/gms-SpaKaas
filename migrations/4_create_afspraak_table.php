@@ -17,7 +17,6 @@ return function (PDO $db) {
             afspraakid INT(11) AUTO_INCREMENT PRIMARY KEY,
             gebruikerid INT(11),
             lodgeid INT(11),
-            titel VARCHAR(50),
             starttijd DATETIME,
             eindtijd DATETIME,
             status VARCHAR(30),

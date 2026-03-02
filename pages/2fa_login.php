@@ -8,12 +8,31 @@ if (!isset($_SESSION['2fa_code']) || trim($_SESSION['2fa_code']) == '') {
     $_SESSION['2fa_code'] = $code; 
 }
 
+<<<<<<< HEAD
+$_SESSION['2fa_email_sent']= false;
+if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['userid'])!='') {
+   
+require_once __DIR__ . '/email/EmailService.php';
+
+try {
+    $emailService = new EmailService();
+    $emailService->sendEmail(
+        $_SESSION['gebruikermail'],
+        '2FA Code',
+        "Uw 2FA code is: $code"
+    );
+} catch (Exception $e) {
+    echo 'Error: ' . htmlspecialchars($e->getMessage());
+}
+
+=======
 // include 2FA email helpers; path should go up one directory from pages
 require_once __DIR__ . '/../email/emailFuncties.php';
 
 $_SESSION['2fa_email_sent']= false;
 if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
     //send2faMail($_SESSION['gebruikermail'], $code);
+>>>>>>> 364fcf5c77b41ea3d6ddd03f2bc2c1971e980ac4
     $_SESSION['2fa_email_sent'] = true;
     var_dump($_SESSION['2fa_code']);
 }
