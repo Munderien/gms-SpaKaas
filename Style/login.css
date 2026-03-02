@@ -1,0 +1,345 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Left side - Spa Resort Marketing */
+        .spa-marketing {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .spa-marketing h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .spa-marketing p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .spa-features {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            flex: 0 1 200px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .feature p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        /* Right side - Forms Container */
+        .forms-container {
+            flex: 1;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .forms-wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .form-card.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card h1 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            flex: 1;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 0.85em;
+            padding: 5px 10px;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .password-toggle:hover {
+            color: #764ba2;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-group input.error {
+            border-color: #e74c3c;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        button[type="submit"]:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .toggle-form {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.95em;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        .toggle-form:hover {
+            color: #764ba2;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        #error {
+            background-color: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+            display: none;
+        }
+
+        #success {
+            background-color: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+            display: none;
+        }
+
+        .password-requirements {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #666;
+            display: none;
+        }
+
+        .password-requirements.show {
+            display: block;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .requirement-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .requirement.met .requirement-icon {
+            color: #27ae60;
+            display: none;
+        }
+
+        .requirement.unmet .requirement-icon {
+            color: #e74c3c;
+        }
+
+        .requirement.met {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .spa-marketing {
+                padding: 40px 20px;
+                min-height: auto;
+            }
+
+            .spa-marketing h2 {
+                font-size: 2em;
+            }
+
+            .spa-features {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .feature {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .forms-wrapper {
+                padding: 0;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+            }
+
+            .spa-marketing h2 {
+                font-size: 1.5em;
+            }
+
+            .spa-marketing p {
+                font-size: 1em;
+            }
+        }

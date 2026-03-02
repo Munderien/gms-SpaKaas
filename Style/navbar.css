@@ -1,0 +1,129 @@
+.navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: linear-gradient(90deg, #0f4c5c 0%, #3d8f8f 100%);
+        box-shadow: 0 6px 30px rgba(15, 76, 92, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 50px;
+        z-index: 1000;
+    }
+
+    .navbar-logo {
+        font-size: 1.8em;
+        font-weight: 800;
+        color: white;
+        text-decoration: none;
+        letter-spacing: 2px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .navbar-logo span {
+        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .navbar-menu {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar-menu a {
+        color: #e0f2f1;
+        text-decoration: none;
+        font-size: 1em;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .navbar-menu a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 16px;
+        right: 16px;
+        height: 2px;
+        background: linear-gradient(90deg, #ffeb3b 0%, #ff9800 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .navbar-menu a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffeb3b;
+    }
+
+    .navbar-menu a:hover::after {
+        transform: scaleX(1);
+    }
+
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 20px 8px 12px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f4c5c;
+        font-weight: 700;
+        font-size: 1.1em;
+    }
+
+    .user-info {
+        color: white;
+        font-weight: 600;
+        font-size: 0.95em;
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 0 20px;
+            height: 60px;
+        }
+
+        .navbar-logo {
+            font-size: 1.4em;
+        }
+
+        .navbar-menu {
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            font-size: 0.9em;
+            padding: 6px 12px;
+        }
+
+        .user-info {
+            display: none;
+        }
+
+        .navbar-user {
+            padding: 8px 12px;
+        }
+    }

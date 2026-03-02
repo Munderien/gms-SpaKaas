@@ -26,16 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
     } else {
-        $update = "UPDATE afspraak 
-               SET lodgeid = '$lodgeId', titel = '$titel', starttijd = '$beginTime',
-               eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
-               WHERE afspraakId=$afspraakId";
+        // Kijkt of er een afspraak is op de lodge die overlapped met dezelfde datum
+        $conflictQuery = "SELECT COUNT(*) as count FROM afspraak
+                         WHERE lodgeid = $lodgeId
+                         AND afspraakId != $afspraakId
+                         AND ((starttijd <= '$beginTime' AND eindtijd > '$beginTime')
+                              OR (starttijd < '$endTime' AND eindtijd >= '$endTime')
+                              OR (starttijd >= '$beginTime' AND eindtijd <= '$endTime'))";
+        $conflictResult = $mysqli->query($conflictQuery);
+        $conflictRow = $conflictResult ? $conflictResult->fetch_assoc() : ['count' => 0];
 
-        if ($mysqli->query($update) === TRUE) {
-            header("Location: planneritem.php?id={$afspraakId}");
-            exit;
+        if ($conflictRow['count'] > 0) {
+            $message = "Deze lodge heeft al een afspraak in deze periode.";
         } else {
-            echo "DB update failed: " . $mysqli->error;
+            $update = "UPDATE afspraak 
+                   SET lodgeid = '$lodgeId', titel = '$titel', starttijd = '$beginTime',
+                   eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
+                   WHERE afspraakId=$afspraakId";
+
+            if ($mysqli->query($update) === TRUE) {
+                header("Location: planneritem.php?id={$afspraakId}");
+                exit;
+            } else {
+                echo "DB update failed: " . $mysqli->error;
+            }
         }
     }
 }

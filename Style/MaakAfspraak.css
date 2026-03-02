@@ -162,3 +162,14 @@
 .form-grid .popup-field {
     margin-bottom: 0;
 }
+
+/* ===== MESSAGE ===== */
+
+.popup-panel p {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    background: #fdeaea;
+    color: #b33a3a;
+}

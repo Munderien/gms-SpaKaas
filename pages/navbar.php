@@ -1,13 +1,24 @@
 <?php
 // reusable navigation bar for authenticated users
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['gebruikerId'])) {
-    // redirect unauthenticated users
     header("Location: inlog.php");
     exit();
 }
+
+// Get user name from session
+include("config.php");
+$stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
+$stmt->execute([$_SESSION['gebruikerId']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$gebruikersnaam = $user ? $user['naam'] : 'Gebruiker';
+$userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
 ?>
-<link rel="stylesheet" href="../style/topbar.css">
+<link rel="stylesheet" href="../Style/navbar.css">
+
 <nav class="navbar">
     <a href="home.php"><button id="navbarItem">Home</button></a>
     <!-- Add other common links here -->
@@ -17,16 +28,8 @@ if (!isset($_SESSION['gebruikerId'])) {
             isset($_SESSION['gebruikermail']) ? $_SESSION['gebruikermail'] : 'Profile'
         ); ?> &#x25BC;</button>
         <div class="dropdown-content">
-            <?php
-            if(isset($_SESSION['gebruikerId'])) {
-                echo"<a href='edit_user.php'>Edit Profile</a>";
-                echo"<a href='logout.php'>Logout</a>";
-            }
-            else {
-                echo"<a href='inlog.php'>Login</a>";
-            }
-
-            ?>
+            <a href="edit_user.php">Edit Profile</a>
+            <a href="logout.php">Logout</a>
         </div>
     </div>
 </nav>
