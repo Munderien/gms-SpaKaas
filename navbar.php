@@ -68,9 +68,9 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 <?php if (isset($_SESSION['naam'])): ?>
                     <span class="nav-username"><?php echo htmlspecialchars($_SESSION['naam']); ?></span>
                 <?php endif; ?>
-                <a href="<?= $base ?>/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+                <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
             <?php else: ?>
-                <a href="<?= $base ?>/inlog/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
+                <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
             <?php endif; ?>
         </div>
     </div>
