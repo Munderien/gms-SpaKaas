@@ -125,7 +125,10 @@ if (!empty($item['lodgeid'])) {
     <div class="popup-overlay" id="planneritem-popup">
         <div class="popup-panel" id="main-panel">
             <?php if ($message) echo "<p>$message</p>"; ?>
-            <span class="popup-close" title="Close">&times;</span>
+            <span class="popup-close" title="Close"
+                onclick="window.location.href='Index.php'">
+                &times;
+            </span>
             <h2>View Planner Item</h2>
             <div class="popup-field">
                 <label>afspraakId</label>
@@ -161,16 +164,14 @@ if (!empty($item['lodgeid'])) {
             </div>
 
             <!-- Action buttons -->
-            <div class="popup-actions" style="margin-top:20px;">
-                <button type="button" class="voltooid-btn">Voltooid</button>
+            <div class="popup-actions">
+                <button type="button" class="primary-btn voltooid-btn">Update</button>
+                <button type="button" class="secondary-btn patient-btn">Gebruiker</button>
             </div>
-            <div class="popup-actions" style="margin-top:20px;">
-                <button type="button" class="patient-btn">Gebruiker</button>
-            </div>
-            <div class="popup-actions" style="margin-top:20px;">
-                <form method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+            <div class="popup-actions">
+                <form method="post" style="width:100%;" onsubmit="return confirm('Are you sure?');">
                     <input type="hidden" name="afspraakId" value="<?php echo $afspraakId; ?>">
-                    <button type="submit" name="delete" style="background:red;color:white;">Delete</button>
+                    <button type="submit" name="delete" class="danger-btn" style="width:100%;">Delete</button>
                 </form>
             </div>
         </div>
@@ -181,7 +182,11 @@ if (!empty($item['lodgeid'])) {
 
         document.querySelector('.voltooid-btn').addEventListener('click', function() {
             panel.innerHTML = `
-            <span class="popup-close" title="Close">&times;</span>
+            <span class="popup-close" title="Close"
+                onclick="window.location.href='Index.php'">
+                &times;
+            </span>
+
             <h2>Update Afspraak</h2>
             <form id="updateForm" method="post">
 
@@ -233,33 +238,80 @@ if (!empty($item['lodgeid'])) {
                 </div>
 
                 <input type="hidden" name="afspraakId" value="<?php echo $afspraakId; ?>">
-                <button type="submit" name="confirm">Confirm</button>
-                <button type="button" onclick="window.location.href='planneritem.php?id=<?php echo $afspraakId; ?>'">Back</button>
+                <div class="popup-actions">
+                    <button type="submit" name="confirm" class="primary-btn">Confirm</button>
+                    <button type="button" class="secondary-btn" onclick="window.location.href='planneritem.php?id=<?php echo $afspraakId; ?>'">Back</button>
+                </div>
             </form>
         `;
         });
 
         document.querySelector('.patient-btn').addEventListener('click', function() {
             panel.innerHTML = `
-            <span class="popup-close" title="Close">&times;</span>
-            <h2>Patient Details</h2>
-            <?php if (!empty($userData)): ?>
-                <div class="popup-field"><label>ID:</label> <?php echo htmlspecialchars($userData['gebruikerid']); ?></div>
-                <div class="popup-field"><label>Email:</label> <?php echo htmlspecialchars($userData['email']); ?></div>
-                <div class="popup-field"><label>Rol:</label> <?php echo htmlspecialchars($userData['rol']); ?></div>
-                <div class="popup-field"><label>IsActief:</label> <?php echo htmlspecialchars($userData['isactief']); ?></div>
-                <div class="popup-field"><label>Is2faIngeschakeld:</label> <?php echo htmlspecialchars($userData['is2faingeschakeld']); ?></div>
-                <div class="popup-field"><label>Adres:</label> <?php echo htmlspecialchars($userData['adres']); ?></div>
-                <div class="popup-field"><label>Naam:</label> <?php echo htmlspecialchars($userData['naam']); ?></div>
-                <div class="popup-field"><label>Plaats:</label> <?php echo htmlspecialchars($userData['plaats']); ?></div>
-                <div class="popup-field"><label>Telefoonnummer:</label> <?php echo htmlspecialchars($userData['telefoonnummer']); ?></div>
-            <?php else: ?>
-                <p>No patient data found for this appointment.</p>
-            <?php endif; ?>
-            <div style="margin-top:20px;">
-                <button type="button" onclick="window.location.href='planneritem.php?id=<?php echo $afspraakId; ?>'">Back</button>
-            </div>
-        `;
+        <span class="popup-close" title="Close"
+            onclick="window.location.href='Index.php'">
+            &times;
+        </span>
+        <h2>Gebruiker Details</h2>
+
+        <?php if (!empty($userData)): ?>
+        
+        <div class="popup-field">
+            <label>Gebruiker ID</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['gebruikerid']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Naam</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['naam']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Email</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['email']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Telefoonnummer</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['telefoonnummer']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Adres</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['adres']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Plaats</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['plaats']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Rol</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['rol']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>Actief</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['isactief']); ?></div>
+        </div>
+
+        <div class="popup-field">
+            <label>2FA Ingeschakeld</label>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['is2faingeschakeld']); ?></div>
+        </div>
+
+        <?php else: ?>
+            <p>Geen gebruiker gevonden voor deze afspraak.</p>
+        <?php endif; ?>
+
+        <div class="popup-actions">
+            <button type="button" class="secondary-btn"
+                onclick="window.location.href='planneritem.php?id=<?php echo $afspraakId; ?>'">
+                Back
+            </button>
+        </div>
+    `;
         });
     </script>
 </body>

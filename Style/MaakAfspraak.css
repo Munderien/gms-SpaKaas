@@ -1,46 +1,164 @@
+/* ===== OVERLAY ===== */
+
 .popup-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: block;
+    inset: 0;
+    background: rgba(15, 61, 46, 0.25);
+    backdrop-filter: blur(4px);
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    padding: 40px;
 }
+
+/* ===== PANEL ===== */
 
 .popup-panel {
-    background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    min-width: 300px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.25s ease;
+
+    position: relative;
 }
 
-.popup-panel h2 {
-    margin-top: 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+.popup-panel h1 {
+    margin: 0 0 24px 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f3d2e;
+
+    text-align: center;
+}
+
+/* ===== FORM FIELDS ===== */
 
 .popup-field {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* 🔥 vertical centering */
 }
 
 .popup-field label {
     display: block;
-    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #0f3d2e;
 }
 
-.popup-value {
-    padding: 6px;
-    background: #f5f5f5;
-    border-radius: 4px;
+/* ===== INPUTS ===== */
+
+.popup-field input,
+.popup-field select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+
+    box-sizing: border-box;   /* 🔥 important */
+    height: 42px;             /* 🔥 forces equal height */
 }
+
+/* ===== MAKES THE ARROW DISSAPEAR BY THE <SELECT> ===== */
+.popup-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.popup-field input:focus,
+.popup-field select:focus {
+    border-color: #2e7d5b;
+    box-shadow: 0 0 0 3px rgba(46,125,91,0.15);
+}
+
+/* ===== SUBMIT BUTTON ===== */
+
+.popup-panel input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #0f3d2e;
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-top: 10px;
+}
+
+.popup-panel input[type="submit"]:hover {
+    background: #2e7d5b;
+    transform: translateY(-1px);
+}
+
+/* ===== CLOSE BUTTON ===== */
+
+/* ===== CLOSE BUTTON ===== */
 
 .popup-close {
-    float: right;
+    position: absolute;
+    right: 24px;
+    top: 20px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     color: #888;
+    transition: 0.2s;
+}
+
+.popup-close:hover {
+    color: #0f3d2e;
+}
+
+/* ===== SUCCESS / ERROR MESSAGE ===== */
+
+.popup-panel p {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.popup-panel p:contains("succesvol") {
+    background: #e9f7f2;
+    color: #2e7d5b;
+}
+
+.popup-panel p:contains("Fout"),
+.popup-panel p:contains("Datum") {
+    background: #fdeaea;
+    color: #b33a3a;
+}
+
+/* ===== FORM ===== */
+
+.form-grid {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-grid .popup-field {
+    margin-bottom: 0;
 }
