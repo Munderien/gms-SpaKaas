@@ -20,7 +20,7 @@ class getDataCalendar
     }
     public function getData()
     {
-        //session_start(); wat is er allemaal aan de hand met github
+        //session_start(); wat is er allemaal aan de hand met github, yeehaw
 
         // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
         $_SESSION['gebruikerid'];

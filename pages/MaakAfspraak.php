@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($conn->query($sql) === TRUE) {
                 $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
                 require_once __DIR__ . '/email/emailService.php';
-                
+
                 $loggedInUser = null;
                 if (isset($_SESSION['gebruikerid'])) {
                     $userQuery = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']);
