@@ -2,9 +2,6 @@
 include("config.php");
 session_start();
 // include navigation bar for consistency
-<<<<<<< HEAD
-require_once __DIR__ . '/navbarKlant.php';
-=======
 $sql="select * from gebruiker where gebruikerid = ?";
 $stmt=$db->prepare($sql);
 $stmt->execute([$_SESSION['gebruikerId']]);
@@ -15,8 +12,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // include navbar after fetching user; pages/navbar.php now uses a separate
 // variable to avoid clobbering $user
-require_once __DIR__ . '/navbar.php';
->>>>>>> 364fcf5c77b41ea3d6ddd03f2bc2c1971e980ac4
+require_once __DIR__ . '/../navbar.php';
 $two_factor = $_SESSION['two_factor'];
 ?>
 <link rel="stylesheet" href="../style/login.css">
@@ -39,42 +35,63 @@ $two_factor = $_SESSION['two_factor'];
             <div class="form-group">
                 <label for="password">Wachtwoord</label>
                 <div class="password-wrapper">
-                    <input type="password" id="password" name="password" placeholder="Laat leeg om niet te wijzigen">
+                    <input type="password" id="password" name="password"  required placeholder="Laat leeg om niet te wijzigen">
                     <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">Tonen</button>
                 </div>
             </div>
 
+            <div class="error-message" id="passwordError">Wachtwoord voldoet niet aan de vereisten.</div>
+                        <div class="password-requirements" id="passwordReqs">
+                            <div class="requirement unmet" id="req-length">
+                                <span class="requirement-icon">✗</span>
+                                <span>Minimaal 8 karakters</span>
+                            </div>
+                            <div class="requirement unmet" id="req-uppercase">
+                                <span class="requirement-icon">✗</span>
+                                <span>Minimaal 1 hoofdletter</span>
+                            </div>
+                            <div class="requirement unmet" id="req-number">
+                                <span class="requirement-icon">✗</span>
+                                <span>Minimaal 1 getal</span>
+                            </div>
+                            <div class="requirement unmet" id="req-special">
+                                <span class="requirement-icon">✗</span>
+                                <span>Minimaal 1 speciaal teken (!@#$%^&*)</span>
+                            </div>
+                        </div>
+            
+
             <div class="form-group">
                 <label for="adres">Adres</label>
-                <input type="text" id="adres" name="adres" value="<?= htmlspecialchars(
+                <input type="text" id="adres" required name="adres" value="<?= htmlspecialchars(
                     $user['adres'] ?? ''
                 ) ?>">
             </div>
 
             <div class="form-group">
                 <label for="postcode">Postcode</label>
-                <input type="text" id="postcode" name="postcode" value="<?= htmlspecialchars(
+                <input type="text" id="postcode" required name="postcode" value="<?= htmlspecialchars(
                     $user['postcode'] ?? ''
                 ) ?>">
             </div>
 
             <div class="form-group">
                 <label for="plaats">Plaats</label>
-                <input type="text" id="plaats" name="plaats" value="<?= htmlspecialchars(
+                <input type="text" id="plaats" required name="plaats" value="<?= htmlspecialchars(
                     $user['plaats'] ?? ''
                 ) ?>">
             </div>
 
             <div class="form-group">
                 <label for="naam">Naam</label>
-                <input type="text" id="naam" name="naam" value="<?= htmlspecialchars(
+                <input type="text" id="naam" required name="naam" value="<?= htmlspecialchars(
                     $user['naam'] ?? ''
                 ) ?>">
             </div>
 
             <div class="form-group">
                 <label for="telefoonnummer">Telefoon</label>
-                <input type="tel" id="telefoonnummer" name="telefoonnummer" value="<?= htmlspecialchars(
+                <input type="tel" id="telefoonnummer"  required name="telefoonnummer" value="<?= htmlspecialchars(
                     $user['telefoonnummer'] ?? ''
                 ) ?>">
             </div>

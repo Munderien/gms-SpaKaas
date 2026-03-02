@@ -1,4 +1,4 @@
-<?php session_start(); if (isset($_SESSION['gebruikerId'])) { echo "<script>window.location.href='home.php'</script>"; } ?>
+<?php session_start(); if (isset($_SESSION['gebruikermail'])) { echo "<script>window.location.href='home.php'</script>"; } ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>

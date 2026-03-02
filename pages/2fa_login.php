@@ -8,14 +8,13 @@ if (!isset($_SESSION['2fa_code']) || trim($_SESSION['2fa_code']) == '') {
     $_SESSION['2fa_code'] = $code; 
 }
 
-<<<<<<< HEAD
 $_SESSION['2fa_email_sent']= false;
-if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['userid'])!='') {
+if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
    
-require_once __DIR__ . '/email/EmailService.php';
-
+require_once __DIR__ . '/../email/EmailService.php';
+/*
 try {
-    $emailService = new EmailService();
+   $emailService = new EmailService();
     $emailService->sendEmail(
         $_SESSION['gebruikermail'],
         '2FA Code',
@@ -24,19 +23,11 @@ try {
 } catch (Exception $e) {
     echo 'Error: ' . htmlspecialchars($e->getMessage());
 }
-
-=======
-// include 2FA email helpers; path should go up one directory from pages
-require_once __DIR__ . '/../email/emailFuncties.php';
-
-$_SESSION['2fa_email_sent']= false;
-if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
-    //send2faMail($_SESSION['gebruikermail'], $code);
->>>>>>> 364fcf5c77b41ea3d6ddd03f2bc2c1971e980ac4
-    $_SESSION['2fa_email_sent'] = true;
-    var_dump($_SESSION['2fa_code']);
+*/
 }
-?>
+$_SESSION['2fa_email_sent'] = true;
+    var_dump($_SESSION['2fa_code']);
+    ?>
  <link rel='stylesheet' href="../Style/login.css">
 <form method="post" action='verwerk_2fa.php'>
     <div class="main-container">
@@ -66,7 +57,7 @@ if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
 
                     <div class="form-group">
                         <label for="inlogMail">code</label>
-                        <input type="text" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="uw 2fa code" required>
+                        <input type="text" id="inlogMail" class="inlogMail" name="inlogcode" placeholder="uw 2fa code" required>
                         <div class="error-message" id="loginEmailError">Voer alstublieft een geldige 2fa code in.</div>
                     </div>
 
@@ -83,18 +74,3 @@ if ($_SESSION['2fa_email_sent']==false&&trim($_SESSION['gebruikerId'])!='') {
                     
                         click voor nieuwe code? <button type="button" class="toggle-form" onclick="location.href='nieuw_2fa_code.php'">Nieuwe code</button>
                     </div>
-<!--<div class="container">
-  <div class="inlogkaart">
-    <h1>Inloggen 2fa</h1>
-    <table>
-        <tr>
-        <td><p>code:</p></td>
-        <td><input class="inlogcode" name="inlogcode" type="text"></td>
-        </tr>
-        <tr>
-            <td></td><td><button class="inlogButton">Login</button></td>
-        </tr>
-    </table>
-  </div>
-</div>
-</form>
