@@ -9,6 +9,7 @@ is2faingeschakeld
 adres
 naam
 plaats
+postcode
 telefoonnummer
 */
 
@@ -24,6 +25,7 @@ return function (PDO $db) {
             adres VARCHAR(50),
             naam VARCHAR(30),
             plaats VARCHAR(30),
+            postcode VARCHAR(10),
             telefoonnummer VARCHAR(20)
         )
     ");
