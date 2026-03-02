@@ -1,0 +1,206 @@
+/* ============================= */
+/* RESET */
+/* ============================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================= */
+/* BODY */
+/* ============================= */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f8f6;
+    min-height: 100vh;
+    padding: 60px 30px;
+}
+
+/* ============================= */
+/* CONTAINER */
+/* ============================= */
+
+.lodges-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.lodges-container h1 {
+    text-align: center;
+    color: #0f3d2e;
+    margin-bottom: 60px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+/* ============================= */
+/* GRID */
+/* ============================= */
+
+.lodges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+/* ============================= */
+/* CARD */
+/* ============================= */
+
+.lodge-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+.lodge-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.lodge-card-header {
+    padding: 24px;
+    background: linear-gradient(135deg, #0f3d2e, #2e7d5b);
+    color: white;
+}
+
+.lodge-card-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ============================= */
+/* SHORT CONTENT */
+/* ============================= */
+
+.lodge-card-content {
+    padding: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.lodge-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2e7d5b;
+}
+
+/* Fade short content slightly when expanded */
+.lodge-card.expanded .lodge-card-content {
+    opacity: 0.4;
+}
+
+/* ============================= */
+/* EXPANDABLE DETAILS */
+/* ============================= */
+
+.lodge-card-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.4s ease;
+    background: #f9fdfb;
+    padding: 0 24px;
+}
+
+.lodge-card.expanded .lodge-card-details {
+    max-height: 600px;
+    padding: 24px;
+}
+
+.details-content {
+    margin-bottom: 25px;
+}
+
+.detail-item {
+    margin-bottom: 18px;
+}
+
+.detail-item label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f3d2e;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.detail-item p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
+
+.close-details {
+    background: #0f3d2e;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.close-details:hover {
+    background: #2e7d5b;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+    .lodges-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .lodges-container h1 {
+        font-size: 24px;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lodges-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lodge-card-header h2 {
+        font-size: 18px;
+    }
+
+    .price {
+        font-size: 16px;
+    }
+}
