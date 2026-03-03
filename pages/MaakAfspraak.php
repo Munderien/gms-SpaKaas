@@ -36,7 +36,7 @@ if ($result && $result->num_rows > 0) {
 $lodges = [];
 $lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
                FROM lodge l
-               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
+               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
                ORDER BY l.lodgeid ASC";
 $lodgeResult = $conn->query($lodgeQuery);
 if ($lodgeResult && $lodgeResult->num_rows > 0) {
@@ -48,7 +48,7 @@ if ($lodgeResult && $lodgeResult->num_rows > 0) {
 $lodgeTypeName = '';
 if (!empty($item['lodgeid'])) {
     $ltQuery = "SELECT lt.naam FROM lodge l
-               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
+               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
                WHERE l.lodgeid = " . intval($item['lodgeid']);
     $ltResult = $conn->query($ltQuery);
     if ($ltResult && $ltResult->num_rows > 0) {

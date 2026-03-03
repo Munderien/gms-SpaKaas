@@ -369,6 +369,7 @@ if (!in_array($ditJaar, $jaren)) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <?php include '../Gantt-Chart.php'; ?>
     </div>
 </body>
 
