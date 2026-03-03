@@ -1,5 +1,5 @@
 <?php
-// Libraries van de jpgraph site
+// Libraries van de jpgraph site (github pls werk ff)
 require_once (__DIR__ . '/../jpgraph/src/jpgraph.php');
 require_once (__DIR__ . '/../jpgraph/src/jpgraph_gantt.php');
  
