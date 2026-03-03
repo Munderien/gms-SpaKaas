@@ -18,30 +18,19 @@ class getDataCalendar
             echo $ex->getMessage();
         }
     }
-    public function getData()
+    public function getData($lodgeType = 'all')
     {
-        //session_start(); wat is er allemaal aan de hand met github, yeehaw
-
-        // Dit moet zo worden aangepast op basis van hoe je bent ingelogd
-        $_SESSION['gebruikerid'];
-        $_SESSION['rol']; // 0 = klant, 1, baliemedewerkers, 2 = monteur, 3 = manager
-
-        $userId = $_SESSION['gebruikerid'];
-        $role = $_SESSION['rol'];
+        // 0 = klant, overige rollen = medewerkers
+        $userId = isset($_SESSION['gebruikerId']) ? (int)$_SESSION['gebruikerId'] : 0;
+        $role = isset($_SESSION['rol']) ? (int)$_SESSION['rol'] : -1;
 
         $params = [];
 
-        if ($role === 3) { // should be 3
-            $sql = "SELECT a.*, lt.naam AS lodgetype
-                    FROM afspraak a
-                    INNER JOIN lodge l ON l.lodgeid = a.lodgeid
-                    INNER JOIN lodgetype lt ON lt.typeid = l.lodgetypeid";
-
-            if (!empty($lodgeType) && $lodgeType !== 'all') {
-                $sql .= " WHERE lt.naam = :lodgetype";
-                $params[':lodgetype'] = $lodgeType;
+        if ($role === 0) {
+            if ($userId <= 0) {
+                return [];
             }
-        } else {
+
             $sql = "SELECT a.*, lt.naam AS lodgetype
                     FROM afspraak a
                     INNER JOIN lodge l ON l.lodgeid = a.lodgeid
@@ -51,6 +40,16 @@ class getDataCalendar
 
             if (!empty($lodgeType) && $lodgeType !== 'all') {
                 $sql .= " AND lt.naam = :lodgetype";
+                $params[':lodgetype'] = $lodgeType;
+            }
+        } else {
+            $sql = "SELECT a.*, lt.naam AS lodgetype
+                    FROM afspraak a
+                    INNER JOIN lodge l ON l.lodgeid = a.lodgeid
+                    INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid";
+
+            if (!empty($lodgeType) && $lodgeType !== 'all') {
+                $sql .= " WHERE lt.naam = :lodgetype";
                 $params[':lodgetype'] = $lodgeType;
             }
         }

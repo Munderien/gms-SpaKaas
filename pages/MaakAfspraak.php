@@ -10,18 +10,21 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$_SESSION['rol'];
 
+$isCustomer = isset($_SESSION['rol']) && (int)$_SESSION['rol'] === 0;
 
 $message = '';
 // get all klanten
 $gebruikers = [];
-if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
+$result = false;
+if ($isCustomer) {
     // Als gebruiker krijg je alleen de ingelogde gebruiker
-    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
+    if (isset($_SESSION['gebruikerId'])) {
+        $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']));
+    }
 } else {
     // Anders alle gebruikers 
-    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
+    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -60,11 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'Vrij';
     $desc = $conn->real_escape_string($_POST['toelichting']);
     $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
-    $userId = intval($_POST['gebruikerid']);
+    if ($isCustomer) {
+        $userId = intval($_SESSION['gebruikerId'] ?? 0);
+    } else {
+        $userId = intval($_POST['gebruikerid'] ?? 0);
+    }
     $lodgeId = intval($_POST['lodgeid']);
 
     $today = date('Y-m-d');
-    if ($beginTime < $today) {
+    if ($userId <= 0) {
+        $message = "Selecteer een gebruiker.";
+    } elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
@@ -90,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 require_once __DIR__ . '/email/emailService.php';
 
                 $loggedInUser = null;
-                if (isset($_SESSION['gebruikerid'])) {
-                    $userQuery = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']);
+                if (isset($_SESSION['gebruikerId'])) {
+                    $userQuery = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']);
                     $userResult = $conn->query($userQuery);
                     if ($userResult && $userResult->num_rows > 0) {
                         $loggedInUser = $userResult->fetch_assoc();
@@ -175,6 +184,14 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
         <div class="popup-overlay" id="planneritem-popup">
             <div class="popup-panel" id="main-panel">
                 <h1>Nieuwe afspraak toevoegen test</h1>
+                <!-- Debug info -->
+                <div style="background: #f0f0f0; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 12px;">
+                    <strong>Debug:</strong> 
+                    rol = <?php echo isset($_SESSION['rol']) ? $_SESSION['rol'] : 'NOT SET'; ?>, 
+                    gebruikerId = <?php echo isset($_SESSION['gebruikerId']) ? $_SESSION['gebruikerId'] : 'NOT SET'; ?>,
+                    isCustomer = <?php echo $isCustomer ? 'true' : 'false'; ?>,
+                    gebruikers count = <?php echo count($gebruikers); ?>
+                </div>
                 <?php if ($message): ?>
                     <p class="<?php echo (str_contains($message, 'succesvol')) ? 'success-message' : 'error-message'; ?>">
                         <?php echo $message; ?>
@@ -198,7 +215,7 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                     </div>
 
                     <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
-                    <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+                    <?php if (!$isCustomer): ?>
                         <div class="popup-field">
                             <label for="gebruikerSelect">Select gebruiker:</label>
                             <select id="gebruikerSelect" name="gebruikerid" required>
@@ -207,7 +224,7 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                         </div>
                     <?php else: ?>
                         <input type="hidden" id="gebruikerSelect" name="gebruikerid"
-                            value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+                            value="<?php echo intval($_SESSION['gebruikerId'] ?? 0); ?>">
                     <?php endif; ?>
 
                     <div class="popup-field">
