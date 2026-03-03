@@ -25,7 +25,7 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 class="nav-link <?php echo $huidigePagina === 'home.php' ? 'active' : ''; ?>">
                 Home
             </a>
-            <a href="<?= $base ?>/Calendar.php"
+            <a href="<?= $base ?>/pages/Calendar.php"
                 class="nav-link <?php echo $huidigePagina === 'Calendar.php' ? 'active' : ''; ?>">
                 Agenda
             </a>
@@ -37,29 +37,55 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
                 Onderhoud 
 
+
+
+            <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 3)): ?>
+                <span class="nav-divider"></span>
+                <a href="<?= $base ?>/balie/uitchecken.php"
+                    class="nav-link <?php echo $huidigePagina === 'uitchecken.php' ? 'active' : ''; ?>">
+                    Uitchecken
+                </a>
+                <a href="<?= $base ?>/balie/lodge_overzicht.php"
+                    class="nav-link <?php echo $huidigePagina === 'lodge_overzicht.php' ? 'active' : ''; ?>">
+                    Beschikbaarheid
+                </a>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 2 || $_SESSION['rol'] == 3)): ?>
+                <span class="nav-divider"></span>
+                <a href="<?= $base ?>/onderhoud/problemen.php"
+                    class="nav-link <?php echo $huidigePagina === 'problemen.php' ? 'active' : ''; ?>">
+                    Problemen
+                </a>
+                <a href="<?= $base ?>/onderhoud/rapportage.php"
+                    class="nav-link <?php echo $huidigePagina === 'rapportage.php' ? 'active' : ''; ?>">
+                    Onderhoudsrapport
+                </a>
+            <?php endif; ?>
+
             <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
                 <span class="nav-divider"></span>
-                <a href="<?= $base ?>/manager/addRole.php"
+                <a href="<?= $base ?>/pages/manager/addRole.php"
                     class="nav-link <?php echo $huidigePagina === 'addRole.php' ? 'active' : ''; ?>">
                     Gebruikers
                 </a>
-                <a href="<?= $base ?>/manager/lodge/type_overzicht.php"
+                <a href="<?= $base ?>/pages/manager/lodge/type_overzicht.php"
                     class="nav-link <?php echo $huidigePagina === 'type_overzicht.php' ? 'active' : ''; ?>">
                     Lodgetypes
                 </a>
-                <a href="<?= $base ?>/manager/lodge/overzicht.php"
+                <a href="<?= $base ?>/pages/manager/lodge/overzicht.php"
                     class="nav-link <?php echo $huidigePagina === 'overzicht.php' ? 'active' : ''; ?>">
                     Lodges
                 </a>
-                <a href="<?= $base ?>/manager/rapportage_lodges.php"
+                <a href="<?= $base ?>/pages/manager/rapportage_lodges.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_lodges.php' ? 'active' : ''; ?>">
                     Lodgerapport
                 </a>
-                <a href="<?= $base ?>/manager/rapportage_omzet.php"
+                <a href="<?= $base ?>/pages/manager/rapportage_omzet.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_omzet.php' ? 'active' : ''; ?>">
                     Omzetrapport
                 </a>
-                <a href="<?= $base ?>/manager/rapportage_personeel.php"
+                <a href="<?= $base ?>/pages/manager/rapportage_personeel.php"
                     class="nav-link <?php echo $huidigePagina === 'rapportage_personeel.php' ? 'active' : ''; ?>">
                     Personeelrapport
                 </a>

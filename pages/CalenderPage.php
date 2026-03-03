@@ -36,7 +36,7 @@ foreach ($data as $events) {
 <html>
 
 <head>
-    <link rel="stylesheet" href="Style/calendar.css">
+    <link rel="stylesheet" href="/GMS-SPAKAAS/Style/calendar.css">
 </head>
 
 <body>

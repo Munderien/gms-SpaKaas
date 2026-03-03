@@ -1,5 +1,5 @@
 <?php
-require '../pages/config.php';
+require '../config.php';
 session_start();
 
 
@@ -93,7 +93,7 @@ $prijsData = $stmt3->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapportage Omzet – SpaKaas</title>
-    <link rel="stylesheet" href="../Style/manager.css">
+    <link rel="stylesheet" href="../../Style/manager.css">
     <style>
         .stat-grid {
             display: grid;
@@ -257,7 +257,7 @@ $prijsData = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php include '../../navbar.php'; ?>
 
     <div class="manager-container" style="max-width:1000px;">
         <h1>Rapportage – Omzet, Bezetting &amp; Prijzen</h1>

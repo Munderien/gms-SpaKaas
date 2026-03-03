@@ -1,5 +1,5 @@
 <?php
-require '../../pages/config.php';
+require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
@@ -47,11 +47,11 @@ $lodgetypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lodgetypes Beheren – SpaKaas</title>
-    <link rel="stylesheet" href="../../Style/manager.css">
+    <link rel="stylesheet" href="../../../Style/manager.css">
 </head>
 
 <body>
-    <?php include '../../navbar.php'; ?>
+    <?php include '../../../navbar.php'; ?>
     <div class="manager-container">
         <h1>Lodgetypes Beheren</h1>
 

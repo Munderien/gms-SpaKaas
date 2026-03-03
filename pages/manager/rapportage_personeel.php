@@ -1,5 +1,5 @@
 <?php
-require '../pages/config.php';
+require '../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
@@ -111,7 +111,7 @@ foreach ($medewerkers as $m) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapportage Personeel – SpaKaas</title>
-    <link rel="stylesheet" href="../Style/manager.css">
+    <link rel="stylesheet" href="../../Style/manager.css">
     <style>
         .stat-grid {
             display: grid;
@@ -211,7 +211,7 @@ foreach ($medewerkers as $m) {
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php include '../../navbar.php'; ?>
     <div class="manager-container">
         <h1>Rapportage – Personeelskosten</h1>
 
@@ -315,4 +315,6 @@ foreach ($medewerkers as $m) {
             </tbody>
         </table>
     </div>
-</body></html>
+</body>
+
+</html>

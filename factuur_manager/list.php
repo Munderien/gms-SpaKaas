@@ -24,6 +24,10 @@ if (isset($_GET['action']) && isset($_GET['factuurid'])) {
         $db->prepare("UPDATE factuur SET betaalstatus = 0 WHERE factuurid = ?")->execute([$id]);
     } elseif ($_GET['action'] == 'herinnering_verstuurd') {
         $db->prepare("UPDATE factuur SET herinneringsmailstatus = 1 WHERE factuurid = ?")->execute([$id]);
+
+        // gebruik $id om in de database emailadres en huisnummer te zoeken met select en join
+        // maak hier mailfunctie aan om de herinnering te sturen
+
     } elseif ($_GET['action'] == 'herinnering_reset') {
         $db->prepare("UPDATE factuur SET herinneringsmailstatus = 0 WHERE factuurid = ?")->execute([$id]);
     }
