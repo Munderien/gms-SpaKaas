@@ -57,7 +57,7 @@ if (!empty($item['lodgeid'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $beginTime = $conn->real_escape_string($_POST['starttijd']);
     $endTime = $conn->real_escape_string($_POST['eindtijd']);
-    $status = 'Afwachten';
+    $status = 'Vrij';
     $desc = $conn->real_escape_string($_POST['toelichting']);
     $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
     $userId = intval($_POST['gebruikerid']);
