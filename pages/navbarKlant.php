@@ -296,8 +296,15 @@ if ($isLoggedIn) {
                 class="nav-link <?php echo $huidigePagina === 'review.php' ? 'active' : ''; ?>">
                 Reviews
             </a>
+        </div>
 
-            </div>
+        <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] != 0)): ?>
+                <span class="nav-divider"></span>
+                <a href="<?= $base ?>/factuur_manager/list.php"
+                    class="nav-link <?php echo $huidigePagina === 'list.php' ? 'active' : ''; ?>">
+                    mewerkerpagina
+                </a>
+            <?php endif; ?>
 
         <div class="nav-user">
             <?php if ($isLoggedIn): ?>

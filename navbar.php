@@ -33,7 +33,7 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 class="nav-link <?php echo $huidigePagina === 'list.php' ? 'active' : ''; ?>">
                 Facturen
             </a>
-            <a href="<?= $base ?> pages/onderhoud/onderhoud_taken.php"
+            <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
                 class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
                 Onderhoud 
 
