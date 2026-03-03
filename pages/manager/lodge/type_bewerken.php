@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($naam == '') {
         $melding = 'Naam is verplicht.';
     } else {
-        $db->prepare("UPDATE lodgetype SET naam=?, beschrijving=?, capaciteit=?, prijs=? WHERE typeid=?")
+        $db->prepare("UPDATE lodgetype SET naam=?, beschrijving=?, capaciteit=?, prijs=? WHERE lodgetypeid=?")
             ->execute([$naam, $beschrijving, $capaciteit, $prijs, $typeid]);
         header('Location: type_overzicht.php?bijgewerkt=1');
         exit;
