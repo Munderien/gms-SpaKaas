@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$afspraken = $db->query("SELECT a.afspraakid, a.titel, a.starttijd, a.eindtijd,
+$afspraken = $db->query("SELECT a.afspraakid, a.starttijd, a.eindtijd,
                              g.naam AS gebruikersnaam, a.lodgeid AS huidig_lodgeid
                       FROM afspraak a
                       JOIN gebruiker g ON g.gebruikerid = a.gebruikerid
@@ -37,7 +37,7 @@ $afspraken = $db->query("SELECT a.afspraakid, a.titel, a.starttijd, a.eindtijd,
 
 $vrijeLodges = $db->query("SELECT l.lodgeid, l.huisnummer, lt.naam AS typename
                      FROM lodge l
-                     JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+                     JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
                      WHERE l.status = 'vrij'
                      ORDER BY l.lodgeid")->fetchAll(PDO::FETCH_ASSOC);
 ?>

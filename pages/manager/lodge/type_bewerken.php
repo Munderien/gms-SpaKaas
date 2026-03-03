@@ -20,7 +20,7 @@ if ($typeid < 1) {
     exit;
 }
 
-$stmt = $db->prepare("SELECT * FROM lodgetype WHERE typeid = ?");
+$stmt = $db->prepare("SELECT * FROM lodgetype WHERE lodgetypeid = ?");
 $stmt->execute([$typeid]);
 $lt = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$lt) {

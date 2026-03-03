@@ -23,12 +23,12 @@ if (isset($_GET['toegevoegd'])) {
 
 if (isset($_POST['verwijder_typeid'])) {
     $typeid = (int) $_POST['verwijder_typeid'];
-    $check = $db->prepare("SELECT COUNT(*) FROM lodge WHERE lodgetypeid = ?");
+    $check = $db->prepare("SELECT COUNT(*) FROM lodge WHERE typeid = ?");
     $check->execute([$typeid]);
     if ($check->fetchColumn() > 0) {
         $melding = 'Dit lodgetype kan niet worden verwijderd omdat er nog lodges aan gekoppeld zijn.';
     } else {
-        $db->prepare("DELETE FROM lodgetype WHERE typeid = ?")->execute([$typeid]);
+        $db->prepare("DELETE FROM lodgetype WHERE lodgetypeid = ?")->execute([$typeid]);
         $melding = 'Lodgetype succesvol verwijderd.';
     }
 }
@@ -87,10 +87,10 @@ $lodgetypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td>€ <?php echo number_format($lt['prijs'], 2, ',', '.'); ?></td>
                             <td><?php echo $lt['aantal_lodges']; ?></td>
                             <td class="actions">
-                                <a href="type_bewerken.php?id=<?php echo $lt['typeid']; ?>"
+                                <a href="type_bewerken.php?id=<?php echo $lt['lodgetypeid']; ?>"
                                     class="btn btn-warning btn-sm">Bewerken</a>
                                 <form method="post" style="display:inline;">
-                                    <input type="hidden" name="verwijder_typeid" value="<?php echo $lt['typeid']; ?>">
+                                    <input type="hidden" name="verwijder_typeid" value="<?php echo $lt['lodgetypeid']; ?>">
                                     <button type="submit" class="btn btn-danger btn-sm"
                                         onclick="return confirm('Weet je zeker dat je &quot;<?php echo htmlspecialchars(addslashes($lt['naam'])); ?>&quot; wilt verwijderen?');">
                                         Verwijderen
