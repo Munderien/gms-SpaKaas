@@ -1,6 +1,14 @@
+<?php
+require_once __DIR__ . '/../../navbar.php'; 
+if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
+    header("Location: ../home.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +17,7 @@
     <link rel="stylesheet" href="./onderhoud_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
+<div class="container">
 <div class="top-bar-onderhoud">
     <h2>Onderhoud taken</h2>
     <button id="add-task" onClick="window.location.href='onderhoud_toevoegen.php'">Taak toevoegen</button>
@@ -39,6 +48,7 @@ foreach ($result as $rij) {
     echo "<p>medewerker: <br>" . $rij['monteurid'] .  "</p>";
     $omschrijving = $rij['omschrijving'];
     echo "<p style='display:none;'>omschrijving:<br></p>";
+    echo "<input type='hidden' id='omschrijving-" . $rij['onderhoudid'] . "' value='" . htmlspecialchars($omschrijving) . "'>";
     echo "<input id='omschrijving-" . $rij['onderhoudid'] . "' type='hidden' value='" . htmlspecialchars($omschrijving) . "'>";
     echo "<span class='clickable-description' onclick=\"showDescription(document.getElementById('omschrijving-" . $rij['onderhoudid'] . "').value)\">omschrijving</span><br>";
     echo "<p>status:<br> " . $rij['status'] . "</p>";
@@ -52,7 +62,7 @@ foreach ($result as $rij) {
 }
 ?>
 </div>
-
+</div>
 <script>
 function showDescription(text) {
     alert(text);

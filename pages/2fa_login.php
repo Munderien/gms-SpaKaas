@@ -1,3 +1,4 @@
+
 <?php
 include("config.php");
 session_start();
@@ -14,6 +15,14 @@ if (isset($_SESSION['2fa_code_time'])) {
         exit();
     }
 }
+    ?>
+    <script>
+        function alertcode() {
+            console.log("Uw 2FA code is: " + <?php echo json_encode($_SESSION['2fa_code']); ?>);
+        }
+        alertcode();
+        </script>
+    <?php
 
 // Only generate and send code if it hasn't been sent yet
 if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false) {
@@ -87,7 +96,7 @@ unset($_SESSION['error']);
 
                     <div class="form-group">
                         <label for="inlogMail">Code</label>
-                        <input type="text" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="Voer uw 6-cijferige 2FA code in" required maxlength="6" pattern="[0-9]{6}">
+                        <input type="text" id="inlogMail" class="inlogMail" name="inlogcode" placeholder="Voer uw 6-cijferige 2FA code in" required maxlength="6" pattern="[0-9]{6}">
                         <small class="help-text">Voer de 6-cijferige code in die u via email heeft ontvangen</small>
                         <div class="error-message" id="loginEmailError" style="display: none;">Voer alstublieft een geldige 6-cijferige 2FA code in.</div>
                     </div>
@@ -98,41 +107,21 @@ unset($_SESSION['error']);
                 </form>
                 
                 <div class="form-footer">
-                    Geen code ontvangen? <button type="button" class="toggle-form" onclick="location.href='nieuw_2fa_code.php'">Nieuwe code aanvragen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const code = document.getElementById('inlogMail').value.trim();
-            const codeRegex = /^[0-9]{6}$/;
-            
-            if (!codeRegex.test(code)) {
-                e.preventDefault();
-                document.getElementById('loginEmailError').style.display = 'block';
-                return false;
-            }
-            document.getElementById('loginEmailError').style.display = 'none';
-        });
-
-        // Only allow numbers in the input
-        document.getElementById('inlogMail').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 6) {
-                this.value = this.value.slice(0, 6);
-            }
-        });
-    </script>
-
-    <style>
-        .help-text {
-            display: block;
-            font-size: 0.85em;
-            color: #666;
-            margin-top: 4px;
-        }
-    </style>
-</body>
-</html>
+                    
+                        click voor nieuwe code? <button type="button" class="toggle-form" onclick="location.href='nieuw_2fa_code.php'">Nieuwe code</button>
+                    </div>
+<!--<div class="container">
+  <div class="inlogkaart">
+    <h1>Inloggen 2fa</h1>
+    <table>
+        <tr>
+        <td><p>code:</p></td>
+        <td><input class="inlogcode" name="inlogcode" type="text"></td>
+        </tr>
+        <tr>
+            <td></td><td><button class="inlogButton">Login</button></td>
+        </tr>
+    </table>
+  </div>
+</div>
+</form>
