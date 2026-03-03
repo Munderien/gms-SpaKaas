@@ -19,13 +19,13 @@ $melding = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $naam = trim($_POST['naam']);
     $beschrijving = trim($_POST['beschrijving']);
-    $capaciteit = (int) $_POST['capiciteit'];
+    $capaciteit = (int) $_POST['capaciteit'];
     $prijs = (float) $_POST['prijs'];
 
     if ($naam == '') {
         $melding = 'Naam is verplicht.';
     } else {
-        $db->prepare("INSERT INTO lodgetype (naam, beschrijving, capiciteit, prijs) VALUES (?, ?, ?, ?)")
+        $db->prepare("INSERT INTO lodgetype (naam, beschrijving, capaciteit, prijs) VALUES (?, ?, ?, ?)")
             ->execute([$naam, $beschrijving, $capaciteit, $prijs]);
         header('Location: type_overzicht.php?toegevoegd=1');
         exit;
@@ -65,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         placeholder="Korte beschrijving (max. 80 tekens)"><?php echo htmlspecialchars($_POST['beschrijving'] ?? ''); ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="capiciteit">Capaciteit (personen) <span style="color:#e74c3c;">*</span></label>
-                    <input type="number" id="capiciteit" name="capiciteit" min="1" max="99"
-                        value="<?php echo htmlspecialchars($_POST['capiciteit'] ?? ''); ?>" placeholder="bijv. 4"
+                    <label for="capaciteit">Capaciteit (personen) <span style="color:#e74c3c;">*</span></label>
+                    <input type="number" id="capaciteit" name="capaciteit" min="1" max="99"
+                        value="<?php echo htmlspecialchars($_POST['capaciteit'] ?? ''); ?>" placeholder="bijv. 4"
                         required>
                 </div>
                 <div class="form-group">
