@@ -34,7 +34,7 @@ try {
     $emailSubject = '2FA Code';
     $emailBody = 'Beste ' . htmlspecialchars($userData['naam']) . ', 
 
-Hier is uw 2FA code: ' . htmlspecialchars($twoFACode) . '
+Hier is uw 2FA code: ' . htmlspecialchars($code) . '
 
 Deze code is geldig voor 10 minuten.';
     
