@@ -1,5 +1,5 @@
 <?php
-require '../pages/config.php';
+require '../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
