@@ -25,8 +25,8 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 class="nav-link <?php echo $huidigePagina === 'home.php' ? 'active' : ''; ?>">
                 Home
             </a>
-            <a href="<?= $base ?>/pages/Calendar.php"
-                class="nav-link <?php echo $huidigePagina === 'Calendar.php' ? 'active' : ''; ?>">
+            <a href="<?= $base ?>/pages/CalenderPage.php"
+                class="nav-link <?php echo $huidigePagina === 'CalenderPage.php' ? 'active' : ''; ?>">
                 Agenda
             </a>
             <a href="<?= $base ?>/factuur_manager/list.php"
@@ -36,6 +36,14 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
             <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
                 class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
                 Onderhoud 
+            </a>
+            <a href="<?= $base ?>/pages/Medewerkers.php"
+                class="nav-link <?php echo $huidigePagina === 'Medewerkers.php' ? 'active' : ''; ?>">
+                Medewerkers
+            </a>
+             <a href="<?= $base ?>/pages/schoonmaak.php"
+                class="nav-link <?php echo $huidigePagina === 'schoonmaak.php' ? 'active' : ''; ?>">
+                Schoonmaak
 
 
 
@@ -48,6 +56,10 @@ $huidigePagina = basename($_SERVER['PHP_SELF']);
                 <a href="<?= $base ?>/balie/lodge_overzicht.php"
                     class="nav-link <?php echo $huidigePagina === 'lodge_overzicht.php' ? 'active' : ''; ?>">
                     Beschikbaarheid
+                </a>
+            <a href="<?= $base ?>/pages/werkuren.php"
+                class="nav-link <?php echo $huidigePagina === 'werkuren.php' ? 'active' : ''; ?>">
+                Werkuren
                 </a>
             <?php endif; ?>
 

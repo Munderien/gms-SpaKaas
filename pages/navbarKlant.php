@@ -300,8 +300,8 @@ if ($isLoggedIn) {
 
         <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] != 0)): ?>
                 <span class="nav-divider"></span>
-                <a href="<?= $base ?>/factuur_manager/list.php"
-                    class="nav-link <?php echo $huidigePagina === 'list.php' ? 'active' : ''; ?>">
+                <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
+                    class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
                     mewerkerpagina
                 </a>
             <?php endif; ?>

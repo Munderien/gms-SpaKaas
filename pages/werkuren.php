@@ -1,11 +1,10 @@
 <?php
 session_start();
 
-/* Check if user is logged in and is a manager
-if (!isset($_SESSION['gebruikerid']) || $_SESSION['rol'] != 0) {
-    header('Location: login.php');
+if ($_SESSION['rol'] != 3) {
+    header('Location: inlog.php');
     exit;
-}*/
+}
 
 // Database connection
 $servername = "127.0.0.1";
@@ -218,6 +217,8 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
     <link rel="stylesheet" href="werkuren.css">
 </head>
 <body>
+    <?php include '../navbar.php'; ?>
+
     <!-- MODAL VOOR WERKUUR BEWERKEN -->
     <div id="editWorkuurModal" class="modal">
         <div class="modal-content">

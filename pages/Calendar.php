@@ -35,7 +35,7 @@ class getDataCalendar
             $sql = "SELECT a.*, lt.naam AS lodgetype
                     FROM afspraak a
                     INNER JOIN lodge l ON l.lodgeid = a.lodgeid
-                    INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid";
+                    INNER JOIN lodgetype lt ON lt.typeid = l.lodgetypeid";
 
             if (!empty($lodgeType) && $lodgeType !== 'all') {
                 $sql .= " WHERE lt.naam = :lodgetype";
@@ -45,7 +45,7 @@ class getDataCalendar
             $sql = "SELECT a.*, lt.naam AS lodgetype
                     FROM afspraak a
                     INNER JOIN lodge l ON l.lodgeid = a.lodgeid
-                    INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
+                    INNER JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
                     WHERE a.gebruikerid = :gebruikerid";
             $params[':gebruikerid'] = $userId;
 

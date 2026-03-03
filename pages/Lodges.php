@@ -13,9 +13,9 @@ if ($conn->connect_error) {
 
 // Get all lodges with their lodge type details
 $lodges = [];
-$query = "SELECT l.lodgeid, lt.lodgetypeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
+$query = "SELECT l.lodgeid, lt.typeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
           FROM lodge l
-          INNER JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
+          INNER JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
           ORDER BY lt.naam ASC";
 $result = $conn->query($query);
 if ($result && $result->num_rows > 0) {
@@ -35,7 +35,7 @@ if ($result && $result->num_rows > 0) {
 
 <body>
     <?php require_once __DIR__ . '/navbarKlant.php'; ?>
-    
+
     <div class="lodges-container">
         <h1>Onze Lodges</h1>
         <div class="lodges-grid">

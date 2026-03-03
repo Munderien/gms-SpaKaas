@@ -35,10 +35,57 @@ while ($row = $result->fetch_assoc()) {
 <html>
 
 <head>
-    <link rel="stylesheet" href="/GMS-SPAKAAS/Style/Table.css">
+    <style>
+        body {
+    font-family: Arial, Helvetica, sans-serif;
+    /*
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /*background-color: gray; */
+    margin: 0px;
+}
+/* Table */
+table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 8px rgb(0,0,0,0,1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+th,td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #3498db;
+    color: white;
+}
+tr:hover {
+    background: #f1f1f1;
+
+}
+td {
+    color: #333;
+}
+tr:nth-child(odd) {
+    background-color: whitesmoke;
+}
+tr:nth-child(odd):hover {
+    background: white;
+}
+
+
+
+    </style>
 </head>
 
 <body>
+    <?php include '../navbar.php'; ?>
     <table>
         <tr>
             <th>Medewerker</th>
