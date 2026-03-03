@@ -15,8 +15,11 @@ if(trim($_SESSION['gebruikerId'])=='' || trim($_SESSION['two_factor']) != '1'){
     }
     if(trim($code)=='' || trim($code) != $_SESSION['2fa_code']){
         echo "De code is onjuist, u wordt terug gestuurd naar de inlog pagina";
+        var_dump($code);
+        var_dump($_SESSION['2fa_code']);
+
         unset($_SESSION['2fa_code']);
-        header("refresh:1;url=../pages/inlog.php");
+        //header("refresh:1;url=../pages/inlog.php");
         exit();
         }
         if(trim($code) == $_SESSION['2fa_code']){
