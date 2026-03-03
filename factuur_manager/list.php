@@ -43,7 +43,7 @@ $sql = "SELECT f.factuurid, f.factuurdatum, f.totaalbedragexbtw, f.btwpercentage
                a.starttijd, a.eindtijd
         FROM factuur f
         JOIN gebruiker g ON f.gebruikerid = g.gebruikerid
-        JOIN lodgetype l ON f.lodgetypeid = l.typeid
+        JOIN lodgetype l ON f.typeid = l.lodgetypeid
         JOIN afspraak a ON f.afspraakid = a.afspraakid
         ORDER BY f.factuurdatum DESC";
 $result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

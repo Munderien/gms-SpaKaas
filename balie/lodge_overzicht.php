@@ -30,7 +30,7 @@ $volgendePeriode = date('Y-m-d', strtotime("+$aantalDagen days", strtotime($star
 $lodges = $db->query("
     SELECT l.lodgeid, l.huisnummer, l.status, lt.naam AS typename
     FROM lodge l
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     ORDER BY l.lodgeid
 ")->fetchAll(PDO::FETCH_ASSOC);
 
