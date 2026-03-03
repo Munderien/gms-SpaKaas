@@ -1,5 +1,5 @@
 <?php
-require '../pages/config.php';
+require '../config.php';
 session_start();
 
 
@@ -64,7 +64,7 @@ $gebruikers = $db->query("SELECT gebruikerid, email, naam, rol, isactief FROM ge
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gebruikersbeheer – SpaKaas</title>
-    <link rel="stylesheet" href="../Style/manager.css">
+    <link rel="stylesheet" href="../../Style/manager.css">
     <style>
         select.compact {
             padding: 5px 8px;
@@ -85,7 +85,7 @@ $gebruikers = $db->query("SELECT gebruikerid, email, naam, rol, isactief FROM ge
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php include '../../navbar.php'; ?>
 
     <div class="manager-container">
         <h1>Gebruikersbeheer</h1>

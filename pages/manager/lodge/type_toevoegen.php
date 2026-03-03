@@ -1,5 +1,5 @@
 <?php
-require '../../pages/config.php';
+require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
@@ -39,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lodgetype Toevoegen – SpaKaas</title>
-    <link rel="stylesheet" href="../../Style/manager.css">
+    <link rel="stylesheet" href="../../../Style/manager.css">
 </head>
 
 <body>
-    <?php include '../../navbar.php'; ?>
+    <?php include '../../../navbar.php'; ?>
     <div class="manager-container">
         <h1>Nieuw Lodgetype Toevoegen</h1>
 

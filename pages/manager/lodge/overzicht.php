@@ -1,5 +1,5 @@
 <?php
-require '../../pages/config.php';
+require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
@@ -43,10 +43,12 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lodges Beheren – SpaKaas</title>
     <!-- force reload when CSS changes; use relative path to avoid 404 -->
-    <link rel="stylesheet" href="../../Style/manager.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../../../Style/manager.css?v=<?php echo time(); ?>">
     <style>
         /* fallback adjustments in case external stylesheet is cached */
-        .inline-form { display: inline; }
+        .inline-form {
+            display: inline;
+        }
 
         select.compact {
             padding: 5px 8px;
@@ -78,7 +80,7 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
 </head>
 
 <body>
-    <?php include '../../navbar.php'; ?>
+    <?php include '../../../navbar.php'; ?>
     <div class="manager-container">
         <div class="top-bar-manager">
             <h1>Lodges Beheren</h1>
@@ -116,10 +118,17 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
                                     <input type="hidden" name="actie" value="status">
                                     <input type="hidden" name="lodgeid" value="<?php echo $l['lodgeid']; ?>">
                                     <select name="status" class="compact">
-                                        <option value="vrij" <?php if ($l['status'] === 'vrij') echo 'selected'; ?>>Vrij</option>
-                                        <option value="bezet" <?php if ($l['status'] === 'bezet') echo 'selected'; ?>>Bezet</option>
-                                        <option value="onderhoud" <?php if ($l['status'] === 'onderhoud') echo 'selected'; ?>>Onderhoud</option>
-                                        <option value="schoonmaak" <?php if ($l['status'] === 'schoonmaak') echo 'selected'; ?>>Aan de schoonmaak</option>
+                                        <option value="vrij" <?php if ($l['status'] === 'vrij')
+                                            echo 'selected'; ?>>Vrij</option>
+                                        <option value="bezet" <?php if ($l['status'] === 'bezet')
+                                            echo 'selected'; ?>>Bezet
+                                        </option>
+                                        <option value="onderhoud" <?php if ($l['status'] === 'onderhoud')
+                                            echo 'selected'; ?>>
+                                            Onderhoud</option>
+                                        <option value="schoonmaak" <?php if ($l['status'] === 'schoonmaak')
+                                            echo 'selected'; ?>>
+                                            Aan de schoonmaak</option>
                                     </select>
                                     <button type="submit" class="btn btn-warning btn-sm">Opslaan</button>
                                 </form>
@@ -130,7 +139,8 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
                                     <input type="hidden" name="lodgeid" value="<?php echo $l['lodgeid']; ?>">
                                     <select name="lodgetypeid" class="compact">
                                         <?php foreach ($lodgetypes as $lt): ?>
-                                            <option value="<?php echo $lt['typeid']; ?>" <?php if ($lt['typeid'] == $l['lodgetypeid']) echo 'selected'; ?>>
+                                            <option value="<?php echo $lt['typeid']; ?>" <?php if ($lt['typeid'] == $l['lodgetypeid'])
+                                                   echo 'selected'; ?>>
                                                 <?php echo htmlspecialchars($lt['naam']); ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -140,7 +150,8 @@ $lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fe
                             </td>
                             <td>€<?php echo number_format($l['prijs'], 2, ',', '.'); ?></td>
                             <td>
-                                <a href="type_bewerken.php?id=<?php echo $l['lodgetypeid']; ?>" class="btn btn-secondary btn-sm">Prijs aanpassen</a>
+                                <a href="type_bewerken.php?id=<?php echo $l['lodgetypeid']; ?>"
+                                    class="btn btn-secondary btn-sm">Prijs aanpassen</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -1,5 +1,5 @@
 <?php
-require '../../pages/config.php';
+require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
@@ -48,11 +48,11 @@ $vrijeLodges = $db->query("SELECT l.lodgeid, l.huisnummer, lt.naam AS typename
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lodge koppelen aan Afspraak – SpaKaas</title>
-    <link rel="stylesheet" href="../../Style/manager.css">
+    <link rel="stylesheet" href="../../../Style/manager.css">
 </head>
 
 <body>
-    <?php include '../../navbar.php'; ?>
+    <?php include '../../../navbar.php'; ?>
     <div class="manager-container">
         <h1>Lodge koppelen aan Afspraak</h1>
 
