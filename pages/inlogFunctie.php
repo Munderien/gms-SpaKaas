@@ -24,7 +24,7 @@ $d = $v->rowcount();
 if ($d > 0) {
   if ($x['is2faingeschakeld'] == 1) {
     $_SESSION['two_factor'] = '1';
-    header("Location: 2fa_login.php");
+    header("Location: nieuw_2fa_code.php");
     $_SESSION['gebruikerId'] = $x['gebruikerid'];
     exit();
   }

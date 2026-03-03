@@ -96,7 +96,7 @@ unset($_SESSION['error']);
 
                     <div class="form-group">
                         <label for="inlogMail">Code</label>
-                        <input type="text" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="Voer uw 6-cijferige 2FA code in" required maxlength="6" pattern="[0-9]{6}">
+                        <input type="text" id="inlogMail" class="inlogMail" name="inlogcode" placeholder="Voer uw 6-cijferige 2FA code in" required maxlength="6" pattern="[0-9]{6}">
                         <small class="help-text">Voer de 6-cijferige code in die u via email heeft ontvangen</small>
                         <div class="error-message" id="loginEmailError" style="display: none;">Voer alstublieft een geldige 6-cijferige 2FA code in.</div>
                     </div>
