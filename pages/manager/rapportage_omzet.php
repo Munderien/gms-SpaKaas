@@ -495,7 +495,7 @@ $prijsData = $stmt3->fetchAll(PDO::FETCH_ASSOC);
                                 : '–'; ?>
                         </td>
                         <td>
-                            <a href="lodge/type_bewerken.php?id=<?php echo $p['typeid']; ?>"
+                            <a href="lodge/type_bewerken.php?id=<?php echo $p['lodgetypeid']; ?>"
                                 class="btn btn-warning btn-sm">Prijs wijzigen</a>
                         </td>
                     </tr>
