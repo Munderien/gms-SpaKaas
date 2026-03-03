@@ -3,7 +3,7 @@ require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: ../../../gms-SpaKaas/pages/inlog.php');
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
