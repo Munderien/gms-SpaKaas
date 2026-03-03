@@ -80,7 +80,7 @@ $lodgetypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php foreach ($lodgetypes as $lt): ?>
                         <tr>
-                            <td><?php echo $lt['typeid']; ?></td>
+                            <td><?php echo $lt['lodgetypeid']; ?></td>
                             <td><?php echo htmlspecialchars($lt['naam']); ?></td>
                             <td><?php echo htmlspecialchars($lt['beschrijving']); ?></td>
                             <td><?php echo $lt['capaciteit']; ?> personen</td>
