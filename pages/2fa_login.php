@@ -1,15 +1,37 @@
+
 <?php
-include ("config.php");
+include("config.php");
 session_start();
 
-$code = rand(100000, 999999);
-if (!isset($_SESSION['2fa_code']) || trim($_SESSION['2fa_code']) == '') {
-    $_SESSION['2fa_code'] = $code; 
+// Check if 2FA code exists and hasn't expired
+if (isset($_SESSION['2fa_code_time'])) {
+    $codeAge = time() - $_SESSION['2fa_code_time'];
+    if ($codeAge > 600) { // 10 minutes
+        $_SESSION['error'] = '2FA code is verlopen. Probeer opnieuw in te loggen.';
+        unset($_SESSION['2fa_code']);
+        unset($_SESSION['2fa_code_time']);
+        unset($_SESSION['2fa_email_sent']);
+        header('Location: login.php');
+        exit();
+    }
 }
+    ?>
+    <script>
+        function alertcode() {
+            console.log("Uw 2FA code is: " + <?php echo json_encode($_SESSION['2fa_code']); ?>);
+        }
+        alertcode();
+        </script>
+    <?php
 
-// Only send email if not already sent
+// Only generate and send code if it hasn't been sent yet
 if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false) {
     if (isset($_SESSION['gebruikermail']) && !empty(trim($_SESSION['gebruikermail']))) {
+        // Generate new 2FA code
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $_SESSION['2fa_code'] = $code;
+        $_SESSION['2fa_code_time'] = time();
+        
         require_once __DIR__ . '/email/EmailService.php';
         
         try {
@@ -17,15 +39,19 @@ if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false
             $emailService->sendEmail(
                 $_SESSION['gebruikermail'],
                 '2FA Code',
-                "Uw 2FA code is: $code"
+                'Uw 2FA code is: ' . htmlspecialchars($code) . '
+
+Deze code is 10 minuten geldig.'
             );
             $_SESSION['2fa_email_sent'] = true;
-            var_dump($_SESSION['2fa_code']);
         } catch (Exception $e) {
-            echo 'Error: ' . htmlspecialchars($e->getMessage());
+            $_SESSION['error'] = 'Email kon niet verzonden worden: ' . htmlspecialchars($e->getMessage());
         }
     }
 }
+
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['error']);
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -59,17 +85,24 @@ if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false
 
         <div class="forms-container">
             <div class="forms-wrapper">
+                <?php if (!empty($error)): ?>
+                    <div class="error-message" style="background-color: #fee; border: 1px solid #fcc; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                <?php endif; ?>
+
                 <form action='verwerk_2fa.php' method="post" class="form-card active" id="loginForm">
                     <h1>2FA Inloggen</h1>
 
                     <div class="form-group">
-                        <label for="inlogMail">code</label>
-                        <input type="text" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="uw 2fa code" required>
-                        <div class="error-message" id="loginEmailError">Voer alstublieft een geldige 2fa code in.</div>
+                        <label for="inlogMail">Code</label>
+                        <input type="text" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="Voer uw 6-cijferige 2FA code in" required maxlength="6" pattern="[0-9]{6}">
+                        <small class="help-text">Voer de 6-cijferige code in die u via email heeft ontvangen</small>
+                        <div class="error-message" id="loginEmailError" style="display: none;">Voer alstublieft een geldige 6-cijferige 2FA code in.</div>
                     </div>
 
                     <div class="button-group">
-                        <button type="submit" class="inlogButton">Login</button>
+                        <button type="submit" class="inlogButton">Inloggen</button>
                     </div>
                 </form>
                 
