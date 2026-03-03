@@ -36,13 +36,11 @@ if ($d > 0) {
   echo "<script>window.location.href='../pages/home.php'</script>";
 } else {
   echo "u heeft verkeerde gegevens ingevoerd";
-  var_dump($mail);
-  var_dump($password);
-   /*echo '<script>
+   echo '<script>
    setTimeout(function(){
    window.location.href = "../pages/inlog.php";
    }, 3000); 
- </script>';*/
+ </script>';
   die();
 }
 ?>

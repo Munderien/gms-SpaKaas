@@ -53,9 +53,9 @@ try {
     $hashedPassword = md5(addslashes($password));
 
     // Insert new user
-    $v = $db->prepare("INSERT INTO gebruiker (email, wachtwoord, rol, isactief, is2faingeschakeld, adres, naam, plaats, telefoonnummer, postcode) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $x = $v->execute([$mail, $hashedPassword, 0, 0, 0, $adres, $name, $plaats, $phone, $postcode]); 
+    $v = $db->prepare("INSERT INTO gebruiker (email, wachtwoord, rol, is2faingeschakeld, adres, naam, plaats, telefoonnummer, postcode) 
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $x = $v->execute([$mail, $hashedPassword, 0, 0, $adres, $name, $plaats, $phone, $postcode]); 
 
     if (!$x) {
         echo json_encode(['success' => false, 'message' => 'Registratie mislukt. Probeer het later opnieuw.']);

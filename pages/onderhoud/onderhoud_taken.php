@@ -27,15 +27,22 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
 include("../config.php");
 
 $sql = "
-    SELECT onderhoud.*, lodge.huisnummer AS lodgenaam
+    SELECT onderhoud.*, 
+           lodge.huisnummer AS lodgenaam,
+           gebruiker.naam AS monteurnaam
     FROM onderhoud
     JOIN lodge ON onderhoud.lodgeid = lodge.lodgeid
+    LEFT JOIN gebruiker ON onderhoud.monteurid = gebruiker.gebruikerid
     ORDER BY CASE onderhoud.prioriteit
         WHEN 'hoog' THEN 1
         WHEN 'middel' THEN 2
         WHEN 'laag' THEN 3
     END ASC
 ";
+$slq="select * from gebruiker where rol>=1";
+$slq=$db->prepare($slq);
+$slq->execute();
+$resultsql=$slq->fetchAll(PDO::FETCH_ASSOC);
 
 $statement = $db->prepare($sql);
 $statement->execute();
@@ -45,17 +52,17 @@ foreach ($result as $rij) {
     echo "<div class='taak-item'>";
     echo "<h3 class='lodge-header'>Lodge: " . $rij['lodgenaam'] . "</h3>";
     echo "<div class='taak-details'>";
-    echo "<p>medewerker: <br>" . $rij['monteurid'] .  "</p>";
+    echo "<p>medewerker: <br>" . $rij['monteurnaam'] .  "</p>";
     $omschrijving = $rij['omschrijving'];
     echo "<p style='display:none;'>omschrijving:<br></p>";
-    echo "<input type='hidden' id='omschrijving-" . $rij['onderhoudid'] . "' value='" . htmlspecialchars($omschrijving) . "'>";
+    echo "<input type='hidden' id=".$rij['onderhoudid']." >";
     echo "<input id='omschrijving-" . $rij['onderhoudid'] . "' type='hidden' value='" . htmlspecialchars($omschrijving) . "'>";
     echo "<span class='clickable-description' onclick=\"showDescription(document.getElementById('omschrijving-" . $rij['onderhoudid'] . "').value)\">omschrijving</span><br>";
     echo "<p>status:<br> " . $rij['status'] . "</p>";
     echo "<p>prioriteit:<br> " . $rij['prioriteit'] . "</p>";
     echo "</div>";
     echo "<div class='taak-actions'>";
-    echo "<button class='edit-button' onClick=\"window.location.href='onderhoud_bewerken.php?id=" . "'\">Bewerken</button>";
+    echo "<button class='edit-button' onClick=\"window.location.href='onderhoud_bewerken.php?id=" . $rij['onderhoudid'] . "'\">Bewerken</button>";
     echo "<button class='delete-button' onClick=\"window.location.href='onderhoud_verwijder_functie.php?id=" . $rij['onderhoudid'] . "'\">Verwijderen</button>";
     echo "</div>";
     echo "</div>";

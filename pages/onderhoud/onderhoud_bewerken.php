@@ -7,6 +7,7 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
 }
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
+
     $sql = "SELECT * FROM onderhoud WHERE onderhoudid = ?";
     $stmt = $db->prepare($sql);
     $stmt->execute([$id]);
@@ -138,7 +139,7 @@ foreach ($lodges as $lodge) {
 <label for="monteurid">Monteur</label>
 <select id="monteurid" name="monteurid" required>
 <?php
-$stmt = $db->prepare("SELECT gebruikerid, naam FROM gebruiker WHERE rol = 2");
+$stmt = $db->prepare("SELECT gebruikerid, naam FROM gebruiker WHERE rol >= 1");
 $stmt->execute();
 $monteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

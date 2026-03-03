@@ -15,14 +15,6 @@ if (isset($_SESSION['2fa_code_time'])) {
         exit();
     }
 }
-    ?>
-    <script>
-        function alertcode() {
-            console.log("Uw 2FA code is: " + <?php echo json_encode($_SESSION['2fa_code']); ?>);
-        }
-        alertcode();
-        </script>
-    <?php
 
 // Only generate and send code if it hasn't been sent yet
 if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false) {
@@ -40,15 +32,16 @@ if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false
                 $_SESSION['gebruikermail'],
                 '2FA Code',
                 'Uw 2FA code is: ' . htmlspecialchars($code) . '
-
-Deze code is 10 minuten geldig.'
+                
+                Deze code is 10 minuten geldig.'
             );
             $_SESSION['2fa_email_sent'] = true;
         } catch (Exception $e) {
             $_SESSION['error'] = 'Email kon niet verzonden worden: ' . htmlspecialchars($e->getMessage());
         }
     }
-}
+}   
+
 
 $error = $_SESSION['error'] ?? '';
 unset($_SESSION['error']);
