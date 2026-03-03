@@ -33,13 +33,13 @@ $melding = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $naam = trim($_POST['naam']);
     $beschrijving = trim($_POST['beschrijving']);
-    $capaciteit = (int) $_POST['capiciteit'];
+    $capaciteit = (int) $_POST['capaciteit'];
     $prijs = (float) $_POST['prijs'];
 
     if ($naam == '') {
         $melding = 'Naam is verplicht.';
     } else {
-        $db->prepare("UPDATE lodgetype SET naam=?, beschrijving=?, capiciteit=?, prijs=? WHERE typeid=?")
+        $db->prepare("UPDATE lodgetype SET naam=?, beschrijving=?, capaciteit=?, prijs=? WHERE typeid=?")
             ->execute([$naam, $beschrijving, $capaciteit, $prijs, $typeid]);
         header('Location: type_overzicht.php?bijgewerkt=1');
         exit;
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $lt['naam'] = $naam;
     $lt['beschrijving'] = $beschrijving;
-    $lt['capiciteit'] = $capaciteit;
+    $lt['capaciteit'] = $capaciteit;
     $lt['prijs'] = $prijs;
 }
 ?>
@@ -85,9 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         maxlength="80"><?php echo htmlspecialchars($lt['beschrijving']); ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="capiciteit">Capaciteit (personen) <span style="color:#e74c3c;">*</span></label>
-                    <input type="number" id="capiciteit" name="capiciteit" min="1" max="99"
-                        value="<?php echo (int) $lt['capiciteit']; ?>" required>
+                    <label for="capcateit">Capaciteit (personen) <span style="color:#e74c3c;">*</span></label>
+                    <input type="number" id="capaciteit" name="capaciteit" min="1" max="99"
+                        value="<?php echo (int) $lt['capaciteit']; ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="prijs">Prijs per nacht (€) <span style="color:#e74c3c;">*</span></label>
