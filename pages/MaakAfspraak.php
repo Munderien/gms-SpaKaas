@@ -36,7 +36,7 @@ if ($result && $result->num_rows > 0) {
 $lodges = [];
 $lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
                FROM lodge l
-               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
                ORDER BY l.lodgeid ASC";
 $lodgeResult = $conn->query($lodgeQuery);
 if ($lodgeResult && $lodgeResult->num_rows > 0) {
