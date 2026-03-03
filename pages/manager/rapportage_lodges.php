@@ -24,8 +24,8 @@ $perType = $db->query("
            SUM(CASE WHEN l.status = 'onderhoud' THEN 1 ELSE 0 END) AS onderhoud,
            SUM(CASE WHEN l.status = 'schoonmaak' THEN 1 ELSE 0 END) AS schoonmaak
     FROM lodgetype lt
-    LEFT JOIN lodge l ON l.lodgetypeid = lt.typeid
-    GROUP BY lt.typeid, lt.naam
+    LEFT JOIN lodge l ON l.typeid = lt.lodgetypeid
+    GROUP BY lt.lodgetypeid, lt.naam
     ORDER BY lt.naam
 ")->fetchAll(PDO::FETCH_ASSOC);
 

@@ -13,9 +13,9 @@ if ($conn->connect_error) {
 
 // Get all lodges with their lodge type details
 $lodges = [];
-$query = "SELECT l.lodgeid, lt.typeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
+$query = "SELECT l.lodgeid, lt.lodgetypeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
           FROM lodge l
-          INNER JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+          INNER JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
           ORDER BY lt.naam ASC";
 $result = $conn->query($query);
 if ($result && $result->num_rows > 0) {

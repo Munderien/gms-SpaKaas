@@ -27,13 +27,13 @@ if (isset($_POST['actie']) && $_POST['actie'] == 'lodgetype') {
     $melding = 'Lodgetype bijgewerkt.';
 }
 
-$lodges = $db->query("SELECT l.lodgeid, l.huisnummer, l.status, l.lodgetypeid,
-                           lt.naam AS typename, lt.prijs, lt.typeid
+$lodges = $db->query("SELECT l.lodgeid, l.huisnummer, l.status, l.typeid,
+                           lt.naam AS typename, lt.prijs, lt.lodgetypeid
                     FROM lodge l
-                    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+                    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
                     ORDER BY l.lodgeid")->fetchAll(PDO::FETCH_ASSOC);
 
-$lodgetypes = $db->query("SELECT typeid, naam FROM lodgetype ORDER BY naam")->fetchAll(PDO::FETCH_ASSOC);
+$lodgetypes = $db->query("SELECT lodgetypeid, naam FROM lodgetype ORDER BY naam")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="nl">

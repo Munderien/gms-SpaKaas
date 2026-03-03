@@ -42,7 +42,7 @@ $problemen = $db->query("
            g.naam AS monteurnaam
     FROM onderhoud o
     JOIN lodge l ON l.lodgeid = o.lodgeid
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     LEFT JOIN gebruiker g ON g.gebruikerid = o.monteurid
     ORDER BY
         CASE o.status WHEN 'open' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'gesloten' THEN 3 END

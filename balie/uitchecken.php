@@ -95,10 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
 
 $bezetteLodges = $db->query("
     SELECT l.lodgeid, l.huisnummer, lt.naam AS typename, lt.prijs,
-           a.afspraakid, a.titel, a.starttijd, a.eindtijd, a.aantalmensen,
+           a.afspraakid, a.starttijd, a.eindtijd, a.aantalmensen,
            g.naam AS klantnaam
     FROM lodge l
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     LEFT JOIN afspraak a ON a.lodgeid = l.lodgeid
     LEFT JOIN gebruiker g ON g.gebruikerid = a.gebruikerid
     WHERE l.status = 'bezet'

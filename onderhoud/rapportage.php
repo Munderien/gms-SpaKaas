@@ -26,7 +26,7 @@ $perLodge = $db->query("
            SUM(CASE WHEN o.status = 'gesloten' THEN 1 ELSE 0 END) AS gesloten_taken
     FROM onderhoud o
     JOIN lodge l ON l.lodgeid = o.lodgeid
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     GROUP BY l.lodgeid, l.huisnummer, lt.naam
     ORDER BY open_taken DESC
 ")->fetchAll(PDO::FETCH_ASSOC);

@@ -57,12 +57,12 @@ $stmt2 = $db->prepare("
                )
            ), 0) AS geboekte_dagen
     FROM lodgetype lt
-    LEFT JOIN lodge l ON l.lodgetypeid = lt.typeid
+    LEFT JOIN lodge l ON l.typeid = lt.lodgetypeid
     LEFT JOIN afspraak a ON a.lodgeid = l.lodgeid
         AND YEAR(a.starttijd) <= ?
         AND YEAR(a.eindtijd)  >= ?
         AND a.starttijd < a.eindtijd
-    GROUP BY lt.typeid, lt.naam
+    GROUP BY lt.lodgetypeid, lt.naam
     ORDER BY lt.naam
 ");
 $stmt2->execute([$jaar, $jaar, $jaar, $jaar]);
@@ -71,7 +71,7 @@ $bezData = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 $dagenJaar = (date('L', mktime(0, 0, 0, 1, 1, $jaar)) ? 366 : 365);
 
 $stmt3 = $db->prepare("
-    SELECT lt.typeid,
+    SELECT lt.lodgetypeid,
            lt.naam AS typename,
            lt.prijs AS huidige_prijs,
            COUNT(f.factuurid) AS boekingen,
@@ -79,8 +79,8 @@ $stmt3 = $db->prepare("
            MIN(f.factuurdatum) AS eerste_factuur,
            MAX(f.factuurdatum) AS laatste_factuur
     FROM lodgetype lt
-    LEFT JOIN factuur f ON f.lodgetypeid = lt.typeid
-    GROUP BY lt.typeid, lt.naam, lt.prijs
+    LEFT JOIN factuur f ON f.typeid = lt.lodgetypeid
+    GROUP BY lt.lodgetypeid, lt.naam, lt.prijs
     ORDER BY lt.naam
 ");
 $stmt3->execute();

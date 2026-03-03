@@ -23,7 +23,7 @@ return function (PDO $db) {
             factuurdatum DATE,
             aantalmensen INT(11),
             totaalbedragexbtw DECIMAL(20,0),
-            btwprecentage DECIMAL(20,0),
+            btwpercentage DECIMAL(20,0),
             betaalstatus TINYINT(1) NOT NULL DEFAULT 0,
             herinneringsmailstatus TINYINT(1) NOT NULL DEFAULT 0,
             toelichting VARCHAR(80),

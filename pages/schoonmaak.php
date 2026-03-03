@@ -124,7 +124,7 @@ $sql = "SELECT
             MAX(s.datum) as latest_datum,
             MAX(s.status) as latest_status
         FROM lodge l
-        LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+        LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
         LEFT JOIN schoonmaak s ON l.lodgeid = s.lodgeid
         GROUP BY l.lodgeid, l.huisnummer, lt.naam, lt.capaciteit
         ORDER BY l.huisnummer";
@@ -145,7 +145,7 @@ $sql_schoonmaak = "SELECT
                 FROM schoonmaak s
                 LEFT JOIN gebruiker g ON s.gebruikerid = g.gebruikerid
                 LEFT JOIN lodge l ON s.lodgeid = l.lodgeid
-                LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+                LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
                 ORDER BY s.datum DESC";
 
 $result_schoonmaak = $conn->query($sql_schoonmaak);

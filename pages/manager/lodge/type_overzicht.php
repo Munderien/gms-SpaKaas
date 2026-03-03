@@ -33,11 +33,11 @@ if (isset($_POST['verwijder_typeid'])) {
     }
 }
 
-$stmt = $db->query("SELECT lt.typeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs,
+$stmt = $db->query("SELECT lt.lodgetypeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs,
                                 COUNT(l.lodgeid) AS aantal_lodges
                          FROM lodgetype lt
-                         LEFT JOIN lodge l ON l.lodgetypeid = lt.typeid
-                         GROUP BY lt.typeid ORDER BY lt.typeid");
+                         LEFT JOIN lodge l ON l.typeid = lt.lodgetypeid
+                         GROUP BY lt.lodgetypeid ORDER BY lt.lodgetypeid");
 $lodgetypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
