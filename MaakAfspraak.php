@@ -10,18 +10,26 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$_SESSION['rol'];
 
+// Check if user is properly logged in
+if (!isset($_SESSION['gebruikerid'])) {
+    die("Niet ingelogd. Sessie gebruikerid is niet ingesteld. <a href='inlog.php'>Ga naar login</a>");
+}
+
+$isCustomer = isset($_SESSION['rol']) && (int)$_SESSION['rol'] === 0;
 
 $message = '';
 // get all klanten
 $gebruikers = [];
-if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
+$result = false;
+if ($isCustomer) {
     // Als gebruiker krijg je alleen de ingelogde gebruiker
-    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
+    if (isset($_SESSION['gebruikerid'])) {
+        $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerid']));
+    }
 } else {
     // Anders alle gebruikers 
-    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker where rol = 0 ORDER BY naam ASC");
+    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -60,11 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'Afwachten';
     $desc      = $conn->real_escape_string($_POST['toelichting']);
     $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
-    $userId    = intval($_POST['gebruikerid']);
+    if ($isCustomer) {
+        $userId = intval($_SESSION['gebruikerid'] ?? 0);
+    } else {
+        $userId = intval($_POST['gebruikerid'] ?? 0);
+    }
     $lodgeId = intval($_POST['lodgeid']);
 
     $today = date('Y-m-d');
-    if ($beginTime < $today) {
+    if ($userId <= 0) {
+        $message = "Selecteer een gebruiker.";
+    } elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
@@ -167,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
-                    <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 0): ?>
+                    <?php if (!$isCustomer): ?>
                         <div class="popup-field">
                             <label for="gebruikerSelect">Select gebruiker:</label>
                             <select id="gebruikerSelect" name="gebruikerid" required>
@@ -175,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </select>
                         </div>
                     <?php else: ?>
-                        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid']); ?>">
+                        <input type="hidden" id="gebruikerSelect" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerid'] ?? 0); ?>">
                     <?php endif; ?>
 
                     <div class="popup-field">

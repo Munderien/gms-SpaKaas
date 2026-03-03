@@ -13,9 +13,9 @@ if (array_key_exists('back', $_POST)) {
     $_SESSION['calendar_date'] = date("Y-m-d", $timestamp);
 }
 
-include 'Calendar.php';
+include __DIR__ . '/Calendar.php';
 $calendar = new Calendar($_SESSION['calendar_date']);
-$getDataCalendar = new getDatacalendar();
+$getDataCalendar = new getDataCalendar();
 $selectedLodgeType = isset($_GET['lodgetype']) ? $_GET['lodgetype'] : 'all';
 $lodgeTypes = $getDataCalendar->getLodgeTypes();
 
