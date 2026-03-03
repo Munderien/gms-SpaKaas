@@ -101,7 +101,7 @@ if ($user && $user->num_rows > 0) {
 $lodges = [];
 $lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
                FROM lodge l
-               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
                ORDER BY l.lodgeid ASC";
 $lodgeResult = $mysqli->query($lodgeQuery);
 if ($lodgeResult && $lodgeResult->num_rows > 0) {
@@ -114,7 +114,7 @@ if ($lodgeResult && $lodgeResult->num_rows > 0) {
 $lodgeTypeName = '';
 if (!empty($item['lodgeid'])) {
     $ltQuery = "SELECT lt.naam FROM lodge l
-               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
+               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
                WHERE l.lodgeid = " . intval($item['lodgeid']);
     $ltResult = $mysqli->query($ltQuery);
     if ($ltResult && $ltResult->num_rows > 0) {
@@ -131,7 +131,7 @@ if (!empty($item['lodgeid'])) {
 <head>
     <meta charset="UTF-8">
     <title>Planner Item Popup</title>
-    <link rel="stylesheet" type="text/css" href="Style/planneritem.css">
+    <link rel="stylesheet" type="text/css" href="/GMS-SPAKAAS/Style/planneritem.css">
 </head>
 
 <body>

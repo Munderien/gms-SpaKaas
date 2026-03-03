@@ -1,7 +1,7 @@
 <?php
-// Libraries van de jpgraph site
-require_once ('jpgraph/src/jpgraph.php');
-require_once ('jpgraph/src/jpgraph_gantt.php');
+// Libraries van de jpgraph site (github pls werk ff)
+require_once (__DIR__ . '/../jpgraph/src/jpgraph.php');
+require_once (__DIR__ . '/../jpgraph/src/jpgraph_gantt.php');
  
 $db = new mysqli("localhost", "root", "", "dms-spakaas");
 

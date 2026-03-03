@@ -35,7 +35,7 @@ while ($row = $result->fetch_assoc()) {
 <html>
 
 <head>
-    <link rel="stylesheet" href="Style/Table.css">
+    <link rel="stylesheet" href="/GMS-SPAKAAS/Style/Table.css">
 </head>
 
 <body>
