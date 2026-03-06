@@ -115,8 +115,14 @@ if (!in_array($ditJaar, $jaren)) {
 
 
         .chart-wrap {
+            width: 100%;
             overflow-x: auto;
-            margin: 24px 0;
+        }
+
+        .chart-wrap img {
+            width: 1200px;
+            /* or larger depending on your chart */
+            height: auto;
         }
 
         .bar-chart {
@@ -260,7 +266,7 @@ if (!in_array($ditJaar, $jaren)) {
                 style="padding:6px 10px;border:1px solid #ccc;border-radius:6px;">
                 <?php foreach ($jaren as $j): ?>
                     <option value="<?php echo $j; ?>" <?php if ($j == $jaar)
-                           echo 'selected'; ?>>
+                                                            echo 'selected'; ?>>
                         <?php echo $j; ?>
                     </option>
                 <?php endforeach; ?>
@@ -272,7 +278,7 @@ if (!in_array($ditJaar, $jaren)) {
                 <?php for ($m = 1; $m <= 12; $m++):
                     $antal = (int) $perMaand[$m]['aantal_afspraken'];
                     $hoogte = $maxBoekingen > 0 ? round(($antal / $maxBoekingen) * 160) : 0;
-                    ?>
+                ?>
                     <div class="bar-col">
                         <div class="bar" style="height:<?php echo $hoogte; ?>px;">
                             <span class="tip">
@@ -298,7 +304,7 @@ if (!in_array($ditJaar, $jaren)) {
             <tbody>
                 <?php for ($m = 1; $m <= 12; $m++):
                     $r = $perMaand[$m];
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php echo $maandNamen[$m - 1]; ?>
@@ -332,7 +338,7 @@ if (!in_array($ditJaar, $jaren)) {
             <tbody>
                 <?php foreach ($perType as $t):
                     $bezettingPct = $t['totaal'] > 0 ? round(($t['bezet'] / $t['totaal']) * 100) : 0;
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php echo htmlspecialchars($t['naam']); ?>
@@ -369,7 +375,10 @@ if (!in_array($ditJaar, $jaren)) {
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <?php include '../Gantt-Chart.php'; ?>
+        <p class="sectie-titel">Gantt planning</p>
+        <div class="chart-wrap">
+            <img src="../Gantt-Chart.php" alt="Gantt planning lodges" style="max-width:1400px;height:auto;border:1px solid #ecf0f1;border-radius:8px;">
+        </div>
     </div>
 </body>
 
