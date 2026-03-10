@@ -15,7 +15,7 @@ $sql = "SELECT lodgeid, starttijd, eindtijd, status
 
 $result = $db->query($sql);
 
-$graph = new GanttGraph();
+$graph = new GanttGraph(3000, 150, 100, 100, true);
 $graph->SetShadow();
 $graph->title->Set("Resort Lodge Planning");
 

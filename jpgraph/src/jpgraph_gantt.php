@@ -198,6 +198,9 @@ class GanttActivityInfo {
     }
 
     function SetMinColWidth($aWidths) {
+        if( !is_array($aWidths) ) {
+            return;
+        }
         $n = min(count($this->iTitles),count($aWidths));
         for($i=0; $i < $n; ++$i ) {
             if( !empty($aWidths[$i]) ) {
