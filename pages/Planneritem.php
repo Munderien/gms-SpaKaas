@@ -20,7 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
     $afspraakId = intval($_POST['afspraakId'] ?? 0);
 
     $today = date('Y-m-d');
-    if ($beginTime < $today) {
+
+    // Alleen niet aanpassen client sided? (voor nu nog niet, kan nog worden aangepast) -Marijn
+    if ($item['starttijd'] < $today) {
+        $message = "Mag niks aanpassen als de afspraak al is begonnen of voorbij is";
+    }
+    elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
