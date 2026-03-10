@@ -17,9 +17,9 @@ $two_factor = $user['is2faingeschakeld'] ?? '0';
 ?>
 <link rel="stylesheet" href="../style/login.css">
 
-<div class="forms-container">
-    <div class="forms-wrapper">
-        <!-- User edit card -->
+<div class="forms-container profile-forms-container">
+    <!-- User edit card -->
+    <div class="forms-wrapper user-info-wrapper">
         <form class="form-card active" action="update_user.php" method="post" id="userEditForm">
             <h1>Gegevens bijwerken</h1>
             <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['gebruikerId']) ?>">
@@ -119,6 +119,63 @@ $two_factor = $user['is2faingeschakeld'] ?? '0';
             </div>
         </form>
     </div>
+
+    <!-- Profile Picture Card -->
+    <div class="forms-wrapper profile-picture-wrapper">
+        <div class="form-card active" id="profilePictureCard">
+            <h1>Profielfoto</h1>
+            
+            <form id="profilePictureForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['gebruikerId']) ?>">
+                
+                <!-- Current Profile Picture Preview -->
+                <div class="form-group" style="text-align: center; margin-bottom: 25px;">
+                    <label>Huidige profielfoto</label>
+                    <div id="profilePicturePreview" style="margin-top: 15px; min-height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5; border: 2px dashed #ddd; border-radius: 8px; padding: 20px;">
+                        <?php 
+                        if (!empty($user['profielfoto'])): 
+                            // Convert longblob to base64 for display
+                            $imageData = base64_encode($user['profielfoto']);
+                            echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Profielfoto" style="max-width: 100%; max-height: 300px; border-radius: 8px;">';
+                        else: 
+                        ?>
+                            <span style="color: #999; font-style: italic;">Geen profielfoto geüpload</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- File Input (Hidden by default) -->
+                <div class="form-group" id="fileInputGroup" style="display: none;">
+                    <label for="profielfoto">Selecteer een foto *</label>
+                    <input type="file" id="profielfoto" name="profielfoto" accept="image/*" required>
+                    <small class="help-text">Toegestane formaten: JPG, PNG, GIF (Max 5MB)</small>
+                    <div id="fileError" class="error-message" style="display: none; margin-top: 10px;"></div>
+                </div>
+
+                <!-- New Picture Preview (shown after selecting a file) -->
+                <div class="form-group" id="newPicturePreview" style="text-align: center; display: none; margin-bottom: 25px;">
+                    <label>Voorbeeld van nieuwe foto</label>
+                    <div id="newImagePreview" style="margin-top: 15px; min-height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5; border: 2px dashed #ddd; border-radius: 8px; padding: 20px;">
+                        <span style="color: #999; font-style: italic;">Geen foto geselecteerd</span>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group" id="buttonGroup">
+                    <button type="button" class="registratieButton btn-change" id="changeBtn" onclick="startProfilePictureChange()">Wijzigen</button>
+                    <?php if (!empty($user['profielfoto'])): ?>
+                        <button type="button" class="registratieButton btn-delete" id="deleteBtn" onclick="deleteProfilePicture()">Verwijderen</button>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Save and Cancel Buttons (shown after change is initiated) -->
+                <div class="button-group" id="saveButtonGroup" style="display: none;">
+                    <button type="submit" class="registratieButton btn-save" id="saveBtn">Opslaan</button>
+                    <button type="button" class="registratieButton btn-cancel" id="cancelBtn" onclick="cancelProfilePictureChange()">Annuleren</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -166,7 +223,7 @@ function validatePassword(password) {
     }
 }
 
-// Form submission validation
+// Form submission validation for user edit form
 document.getElementById('userEditForm').addEventListener('submit', function(e) {
     const mail = document.getElementById('mail').value.trim();
     const password = document.getElementById('password').value;
@@ -217,6 +274,102 @@ document.getElementById('userEditForm').addEventListener('submit', function(e) {
         }
     }
 });
+
+// Profile Picture Functions
+function startProfilePictureChange() {
+    // Show file input and new picture preview
+    document.getElementById('fileInputGroup').style.display = 'block';
+    document.getElementById('newPicturePreview').style.display = 'block';
+    
+    // Hide change and delete buttons, show save and cancel
+    document.getElementById('buttonGroup').style.display = 'none';
+    document.getElementById('saveButtonGroup').style.display = 'flex';
+    
+    // Focus on file input
+    document.getElementById('profielfoto').focus();
+}
+
+function cancelProfilePictureChange() {
+    // Hide file input and new picture preview
+    document.getElementById('fileInputGroup').style.display = 'none';
+    document.getElementById('newPicturePreview').style.display = 'none';
+    document.getElementById('newImagePreview').innerHTML = '<span style="color: #999; font-style: italic;">Geen foto geselecteerd</span>';
+    
+    // Show change and delete buttons, hide save and cancel
+    document.getElementById('buttonGroup').style.display = 'flex';
+    document.getElementById('saveButtonGroup').style.display = 'none';
+    
+    // Clear file input
+    document.getElementById('profielfoto').value = '';
+    document.getElementById('fileError').style.display = 'none';
+}
+
+function deleteProfilePicture() {
+    if (confirm('Weet u zeker dat u uw profielfoto wil verwijderen?')) {
+        const form = document.getElementById('profilePictureForm');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'delete_profile_picture';
+        input.value = '1';
+        form.appendChild(input);
+        form.action = 'update_profile_picture.php';
+        form.submit();
+    }
+}
+
+// File input change handler
+document.getElementById('profielfoto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const fileError = document.getElementById('fileError');
+    const newImagePreview = document.getElementById('newImagePreview');
+    
+    // Validation
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    
+    if (file) {
+        if (file.size > maxSize) {
+            fileError.textContent = 'Bestand is te groot. Maximum 5MB is toegestaan.';
+            fileError.style.display = 'block';
+            newImagePreview.innerHTML = '<span style="color: #999; font-style: italic;">Geen foto geselecteerd</span>';
+            this.value = '';
+            return;
+        }
+        
+        if (!allowedTypes.includes(file.type)) {
+            fileError.textContent = 'Ongeldig bestandstype. Gebruik JPG, PNG of GIF.';
+            fileError.style.display = 'block';
+            newImagePreview.innerHTML = '<span style="color: #999; font-style: italic;">Geen foto geselecteerd</span>';
+            this.value = '';
+            return;
+        }
+        
+        fileError.style.display = 'none';
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            newImagePreview.innerHTML = '<img src="' + event.target.result + '" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px;">';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Form submission for profile picture
+document.getElementById('profilePictureForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('profielfoto');
+    
+    if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Selecteer alstublieft een foto');
+        return;
+    }
+    
+    const form = this;
+    form.action = 'update_profile_picture.php';
+    form.submit();
+});
 </script>
 
 <style>
@@ -257,5 +410,202 @@ document.getElementById('userEditForm').addEventListener('submit', function(e) {
     min-width: 20px;
     text-align: center;
     font-weight: bold;
+}
+
+/* Profile Forms Container - Side by Side Layout */
+.profile-forms-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 60px !important;
+    padding: 40px 20px !important;
+    flex-wrap: wrap;
+}
+
+.user-info-wrapper {
+    flex: 0 1 450px;
+}
+
+.profile-picture-wrapper {
+    flex: 0 1 450px;
+    margin-top: 0 !important;
+}
+
+/* Button Group Styling */
+#buttonGroup, #saveButtonGroup {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+/* Enhanced Button Styles */
+.registratieButton {
+    position: relative;
+    padding: 12px 30px;
+    font-size: 1em;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.registratieButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.registratieButton:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Primary Save Button */
+.btn-save {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-save:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+/* Change Button */
+.btn-change {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+}
+
+.btn-change:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-change:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Delete Button */
+.btn-delete {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-delete:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+/* Cancel Button */
+.btn-cancel {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #545b62 100%);
+    box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-cancel:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+/* Disabled state */
+.registratieButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.registratieButton:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .profile-forms-container {
+        gap: 40px;
+    }
+    
+    .user-info-wrapper,
+    .profile-picture-wrapper {
+        flex: 0 1 400px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .profile-forms-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .user-info-wrapper,
+    .profile-picture-wrapper {
+        flex: 1;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .registratieButton {
+        padding: 10px 20px;
+        font-size: 0.9em;
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    #buttonGroup, #saveButtonGroup {
+        gap: 10px;
+    }
+    
+    .profile-forms-container {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .registratieButton {
+        padding: 10px 15px;
+        font-size: 0.85em;
+        width: 100%;
+    }
+    
+    #buttonGroup, #saveButtonGroup {
+        flex-direction: column;
+    }
 }
 </style>

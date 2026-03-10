@@ -14,16 +14,18 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
 $huidigePagina = basename($_SERVER['PHP_SELF']);
 $isLoggedIn = isset($_SESSION['gebruikerId']);
 
-// Get user name from database if logged in
+// Get user name and profile picture from database if logged in
 $gebruikersnaam = 'Gebruiker';
 $userInitial = 'U';
+$profielfoto = null;
 
 if ($isLoggedIn) {
     include("config.php");
-    $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
+    $stmt = $db->prepare("SELECT naam, profielfoto FROM gebruiker WHERE gebruikerid = ?");
     $stmt->execute([$_SESSION['gebruikerId']]);
     $navUser = $stmt->fetch(PDO::FETCH_ASSOC);
     $gebruikersnaam = $navUser ? $navUser['naam'] : 'Gebruiker';
+    $profielfoto = $navUser && !empty($navUser['profielfoto']) ? $navUser['profielfoto'] : null;
     $userInitial = strtoupper(substr($gebruikersnaam, 0, 1));
 }
 ?>
@@ -154,6 +156,24 @@ if ($isLoggedIn) {
         font-weight: 700;
         font-size: 1.05em;
         flex-shrink: 0;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .user-avatar-initial {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
     }
 
     .nav-username {
@@ -308,7 +328,13 @@ if ($isLoggedIn) {
 
         <div class="nav-user">
             <?php if ($isLoggedIn): ?>
-                <div class="user-avatar"><?php echo $userInitial; ?></div>
+                <div class="user-avatar">
+                    <?php if ($profielfoto): ?>
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
+                    <?php else: ?>
+                        <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
+                    <?php endif; ?>
+                </div>
                 <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
                 <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
             <?php else: ?>
