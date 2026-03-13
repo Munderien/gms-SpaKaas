@@ -32,16 +32,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get all lodges with their lodge type details
-$lodges = [];
-$query = "SELECT l.lodgeid, lt.lodgetypeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
-          FROM lodge l
-          INNER JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
+// Get all unique lodge types
+$lodgeTypes = [];
+$query = "SELECT lt.lodgetypeid, lt.naam, lt.beschrijving, lt.capaciteit, lt.prijs
+          FROM lodgetype lt
           ORDER BY lt.naam ASC";
 $result = $conn->query($query);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $lodges[] = $row;
+        $lodgeTypes[] = $row;
     }
 }
 
@@ -63,13 +62,13 @@ if ($result && $result->num_rows > 0) {
     <div class="lodges-container">
         <h1><?= $lang['lodges_title'] ?></h1>
         <div class="lodges-grid">
-            <?php foreach ($lodges as $lodge): ?>
+            <?php foreach ($lodgeTypes as $lodgeType): ?>
                 <div class="lodge-card" onclick="toggleDetails(this)">
                     <div class="lodge-card-header">
-                        <h2><?php echo htmlspecialchars($lodge['naam']); ?></h2>
+                        <h2><?php echo htmlspecialchars($lodgeType['naam']); ?></h2>
                     </div>
                     <div class="lodge-card-content">
-                        <p class="description"><?php echo htmlspecialchars(substr($lodge['beschrijving'], 0, 100)) . '...'; ?></p>
+                        <p class="description"><?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?></p>
                         <div class="lodge-card-footer">
                             <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodge['prijs']); ?></span>
                         </div>
@@ -101,9 +100,13 @@ if ($result && $result->num_rows > 0) {
             card.classList.toggle("expanded");
         }
 
-        function bookAppointment(lodgeId) {
+        function bookAppointment(lodgeTypeId) {
             event.stopPropagation();
-            window.location.href = 'MaakAfspraak.php?lodgeid=' + lodgeId;
+            window.location.href = 'MaakAfspraak.php?lodgetypeid=' + lodgeTypeId;
+        }
+        function productLodge(lodgetypeId) {
+            event.stopPropagation();
+            window.location.href = 'Lodgepdp.php?lodgetypeid=' + lodgetypeId;
         }
     </script>
 </body>
