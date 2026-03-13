@@ -11,7 +11,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$isCustomer = isset($_SESSION['rol']) && (int)$_SESSION['rol'] === 0;
+if (!isset($_SESSION['gebruikerId'])) {
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    exit;
+}
+
+// Kijk hier later naar hier -Marijn
+$isCustomer = isset($_SESSION['rol']) && $_SESSION['rol'] != 0;
 
 $message = '';
 // get all klanten
@@ -32,16 +38,15 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
-// get all lodges
-$lodges = [];
-$lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
-               FROM lodge l
-               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
-               ORDER BY l.lodgeid ASC";
-$lodgeResult = $conn->query($lodgeQuery);
-if ($lodgeResult && $lodgeResult->num_rows > 0) {
-    while ($row = $lodgeResult->fetch_assoc()) {
-        $lodges[] = $row;
+// get all lodge types
+$lodgeTypes = [];
+$lodgeTypeQuery = "SELECT lodgetypeid, naam
+                   FROM lodgetype
+                   ORDER BY naam ASC";
+$lodgeTypeResult = $conn->query($lodgeTypeQuery);
+if ($lodgeTypeResult && $lodgeTypeResult->num_rows > 0) {
+    while ($row = $lodgeTypeResult->fetch_assoc()) {
+        $lodgeTypes[] = $row;
     }
 }
 
@@ -68,28 +73,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $userId = intval($_POST['gebruikerid'] ?? 0);
     }
-    $lodgeId = intval($_POST['lodgeid']);
+    $lodgeTypeId = intval($_POST['lodgetypeid'] ?? 0);
 
     $today = date('Y-m-d');
     if ($userId <= 0) {
         $message = "Selecteer een gebruiker.";
+    } elseif ($lodgeTypeId <= 0) {
+        $message = "Selecteer een lodgetype.";
     } elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
     } else {
-        // Kijkt of er een afspraak is op de lodge die overlapped met dezelfde datum
-        $conflictQuery = "SELECT COUNT(*) as count FROM afspraak 
-                         WHERE lodgeid = $lodgeId 
-                         AND ((starttijd <= '$beginTime' AND eindtijd > '$beginTime')
-                              OR (starttijd < '$endTime' AND eindtijd >= '$endTime')
-                              OR (starttijd >= '$beginTime' AND eindtijd <= '$endTime'))";
-        $conflictResult = $conn->query($conflictQuery);
-        $conflictRow = $conflictResult->fetch_assoc();
+        // Zoek een beschikbare lodge binnen het gekozen lodgetype in de geselecteerde periode
+        $availableLodgeQuery = "SELECT l.lodgeid
+                                FROM lodge l
+                                WHERE l.typeid = $lodgeTypeId
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM afspraak a
+                                    WHERE a.lodgeid = l.lodgeid
+                                    AND (
+                                        (a.starttijd <= '$beginTime' AND a.eindtijd > '$beginTime')
+                                        OR (a.starttijd < '$endTime' AND a.eindtijd >= '$endTime')
+                                        OR (a.starttijd >= '$beginTime' AND a.eindtijd <= '$endTime')
+                                    )
+                                )
+                                ORDER BY l.lodgeid ASC
+                                LIMIT 1";
 
-        if ($conflictRow['count'] > 0) {
-            $message = "Deze lodge heeft al een afspraak in deze periode.";
+        $availableLodgeResult = $conn->query($availableLodgeQuery);
+
+        if (!$availableLodgeResult || $availableLodgeResult->num_rows === 0) {
+            $message = "Geen beschikbare lodge gevonden voor dit lodgetype in deze periode.";
         } else {
+            $availableLodge = $availableLodgeResult->fetch_assoc();
+            $lodgeId = (int) $availableLodge['lodgeid'];
+
             $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, starttijd, eindtijd,
             status, toelichting, aantalmensen)
                     VALUES ('$userId', '$lodgeId', '$beginTime', '$endTime', 
@@ -145,14 +165,14 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gebruikers = <?php echo json_encode($gebruikers); ?>;
-            const lodges = <?php echo json_encode($lodges); ?>;
+            const lodgeTypes = <?php echo json_encode($lodgeTypes); ?>;
 
             const gebruikerSelect = document.getElementById('gebruikerSelect');
-            const lodgeSelect = document.getElementById('lodgeSelect');
+            const lodgeTypeSelect = document.getElementById('lodgeTypeSelect');
 
-            // krijgt lodgeid van lodges.php
+            // krijgt lodgetypeid van Lodges.php
             const params = new URLSearchParams(window.location.search);
-            const urlLodgeId = params.get('lodgeid');
+            const urlLodgeTypeId = params.get('lodgetypeid');
 
             // Only populate gebruiker dropdown if it's actually a select element (not hidden input)
             if (gebruikerSelect && gebruikerSelect.tagName === 'SELECT') {
@@ -164,21 +184,20 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                 });
             }
 
-            lodges.forEach(l => {
+            lodgeTypes.forEach(l => {
                 const opt = document.createElement('option');
-                opt.value = l.lodgeid;
-                opt.textContent = l.lodgetype_naam || l.lodgeid;
-                lodgeSelect.appendChild(opt);
+                opt.value = l.lodgetypeid;
+                opt.textContent = l.naam || l.lodgetypeid;
+                lodgeTypeSelect.appendChild(opt);
             });
 
-            // als er een lodgeid is geselecteerd voordat je de pagina opent, dan wordt die automatisch gekozen
-            if (urlLodgeId) {
-                lodgeSelect.value = urlLodgeId;
+            // als er een lodgetypeid is geselecteerd voordat je de pagina opent, dan wordt die automatisch gekozen
+            if (urlLodgeTypeId) {
+                lodgeTypeSelect.value = urlLodgeTypeId;
             }
         });
     </script>
 </head>
-
 <body>
     <div class="form-grid">
         <div class="popup-overlay" id="planneritem-popup">
@@ -228,9 +247,9 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                     <?php endif; ?>
 
                     <div class="popup-field">
-                        <label for="lodgeSelect">Select Lodge:</label>
-                        <select id="lodgeSelect" name="lodgeid" required>
-                            <option value="">-- Select Lodge --</option>
+                        <label for="lodgeTypeSelect">Select Lodgetype:</label>
+                        <select id="lodgeTypeSelect" name="lodgetypeid" required>
+                            <option value="">-- Select Lodgetype --</option>
                         </select>
                     </div>
 
