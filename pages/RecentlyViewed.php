@@ -10,8 +10,10 @@ $pass = '';
 
 $recentlodges = [];
 
-// 1) For guests: read from cookie
-if (isset($_COOKIE['recentLodges'])) {
+$cookieConsentGiven = isset($_COOKIE['cookieConsent']) && $_COOKIE['cookieConsent'] === 'accepted';
+
+// 1) For guests: read from cookie (only if consent given)
+if ($cookieConsentGiven && isset($_COOKIE['recentLodges'])) {
     $decoded = json_decode($_COOKIE['recentLodges'], true);
     if (is_array($decoded)) {
         $recentlodges = array_values(array_unique(array_map('intval', $decoded)));
@@ -20,7 +22,7 @@ if (isset($_COOKIE['recentLodges'])) {
 }
 
 // 2) For logged-in users: merge cookie history into DB and sync cookie
-if (isset($_SESSION['gebruikerId'])) {
+if ($cookieConsentGiven && isset($_SESSION['gebruikerId'])) {
     $conn = new mysqli($host, $user, $pass, $db);
     if (!$conn->connect_error) {
         $gebruikerId = (int) $_SESSION['gebruikerId'];
@@ -61,7 +63,9 @@ if (isset($_SESSION['gebruikerId'])) {
                 }
 
                 $recentlodges = $mergedRecent;
-                setcookie('recentLodges', json_encode($recentlodges), time() + (14 * 24 * 60 * 60), '/');
+                if ($cookieConsentGiven) {
+                    setcookie('recentLodges', json_encode($recentlodges), time() + (14 * 24 * 60 * 60), '/');
+                }
             }
 
             $stmt->close();
