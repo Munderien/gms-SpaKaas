@@ -70,25 +70,26 @@ if ($result && $result->num_rows > 0) {
                     <div class="lodge-card-content">
                         <p class="description"><?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?></p>
                         <div class="lodge-card-footer">
-                            <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodge['prijs']); ?></span>
+                            <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
                         </div>
                     </div>
                     <div class="lodge-card-details">
                         <div class="details-content">
                             <div class="detail-item">
                                 <label><?= $lang['lodges_description'] ?>:</label>
-                                <p><?php echo htmlspecialchars($lodge['beschrijving']); ?></p>
+                                <p><?php echo htmlspecialchars($lodgeType['beschrijving']); ?></p>
                             </div>
                             <div class="detail-item">
                                 <label><?= $lang['lodges_capacity'] ?>:</label>
-                                <p><?php echo htmlspecialchars($lodge['capaciteit']); ?> <?= $lang['lodges_persons'] ?></p>
+                                <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?> <?= $lang['lodges_persons'] ?></p>
                             </div>
                             <div class="detail-item">
                                 <label><?= $lang['lodges_price'] ?>:</label>
-                                <p><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodge['prijs']); ?></p>
+                                <p><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></p>
                             </div>
                         </div>
-                        <button class="close-details" onclick="bookAppointment(<?php echo htmlspecialchars($lodge['lodgeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
+                        <button class="close-details" onclick="bookAppointment(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
+                        <button class="close-details" onclick="productLodge(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_details'] ?? 'Details' ?></button>
                     </div>
                 </div>
             <?php endforeach; ?>
