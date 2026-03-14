@@ -177,6 +177,8 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
+
+    <?php require_once __DIR__ . '/RecentLodges.php'; ?>
 </body>
 
 </html>

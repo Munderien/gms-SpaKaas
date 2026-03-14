@@ -517,3 +517,5 @@ if ($isLoggedIn) {
         });
     });
 </script>
+
+<?php require_once __DIR__ . '/cookieConsent.php'; ?>
