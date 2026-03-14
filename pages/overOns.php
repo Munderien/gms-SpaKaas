@@ -2,7 +2,7 @@
 session_start();
 
 // Language configuration
-$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr'];
+$availableLanguages = ['nl', 'en'];
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 // Validate language exists

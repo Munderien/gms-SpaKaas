@@ -10,7 +10,7 @@ prijs
 return function (PDO $db) {
     $db->exec("
         CREATE TABLE IF NOT EXISTS lodgetype (
-            typeid INT(11) AUTO_INCREMENT PRIMARY KEY,
+            lodgetypeid INT(11) AUTO_INCREMENT PRIMARY KEY,
             naam VARCHAR(30),
             beschrijving VARCHAR(80),
             capaciteit INT(11),

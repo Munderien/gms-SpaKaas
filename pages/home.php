@@ -2,7 +2,7 @@
 session_start();
 
 // Language configuration
-$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr'];
+$availableLanguages = ['nl', 'en'];
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 // Validate language exists
@@ -11,22 +11,22 @@ if (!in_array($currentLang, $availableLanguages)) {
     $_SESSION['language'] = $currentLang;
 }
 
-// Load language file - Use require instead of require_once
+// Load language file - Fixed path
 $langFile = __DIR__ . "/vertaling/{$currentLang}.php";
 
 if (file_exists($langFile)) {
-    $lang = require($langFile);  // Changed from require_once to require
+    $lang = require_once($langFile);
 } else {
     die("Error: Language file not found at {$langFile}");
 }
 
 // Ensure $lang is an array
 if (!is_array($lang)) {
-    $lang = [];  // Fallback to empty array instead of dying
+    die("Error: Language file did not return an array");
 }
 
 // Fetch user data only if logged in
-$naam = $lang['welcome'] ?? 'Welcome';
+$naam = $lang['welcome'];
 $isLoggedIn = isset($_SESSION['gebruikerId']);
 
 if ($isLoggedIn) {
@@ -34,7 +34,7 @@ if ($isLoggedIn) {
     $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
     $stmt->execute([$_SESSION['gebruikerId']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    $naam = $user ? $user['naam'] : ($lang['guest'] ?? 'Guest');
+    $naam = $user ? $user['naam'] : $lang['guest'];
 }
 
 // Setup for reviews
@@ -44,7 +44,7 @@ try {
     include("config.php");
     $pdo = $db;
 } catch (PDOException $e) {
-    die(($lang['db_connection_failed'] ?? 'Database connection failed') . ": " . $e->getMessage());
+    die($lang['db_connection_failed'] . ": " . $e->getMessage());
 }
 
 // Fetch all reviews
@@ -179,8 +179,6 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
-
-    <?php require_once __DIR__ . '/RecentLodges.php'; ?>
 </body>
 
 </html>

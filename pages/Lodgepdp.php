@@ -31,10 +31,9 @@ if (!$lodgeType) {
     die('Lodgetype niet gevonden.');
 }
 
-// Track recently viewed lodge types in cookie (only if consent given)
-$cookieConsentGiven = isset($_COOKIE['cookieConsent']) && $_COOKIE['cookieConsent'] === 'accepted';
+// Track recently viewed lodge types in cookie (also works for guests)
 $recentLodges = [];
-if ($cookieConsentGiven && isset($_COOKIE['recentLodges'])) {
+if (isset($_COOKIE['recentLodges'])) {
     $decoded = json_decode($_COOKIE['recentLodges'], true);
     if (is_array($decoded)) {
         $recentLodges = array_map('intval', $decoded);
@@ -46,9 +45,7 @@ $recentLodges = array_values(array_diff($recentLodges, [$lodgetypeId]));
 array_unshift($recentLodges, $lodgetypeId);
 $recentLodges = array_slice($recentLodges, 0, 5);
 
-if ($cookieConsentGiven) {
-    setcookie('recentLodges', json_encode($recentLodges), time() + (14 * 24 * 60 * 60), '/');
-}
+setcookie('recentLodges', json_encode($recentLodges), time() + (14 * 24 * 60 * 60), '/');
 
 // Track this view if user is logged in
 if (isset($_SESSION['gebruikerId'])) {

@@ -1,15 +1,18 @@
 <?php
 session_start();
 include("config.php");
-$mail = trim(htmlspecialchars($_POST['inlogMail'] ?? ''));
-$passwordRaw = trim($_POST['inlogPassword'] ?? '');
+$mail = trim(htmlspecialchars($_POST['inlogMail']));
+$password = trim(md5(addslashes($_POST['inlogPassword'])));
 
-if ($mail === '' || $passwordRaw === '') {
-  $_SESSION['error'] = 'Uw gebruikersnaam en wachtwoord mogen niet leeg zijn.';
-  header('Location: ../pages/inlog.php');
-  exit;
+if (trim($mail) === "" or trim($password) === "") {
+  echo "$('#error').html('Uw gebruikersnaam en wachtwoord mogen niet leeg zijn.').show();";
+  echo '<script>
+  setTimeout(function(){
+    window.location.href = "../pages/inlog.php";
+  }, 3000); 
+</script>';
+  die();
 }
-$password = md5(addslashes($passwordRaw));
 
 $v = $db->prepare("select * from gebruiker where email=? and wachtwoord=?");
 
@@ -18,14 +21,13 @@ $x = $v->fetch(PDO::FETCH_ASSOC);
 
 $d = $v->rowcount();
 
-if ($d >0) {
+if ($d > 0) {
   if ($x['is2faingeschakeld'] == 1) {
     $_SESSION['two_factor'] = '1';
+    header("Location: nieuw_2fa_code.php");
     $_SESSION['gebruikerId'] = $x['gebruikerid'];
-    header('Location: nieuw_2fa_code.php');
     exit();
   }
-
   $_SESSION['gebruikerId'] = $x['gebruikerid'];
   $_SESSION['rol'] = $x['rol'];
   $_SESSION['gebruikermail'] = $x['email'];

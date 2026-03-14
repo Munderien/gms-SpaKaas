@@ -1,16 +1,4 @@
-<?php
-session_start();
-if (isset($_SESSION['gebruikermail'])) {
-    echo "<script>window.location.href='home.php'</script>";
-    exit;
-}
-
-$errorMsg = '';
-if (isset($_SESSION['error'])) {
-    $errorMsg = $_SESSION['error'];
-    unset($_SESSION['error']);
-}
-?>
+<?php session_start(); if (isset($_SESSION['gebruikermail'])) { echo "<script>window.location.href='home.php'</script>"; } ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -45,24 +33,23 @@ if (isset($_SESSION['error'])) {
         <div class="forms-container">
             <div class="forms-wrapper">
                 <!-- Error/Success Messages -->
-                <div id="success" class="error-message" style="display: none;"></div>
-                
+                <div id="error"></div>
+                <div id="success"></div>
+
                 <!-- Login Form -->
-                <form action="inlogFunctie.php" method="post" class="form-card active" id="loginForm" novalidate>
-                    <div id="error" class="error-message" style="display: <?php echo ($errorMsg !== '' ? 'block' : 'none'); ?>;"><?php echo htmlspecialchars($errorMsg); ?></div>
+                <form action="inlogFunctie.php" method="post" class="form-card active" id="loginForm">
                     <h1>Inloggen</h1>
 
-                    <div class="error-message" >voer alles in alstublieft.</div>
                     <div class="form-group">
                         <label for="inlogMail">Email</label>
-                        <input type="email" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="uw@email.com">
+                        <input type="email" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="uw@email.com" required>
                         <div class="error-message" id="loginEmailError">Voer alstublieft een geldig email adres in.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="inlogPassword">Wachtwoord</label>
                         <div class="password-wrapper">
-                            <input type="password" id="inlogPassword" class="inlogPassword" name="inlogPassword" placeholder="Uw wachtwoord">
+                            <input type="password" id="inlogPassword" class="inlogPassword" name="inlogPassword" placeholder="Uw wachtwoord" required>
                             <button type="button" class="password-toggle" onclick="togglePasswordVisibility('inlogPassword')">Tonen</button>
                         </div>
                         <div class="error-message" id="loginPasswordError">Wachtwoord mag niet leeg zijn.</div>
@@ -229,47 +216,39 @@ if (isset($_SESSION['error'])) {
         // Validation for login form
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             let isValid = true;
-            const emailEl = document.getElementById('inlogMail');
-            const passwordEl = document.getElementById('inlogPassword');
-            const email = emailEl.value.trim();
-            const password = passwordEl.value.trim();
-            const errorBox = document.getElementById('error');
+            const email = document.getElementById('inlogMail').value.trim();
+            const password = document.getElementById('inlogPassword').value.trim();
 
             // Reset errors
-            errorBox.style.display = 'none';
-            errorBox.textContent = '';
-            document.querySelectorAll('#loginForm .error-message').forEach(el => el.classList.remove('show'));
-            document.querySelectorAll('#loginForm input').forEach(el => el.classList.remove('error'));
+            document.querySelectorAll('#loginForm .error-message').forEach(el => {
+                el.classList.remove('show');
+            });
+            document.querySelectorAll('#loginForm input').forEach(el => {
+                el.classList.remove('error');
+            });
 
             // Email validation
             if (email === '') {
-                emailEl.classList.add('error');
-                document.getElementById('loginEmailError').textContent = 'Email is verplicht.';
+                document.getElementById('inlogMail').classList.add('error');
                 document.getElementById('loginEmailError').classList.add('show');
-                errorBox.textContent = 'Email is verplicht.';
-                errorBox.style.display = 'block';
                 isValid = false;
             } else if (!isValidEmail(email)) {
-                emailEl.classList.add('error');
+                document.getElementById('inlogMail').classList.add('error');
                 document.getElementById('loginEmailError').textContent = 'Voer alstublieft een geldig email adres in.';
                 document.getElementById('loginEmailError').classList.add('show');
-
                 isValid = false;
             }
 
             // Password validation
             if (password === '') {
-                passwordEl.classList.add('error');
+                document.getElementById('inlogPassword').classList.add('error');
                 document.getElementById('loginPasswordError').classList.add('show');
                 isValid = false;
             }
 
             if (!isValid) {
                 e.preventDefault();
-                return;
             }
-
-            // If valid, allow form submit to inlogFunctie.php for server-side authentication.
         });
 
         // Validation for registration form
@@ -290,6 +269,8 @@ if (isset($_SESSION['error'])) {
             const email = document.getElementById('mail').value.trim();
             if (email === '') {
                 document.getElementById('mail').classList.add('error');
+                document.getElementById('emailError').textContent = 'Email is verplicht.';
+                document.getElementById('emailError').classList.add('show');
                 isValid = false;
             } else if (!isValidEmail(email)) {
                 document.getElementById('mail').classList.add('error');
