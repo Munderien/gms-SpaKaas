@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Language configuration
-$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
+$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English', 'de' => 'Deutsch', 'fr' => 'Français', 'tr' => 'Türkçe'];
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 // Validate language exists
@@ -15,6 +15,7 @@ if (!in_array($currentLang, array_keys($availableLanguages))) {
 
 // Load language file - Fixed path
 $langFile = __DIR__ . "/vertaling/{$currentLang}.php";
+$lang = file_exists($langFile) ? require $langFile : [];
 
 // Determine application root dynamically
 $script = $_SERVER['SCRIPT_NAME'];
@@ -466,7 +467,7 @@ if ($isLoggedIn) {
                     <?php foreach ($availableLanguages as $code => $name): ?>
                         <a href="<?= $base ?>/pages/set-language.php?lang=<?= $code ?>" 
                            class="lang-option <?= $code === $currentLang ? 'active' : '' ?>">
-                            <span class="lang-flag"><?= $code === 'nl' ? 'NL' : 'EN' ?></span>
+                            <span class="lang-flag"><?= strtoupper($code) ?></span>
                             <span><?= $name ?></span>
                         </a>
                     <?php endforeach; ?>
