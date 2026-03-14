@@ -31,12 +31,15 @@ if ($d >0) {
   $_SESSION['gebruikermail'] = $x['email'];
   $_SESSION['two_factor'] = $x['is2faingeschakeld'];
 
-  header('Location: ../pages/home.php');
-  exit();
+  include('RecentlyViewed.php');
+  echo "<script>window.location.href='../pages/home.php'</script>";
+} else {
+  echo "u heeft verkeerde gegevens ingevoerd";
+   echo '<script>
+   setTimeout(function(){
+   window.location.href = "../pages/inlog.php";
+   }, 3000); 
+ </script>';
+  die();
 }
-  $_SESSION['error'] = 'Ongeldige gebruikersnaam of wachtwoord. Probeer het opnieuw.';
-  header('Location: ../pages/inlog.php');
-  exit;
-
-
 ?>

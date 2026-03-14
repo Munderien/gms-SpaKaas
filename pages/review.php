@@ -1,6 +1,25 @@
 <?php
 session_start();
 
+// Language configuration
+$availableLanguages = ['nl', 'en'];
+$currentLang = $_SESSION['language'] ?? 'nl';
+
+// Validate language exists
+if (!in_array($currentLang, $availableLanguages)) {
+    $currentLang = 'nl';
+    $_SESSION['language'] = $currentLang;
+}
+
+// Load language file
+$langFile = __DIR__ . "/vertaling/{$currentLang}.php";
+
+if (file_exists($langFile)) {
+    $lang = require_once($langFile);
+} else {
+    die("Error: Language file not found at {$langFile}");
+}
+
 $dbHost = "localhost";
 $dbName = "dms-spakaas";
 $dbUser = "root";
@@ -12,12 +31,12 @@ $currentUserId = $isLoggedIn ? (int) $_SESSION['gebruikerId'] : null;
 include("config.php");
 
 // Only fetch user name if logged in
-$naam = 'Gast';
+$naam = $lang['guest'];
 if ($isLoggedIn) {
     $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
     $stmt->execute([$_SESSION['gebruikerId']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    $naam = $user ? $user['naam'] : 'Gast';
+    $naam = $user ? $user['naam'] : $lang['guest'];
 }
 
 try {
@@ -31,7 +50,7 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    die("Databaseverbinding mislukt: " . $e->getMessage());
+    die($lang['review_error_db'] . ": " . $e->getMessage());
 }
 
 $errorMessage = "";
@@ -52,7 +71,7 @@ if ($isLoggedIn && isset($_GET['edit'])) {
     $editReview = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$editReview) {
-        $errorMessage = "Review niet gevonden of niet van jou om te bewerken.";
+        $errorMessage = $lang['review_error_not_found'];
     }
 } elseif (!$isLoggedIn && isset($_GET['edit'])) {
     // Redirect to login if trying to edit while not logged in
@@ -75,8 +94,8 @@ if ($isLoggedIn && $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete
     ]);
 
     $_SESSION['success'] = $stmt->rowCount()
-        ? "Review succesvol verwijderd."
-        : "Review niet gevonden of niet van jou om te verwijderen.";
+        ? $lang['review_success_delete']
+        : $lang['review_error_not_found_delete'];
 
     header("Location: review.php");
     exit;
@@ -89,9 +108,9 @@ if ($isLoggedIn && $_SERVER["REQUEST_METHOD"] === "POST") {
     $message = trim($_POST["message"] ?? "");
 
     if ($rating < 1 || $rating > 5) {
-        $errorMessage = "Beoordeling moet tussen 1 en 5 liggen.";
+        $errorMessage = $lang['review_error_rating'];
     } elseif ($message === "") {
-        $errorMessage = "Bericht is verplicht.";
+        $errorMessage = $lang['review_error_message_empty'];
     } else {
         $illustrationData = null;
         $hasNewFile = false;
@@ -100,19 +119,19 @@ if ($isLoggedIn && $_SERVER["REQUEST_METHOD"] === "POST") {
             $hasNewFile = true;
 
             if ($_FILES["illustration"]["error"] !== UPLOAD_ERR_OK) {
-                $errorMessage = "Fout bij uploaden van bestand.";
+                $errorMessage = $lang['review_error_upload'];
             } else {
                 $tmp = $_FILES["illustration"]["tmp_name"];
                 $max = 5 * 1024 * 1024;
 
                 if (filesize($tmp) > $max) {
-                    $errorMessage = "Afbeelding is groter dan 5MB.";
+                    $errorMessage = $lang['review_error_file_size'];
                 } else {
                     $info = @getimagesize($tmp);
                     $allowed = ["image/jpeg", "image/png", "image/gif"];
 
                     if (!$info || !in_array($info["mime"], $allowed, true)) {
-                        $errorMessage = "Alleen JPG, PNG of GIF toegestaan.";
+                        $errorMessage = $lang['review_error_file_type'];
                     } else {
                         $illustrationData = file_get_contents($tmp);
                     }
@@ -152,8 +171,8 @@ if ($isLoggedIn && $_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute();
 
             $_SESSION['success'] = $isUpdate
-                ? "Review succesvol bijgewerkt!"
-                : "Review succesvol verzonden!";
+                ? $lang['review_success_update']
+                : $lang['review_success_new'];
 
             header("Location: review.php");
             exit;
@@ -170,11 +189,11 @@ $stmt = $pdo->query("
 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<?= $currentLang ?>">
 
 <head>
     <meta charset="UTF-8">
-    <title>Reviews</title>
+    <title><?= $lang['review_page_title'] ?></title>
     <link rel="stylesheet" href="../Style/reviewStyle.css">
     <style>
         body {
@@ -290,7 +309,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php require_once __DIR__ . '/navbarKlant.php'; ?>
 
     <?php if ($isLoggedIn): ?>
-        <h1><?= $editReview ? "Review bewerken" : "Review plaatsen" ?></h1>
+        <h1><?= $editReview ? $lang['review_form_title_edit'] : $lang['review_form_title_new'] ?></h1>
 
         <?php
         if (isset($_SESSION['success'])) {
@@ -312,42 +331,41 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="hidden" name="reviewid" value="<?= (int) $editReview['reviewid'] ?>">
                 <?php endif; ?>
 
-                <label><strong>Beoordeling (1-5)</strong></label>
+                <label><strong><?= $lang['review_form_rating'] ?></strong></label>
                 <input type="number" name="rating" min="1" max="5" step="0.1" required
                     value="<?= htmlspecialchars($editReview['rating'] ?? '') ?>">
 
-                <label><strong>Bericht</strong></label>
+                <label><strong><?= $lang['review_form_message'] ?></strong></label>
                 <textarea name="message" rows="4"
                     required><?= htmlspecialchars($editReview['opmerking'] ?? '') ?></textarea>
 
-                <label><strong>Illustratie (optioneel)</strong></label>
+                <label><strong><?= $lang['review_form_illustration'] ?></strong></label>
                 <input type="file" name="illustration" accept="image/*">
 
                 <?php if ($editReview): ?>
-                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;">Review bijwerken</button>
-                    <button type="submit" name="delete_review" value="1" onclick="return confirm('Deze review verwijderen?');"
+                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_update'] ?></button>
+                    <button type="submit" name="delete_review" value="1" onclick="return confirm('<?= $lang['review_form_delete_confirm'] ?>');"
                         style="background:#dc3545;color:#fff;margin-left:8px;margin-top: 15px;">
-                        Review verwijderen
+                        <?= $lang['review_form_delete'] ?>
                     </button>
                 <?php else: ?>
-                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;">Review plaatsen</button>
+                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_submit'] ?></button>
                 <?php endif; ?>
             </form>
         </div>
     <?php else: ?>
         <div class="login-prompt">
-            <strong>Wil je een review plaatsen?</strong><br>
-            Je moet ingelogd zijn om een review te schrijven. 
-            <a href="inlog.php">Log hier in</a> of 
-            <a href="inlog.php">maak een account aan</a>
+            <strong><?= $lang['review_login_prompt'] ?></strong><br>
+            <?= $lang['review_login_required'] ?>
+            <a href="inlog.php"><?= $lang['review_login_here'] ?></a> <?php echo $lang['review_create_account']; ?>
         </div>
     <?php endif; ?>
 
-    <h2>Recente reviews</h2>
+    <h2><?= $lang['review_heading_recent'] ?></h2>
 
     <?php foreach ($reviews as $r): ?>
         <div class="review-card">
-            <div class="rating">⭐ Beoordeling: <?= htmlspecialchars($r['rating']) ?>/5</div>
+            <div class="rating"><?= $lang['review_rating_label'] ?>: <?= htmlspecialchars($r['rating']) ?><?= $lang['out_of_5'] ?></div>
             <div><?= nl2br(htmlspecialchars($r['opmerking'])) ?></div>
 
             <?php if (!empty($r['illustratie'])):
@@ -357,10 +375,10 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <img src="data:<?= $mime ?>;base64,<?= base64_encode($r['illustratie']) ?>" alt="Review afbeelding">
             <?php endif; ?>
 
-            <small>📅 <?= htmlspecialchars($r['datum']) ?></small>
+            <small><?= htmlspecialchars($r['datum']) ?></small>
 
             <?php if ($isLoggedIn && (int) $r['gebruikerid'] === $currentUserId): ?>
-                <div><a href="?edit=<?= (int) $r['reviewid'] ?>">✏️ Bewerken</a></div>
+                <div><a href="?edit=<?= (int) $r['reviewid'] ?>"><?= $lang['review_edit_link'] ?></a></div>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>

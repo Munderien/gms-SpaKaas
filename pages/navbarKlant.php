@@ -3,6 +3,19 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Language configuration
+$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
+$currentLang = $_SESSION['language'] ?? 'nl';
+
+// Validate language exists
+if (!in_array($currentLang, array_keys($availableLanguages))) {
+    $currentLang = 'nl';
+    $_SESSION['language'] = $currentLang;
+}
+
+// Load language file - Fixed path
+$langFile = __DIR__ . "/vertaling/{$currentLang}.php";
+
 // Determine application root dynamically
 $script = $_SERVER['SCRIPT_NAME'];
 if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
@@ -131,11 +144,106 @@ if ($isLoggedIn) {
         margin: 0 8px;
     }
 
+    /* Language Dropdown Styles */
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-left: auto;
+    }
+
+    .language-switcher {
+        position: relative;
+    }
+
+    .lang-toggle {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .lang-toggle:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .lang-toggle svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .lang-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a5f6f 100%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        min-width: 180px;
+        margin-top: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        display: none;
+        z-index: 2000;
+        overflow: hidden;
+    }
+
+    .lang-dropdown.active {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .lang-option {
+        color: rgba(255, 255, 255, 0.8);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .lang-option:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .lang-option.active {
+        background: rgba(255, 235, 59, 0.2);
+        color: #ffeb3b;
+        border-left-color: #ffeb3b;
+        font-weight: 600;
+    }
+
+    .lang-flag {
+        font-size: 1.1rem;
+    }
+
     .nav-user {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-left: auto;
         white-space: nowrap;
         background: rgba(255, 255, 255, 0.15);
         padding: 8px 18px 8px 10px;
@@ -261,6 +369,10 @@ if ($isLoggedIn) {
             font-size: 0.8rem;
         }
 
+        .nav-links {
+            gap: 2px;
+        }
+
         .nav-username {
             display: none;
         }
@@ -280,6 +392,20 @@ if ($isLoggedIn) {
             padding: 6px 12px;
             font-size: 0.75rem;
         }
+
+        .lang-toggle {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        .lang-dropdown {
+            min-width: 160px;
+        }
+
+        .lang-option {
+            padding: 10px 12px;
+            font-size: 0.85rem;
+        }
     }
 </style>
 
@@ -292,54 +418,101 @@ if ($isLoggedIn) {
         <div class="nav-links">
             <a href="<?= $base ?>/pages/home.php"
                 class="nav-link <?php echo $huidigePagina === 'home.php' ? 'active' : ''; ?>">
-                Home
+                <?= $lang['nav_home'] ?? 'Home' ?>
             </a>
             
             <!-- Only show these if logged in -->
             <?php if ($isLoggedIn): ?>
                 <a href="<?= $base ?>/pages/lodges.php"
                     class="nav-link <?php echo $huidigePagina === 'lodges.php' ? 'active' : ''; ?>">
-                    Boekingen
+                    <?= $lang['nav_bookings'] ?? 'Boekingen' ?>
                 </a>
                 <a href="<?= $base ?>/pages/edit_user.php"
                     class="nav-link <?php echo $huidigePagina === 'edit_user.php' ? 'active' : ''; ?>">
-                    Profiel
+                    <?= $lang['nav_profile'] ?? 'Profiel' ?>
                 </a>
             <?php endif; ?>
 
             <a href="<?= $base ?>/pages/overOns.php"
                 class="nav-link <?php echo $huidigePagina === 'overOns.php' ? 'active' : ''; ?>">
-                Over ons
+                <?= $lang['nav_about'] ?? 'Over ons' ?>
             </a>
 
             <a href="<?= $base ?>/pages/review.php"
                 class="nav-link <?php echo $huidigePagina === 'review.php' ? 'active' : ''; ?>">
-                Reviews
+                <?= $lang['nav_reviews'] ?? 'Reviews' ?>
             </a>
         </div>
 
         <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] != 0)): ?>
-                <span class="nav-divider"></span>
-                <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
-                    class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
-                    mewerkerpagina
-                </a>
-            <?php endif; ?>
+            <span class="nav-divider"></span>
+            <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
+                class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
+                <?= $lang['nav_employee'] ?? 'Medewerkerpagina' ?>
+            </a>
+        <?php endif; ?>
 
-        <div class="nav-user">
-            <?php if ($isLoggedIn): ?>
-                <div class="user-avatar">
-                    <?php if ($profielfoto): ?>
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
-                    <?php else: ?>
-                        <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
-                    <?php endif; ?>
+        <div class="nav-controls">
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+                <button class="lang-toggle" onclick="toggleLanguageDropdown(event)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <?= strtoupper($currentLang) ?>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <?php foreach ($availableLanguages as $code => $name): ?>
+                        <a href="<?= $base ?>/pages/set-language.php?lang=<?= $code ?>" 
+                           class="lang-option <?= $code === $currentLang ? 'active' : '' ?>">
+                            <span class="lang-flag"><?= $code === 'nl' ? 'NL' : 'EN' ?></span>
+                            <span><?= $name ?></span>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
-                <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
-                <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
-            <?php else: ?>
-                <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
-            <?php endif; ?>
+            </div>
+
+            <div class="nav-user">
+                <?php if ($isLoggedIn): ?>
+                    <div class="user-avatar">
+                        <?php if ($profielfoto): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
+                        <?php else: ?>
+                            <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
+                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
+                <?php else: ?>
+                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </nav>
+
+<script>
+    function toggleLanguageDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('langDropdown');
+        dropdown.classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('langDropdown');
+        const switcher = document.querySelector('.language-switcher');
+        
+        if (!switcher.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    // Close dropdown when clicking a language option
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.getElementById('langDropdown').classList.remove('active');
+        });
+    });
+</script>
