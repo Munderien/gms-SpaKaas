@@ -38,7 +38,7 @@ if ($isLoggedIn) {
 }
 
 // Setup for reviews
-$currentUserId = $isLoggedIn ? (int) $_SESSION['gebruikerId'] : 0;
+$currentUserId = $isLoggedIn ? (int)$_SESSION['gebruikerId'] : 0;
 
 try {
     include("config.php");
@@ -67,14 +67,14 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
 
     <main class="home-container">
         <!-- Welcome Card -->
         <section class="welcome-card">
             <div class="welcome-header">
                 <h1>
-                    <?php
+                    <?php 
                     if ($isLoggedIn && $naam !== $lang['guest']) {
                         echo $lang['welcome_back'] . ", <span class='user-name'>" . htmlspecialchars(ucfirst($naam)) . "</span>!";
                     } else {
@@ -141,23 +141,21 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h2><?= $lang['recent_reviews'] ?></h2>
 
     <?php if ($isLoggedIn): ?>
-        <div class="reviews-button-container">
-            <a href="review.php" class="btn-reviews"><?= $lang['create_review'] ?></a>
-        </div>
+    <div class="reviews-button-container">
+        <a href="review.php" class="btn-reviews"><?= $lang['create_review'] ?></a>
+    </div>
     <?php else: ?>
-        <div class="reviews-button-container">
-            <p style="color: #666; font-style: italic;">
-                <a href="inlog.php"
-                    style="color: #3fa8a8; text-decoration: none; font-weight: 600;"><?= $lang['login_link'] ?></a>
-                <?= $lang['login_to_review'] ?>
-            </p>
-        </div>
+    <div class="reviews-button-container">
+        <p style="color: #666; font-style: italic;">
+            <a href="inlog.php" style="color: #3fa8a8; text-decoration: none; font-weight: 600;"><?= $lang['login_link'] ?></a> <?= $lang['login_to_review'] ?>
+        </p>
+    </div>
     <?php endif; ?>
 
     <?php foreach ($reviews as $r): ?>
         <div class="review-card">
             <div class="rating"><?= $lang['rating'] ?>:
-                <?= htmlspecialchars($r['rating']) ?>    <?= $lang['out_of_5'] ?>
+                <?= htmlspecialchars($r['rating']) ?><?= $lang['out_of_5'] ?>
             </div>
             <div>
                 <?= nl2br(htmlspecialchars($r['opmerking'])) ?>
