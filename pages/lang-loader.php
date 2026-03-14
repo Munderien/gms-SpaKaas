@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$availableLanguages = ['nl', 'en'];
+$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr']; 
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 // Validate language

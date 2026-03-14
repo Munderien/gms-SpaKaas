@@ -2,7 +2,7 @@
 session_start();
 
 // Validate and set the language
-$availableLanguages = ['nl', 'en'];
+$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr'];
 $lang = isset($_GET['lang']) && in_array($_GET['lang'], $availableLanguages) ? $_GET['lang'] : 'nl';
 
 $_SESSION['language'] = $lang;
