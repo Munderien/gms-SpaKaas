@@ -3,7 +3,7 @@ include("config.php");
 session_start();
 
 // Language configuration
-$availableLanguages = ['nl', 'en'];
+$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr'];
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 // Validate language exists
