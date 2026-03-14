@@ -78,6 +78,7 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
                 opacity: 0;
                 transform: translateY(-30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -89,6 +90,7 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -115,6 +117,7 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -339,7 +342,7 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <!-- Hero Section -->
     <div class="about-hero">
@@ -450,14 +453,20 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
             <h2><?= $lang['about_facilities_heading'] ?></h2>
             <p><?= $lang['about_facilities_intro'] ?></p>
             <ul>
-                <li><strong><?= $lang['about_stat_lodges'] ?> <?= $lang['about_facility_lodges'] ?>:</strong> <?= $lang['about_facility_lodges_desc'] ?></li>
+                <li><strong><?= $lang['about_stat_lodges'] ?> <?= $lang['about_facility_lodges'] ?>:</strong>
+                    <?= $lang['about_facility_lodges_desc'] ?></li>
                 <li><strong><?= $lang['about_facility_pool'] ?>:</strong> <?= $lang['about_facility_pool_desc'] ?></li>
-                <li><strong><?= $lang['about_facility_sauna'] ?>:</strong> <?= $lang['about_facility_sauna_desc'] ?></li>
+                <li><strong><?= $lang['about_facility_sauna'] ?>:</strong> <?= $lang['about_facility_sauna_desc'] ?>
+                </li>
                 <li><strong><?= $lang['about_facility_yoga'] ?>:</strong> <?= $lang['about_facility_yoga_desc'] ?></li>
-                <li><strong><?= $lang['about_facility_lounge'] ?>:</strong> <?= $lang['about_facility_lounge_desc'] ?></li>
-                <li><strong><?= $lang['about_facility_restaurant'] ?>:</strong> <?= $lang['about_facility_restaurant_desc'] ?></li>
-                <li><strong><?= $lang['about_facility_boutique'] ?>:</strong> <?= $lang['about_facility_boutique_desc'] ?></li>
-                <li><strong><?= $lang['about_facility_parking'] ?>:</strong> <?= $lang['about_facility_parking_desc'] ?></li>
+                <li><strong><?= $lang['about_facility_lounge'] ?>:</strong> <?= $lang['about_facility_lounge_desc'] ?>
+                </li>
+                <li><strong><?= $lang['about_facility_restaurant'] ?>:</strong>
+                    <?= $lang['about_facility_restaurant_desc'] ?></li>
+                <li><strong><?= $lang['about_facility_boutique'] ?>:</strong>
+                    <?= $lang['about_facility_boutique_desc'] ?></li>
+                <li><strong><?= $lang['about_facility_parking'] ?>:</strong> <?= $lang['about_facility_parking_desc'] ?>
+                </li>
             </ul>
         </div>
 
@@ -467,11 +476,16 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
             <h3><?= $lang['about_sustainability_subheading'] ?></h3>
             <p><?= $lang['about_sustainability_intro'] ?></p>
             <ul>
-                <li>☀️ <strong><?= $lang['about_sustainability_solar'] ?>:</strong> <?= $lang['about_sustainability_solar_desc'] ?></li>
-                <li>♻️ <strong><?= $lang['about_sustainability_waste'] ?>:</strong> <?= $lang['about_sustainability_waste_desc'] ?></li>
-                <li>💧 <strong><?= $lang['about_sustainability_water'] ?>:</strong> <?= $lang['about_sustainability_water_desc'] ?></li>
-                <li>🌳 <strong><?= $lang['about_sustainability_reforestation'] ?>:</strong> <?= $lang['about_sustainability_reforestation_desc'] ?></li>
-                <li>🐝 <strong><?= $lang['about_sustainability_biodiversity'] ?>:</strong> <?= $lang['about_sustainability_biodiversity_desc'] ?></li>
+                <li>☀️ <strong><?= $lang['about_sustainability_solar'] ?>:</strong>
+                    <?= $lang['about_sustainability_solar_desc'] ?></li>
+                <li>♻️ <strong><?= $lang['about_sustainability_waste'] ?>:</strong>
+                    <?= $lang['about_sustainability_waste_desc'] ?></li>
+                <li>💧 <strong><?= $lang['about_sustainability_water'] ?>:</strong>
+                    <?= $lang['about_sustainability_water_desc'] ?></li>
+                <li>🌳 <strong><?= $lang['about_sustainability_reforestation'] ?>:</strong>
+                    <?= $lang['about_sustainability_reforestation_desc'] ?></li>
+                <li>🐝 <strong><?= $lang['about_sustainability_biodiversity'] ?>:</strong>
+                    <?= $lang['about_sustainability_biodiversity_desc'] ?></li>
             </ul>
         </div>
 

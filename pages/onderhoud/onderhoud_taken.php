@@ -1,14 +1,16 @@
 <?php
-require_once __DIR__ . '/../../navbar.php'; 
-if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] == 0) {
     header("Location: ../home.php");
     exit();
 }
+require_once __DIR__ . '/../../navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
-    
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,17 +18,18 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
     <!-- make sure we load the correct stylesheet and bust caches -->
     <link rel="stylesheet" href="./onderhoud_style.css?v=<?php echo time(); ?>">
 </head>
-<body>
-<div class="container">
-<div class="top-bar-onderhoud">
-    <h2>Onderhoud taken</h2>
-    <button id="add-task" onClick="window.location.href='onderhoud_toevoegen.php'">Taak toevoegen</button>
-</div>
-<div class="taken-container">
-<?php
-include("../config.php");
 
-$sql = "
+<body>
+    <div class="container">
+        <div class="top-bar-onderhoud">
+            <h2>Onderhoud taken</h2>
+            <button id="add-task" onClick="window.location.href='onderhoud_toevoegen.php'">Taak toevoegen</button>
+        </div>
+        <div class="taken-container">
+            <?php
+            include("../config.php");
+
+            $sql = "
     SELECT onderhoud.*, 
            lodge.huisnummer AS lodgenaam,
            gebruiker.naam AS monteurnaam
@@ -39,42 +42,43 @@ $sql = "
         WHEN 'laag' THEN 3
     END ASC
 ";
-$slq="select * from gebruiker where rol>=1";
-$slq=$db->prepare($slq);
-$slq->execute();
-$resultsql=$slq->fetchAll(PDO::FETCH_ASSOC);
+            $slq = "select * from gebruiker where rol>=1";
+            $slq = $db->prepare($slq);
+            $slq->execute();
+            $resultsql = $slq->fetchAll(PDO::FETCH_ASSOC);
 
-$statement = $db->prepare($sql);
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $statement = $db->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($result as $rij) {
-    echo "<div class='taak-item'>";
-    echo "<h3 class='lodge-header'>Lodge: " . $rij['lodgenaam'] . "</h3>";
-    echo "<div class='taak-details'>";
-    echo "<p>medewerker: <br>" . $rij['monteurnaam'] .  "</p>";
-    $omschrijving = $rij['omschrijving'];
-    echo "<p style='display:none;'>omschrijving:<br></p>";
-    echo "<input type='hidden' id=".$rij['onderhoudid']." >";
-    echo "<input id='omschrijving-" . $rij['onderhoudid'] . "' type='hidden' value='" . htmlspecialchars($omschrijving) . "'>";
-    echo "<span class='clickable-description' onclick=\"showDescription(document.getElementById('omschrijving-" . $rij['onderhoudid'] . "').value)\">omschrijving</span><br>";
-    echo "<p>status:<br> " . $rij['status'] . "</p>";
-    echo "<p>prioriteit:<br> " . $rij['prioriteit'] . "</p>";
-    echo "</div>";
-    echo "<div class='taak-actions'>";
-    echo "<button class='edit-button' onClick=\"window.location.href='onderhoud_bewerken.php?id=" . $rij['onderhoudid'] . "'\">Bewerken</button>";
-    echo "<button class='delete-button' onClick=\"window.location.href='onderhoud_verwijder_functie.php?id=" . $rij['onderhoudid'] . "'\">Verwijderen</button>";
-    echo "</div>";
-    echo "</div>";
-}
-?>
-</div>
-</div>
-<script>
-function showDescription(text) {
-    alert(text);
-}
-</script>
+            foreach ($result as $rij) {
+                echo "<div class='taak-item'>";
+                echo "<h3 class='lodge-header'>Lodge: " . $rij['lodgenaam'] . "</h3>";
+                echo "<div class='taak-details'>";
+                echo "<p>medewerker: <br>" . $rij['monteurnaam'] . "</p>";
+                $omschrijving = $rij['omschrijving'];
+                echo "<p style='display:none;'>omschrijving:<br></p>";
+                echo "<input type='hidden' id=" . $rij['onderhoudid'] . " >";
+                echo "<input id='omschrijving-" . $rij['onderhoudid'] . "' type='hidden' value='" . htmlspecialchars($omschrijving) . "'>";
+                echo "<span class='clickable-description' onclick=\"showDescription(document.getElementById('omschrijving-" . $rij['onderhoudid'] . "').value)\">omschrijving</span><br>";
+                echo "<p>status:<br> " . $rij['status'] . "</p>";
+                echo "<p>prioriteit:<br> " . $rij['prioriteit'] . "</p>";
+                echo "</div>";
+                echo "<div class='taak-actions'>";
+                echo "<button class='edit-button' onClick=\"window.location.href='onderhoud_bewerken.php?id=" . $rij['onderhoudid'] . "'\">Bewerken</button>";
+                echo "<button class='delete-button' onClick=\"window.location.href='onderhoud_verwijder_functie.php?id=" . $rij['onderhoudid'] . "'\">Verwijderen</button>";
+                echo "</div>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </div>
+    <script>
+        function showDescription(text) {
+            alert(text);
+        }
+    </script>
 
 </body>
+
 </html>

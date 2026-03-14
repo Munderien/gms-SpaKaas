@@ -55,7 +55,7 @@ try {
     // Insert new user
     $v = $db->prepare("INSERT INTO gebruiker (email, wachtwoord, rol, is2faingeschakeld, adres, naam, plaats, telefoonnummer, postcode) 
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $x = $v->execute([$mail, $hashedPassword, 0, 0, $adres, $name, $plaats, $phone, $postcode]); 
+    $x = $v->execute([$mail, $hashedPassword, 0, 0, $adres, $name, $plaats, $phone, $postcode]);
 
     if (!$x) {
         echo json_encode(['success' => false, 'message' => 'Registratie mislukt. Probeer het later opnieuw.']);
@@ -72,7 +72,7 @@ try {
         $_SESSION['rol'] = $user['rol'];
         $_SESSION['gebruikermail'] = $user['email'];
         $_SESSION['two_factor'] = $user['is2faingeschakeld'];
-        
+
         echo json_encode(['success' => true, 'message' => 'Registratie succesvol! U wordt doorgestuurd...']);
         exit();
     } else {
@@ -95,34 +95,34 @@ try {
  */
 function validatePasswordStrength($password) {
     $errors = [];
-    
+
     // Check length
     if (strlen($password) < 8) {
         $errors[] = 'Minimaal 8 karakters';
     }
-    
+
     // Check for uppercase letter
     if (!preg_match('/[A-Z]/', $password)) {
         $errors[] = 'Minimaal 1 hoofdletter';
     }
-    
+
     // Check for number
     if (!preg_match('/[0-9]/', $password)) {
         $errors[] = 'Minimaal 1 getal';
     }
-    
+
     // Check for special character
     if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $password)) {
         $errors[] = 'Minimaal 1 speciaal teken (!@#$%^&* etc)';
     }
-    
+
     if (count($errors) > 0) {
         return [
             'valid' => false,
             'message' => 'Wachtwoord voldoet niet aan de vereisten: ' . implode(', ', $errors)
         ];
     }
-    
+
     return ['valid' => true];
 }
 ?>

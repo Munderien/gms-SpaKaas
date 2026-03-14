@@ -1,7 +1,7 @@
 <?php
 session_start();
 $host = 'localhost';
-$db   = 'dms-spakaas';
+$db = 'dms-spakaas';
 $user = 'root';
 $pass = '';
 
@@ -79,7 +79,7 @@ if (isset($_SESSION['gebruikerId'])) {
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <div class="lodges-container">
         <h1><?php echo htmlspecialchars($lodgeType['naam']); ?></h1>
@@ -101,7 +101,9 @@ if (isset($_SESSION['gebruikerId'])) {
                         <p><?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?></p>
                     </div>
                 </div>
-                <button class="close-details" onclick="window.location.href='MaakAfspraak.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">Maak afspraak</button>
+                <button class="close-details"
+                    onclick="window.location.href='MaakAfspraak.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">Maak
+                    afspraak</button>
             </div>
         </div>
     </div>
