@@ -15,7 +15,7 @@ if (!isset($lang) || !is_array($lang)) {
     }
 }
 
-$base = '/dms-spakaas/gms-SpaKaas';
+$base = '/websites/gms-spakaas';
 $huidigePagina = basename($_SERVER['PHP_SELF']);
 $isLoggedIn = isset($_SESSION['gebruikerId']);
 
