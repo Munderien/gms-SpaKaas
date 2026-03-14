@@ -1,6 +1,18 @@
 <?php
 session_start();
+include('config.php');
 
+if (!isset($_SESSION['gebruikerId'])) {
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    exit;
+}
+$stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
+$stmt->execute([$_SESSION['gebruikerId']]);
+$_SESSION['rol'] = (int) $stmt->fetchColumn();
+
+if ($_SESSION['rol'] = 0) {
+    die('Geen toegang');
+}
 if (!isset($_SESSION['calendar_date'])) {
     $_SESSION['calendar_date'] = date("Y-m-d");
 }

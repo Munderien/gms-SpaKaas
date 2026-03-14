@@ -8,41 +8,70 @@ try {
 } catch (Exception $e) {
     die("DB Connection failed: " . $e->getMessage());
 }
+
+if (!isset($_SESSION['gebruikerId'])) {
+    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    exit;
+}
+
 $message = '';
 // Handle update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
+    $afspraakId = intval($_POST['afspraakId'] ?? 0);
+    
+    // Load current appointment data first to check if it can be edited
+    $checkQuery = "SELECT starttijd FROM afspraak WHERE afspraakId = $afspraakId LIMIT 1";
+    $checkResult = $mysqli->query($checkQuery);
+    $currentItem = $checkResult ? $checkResult->fetch_assoc() : null;
+    
     $beginTime = $mysqli->real_escape_string($_POST['starttijd'] ?? '');
     $endTime   = $mysqli->real_escape_string($_POST['eindtijd'] ?? '');
     $status = $mysqli->real_escape_string($_POST['status'] ?? '');
     $desc      = $mysqli->real_escape_string($_POST['toelichting'] ?? '');
     $aantalmensen = $mysqli->real_escape_string($_POST['aantalmensen'] ?? '');
-    $lodgeId = intval($_POST['lodgeid'] ?? 0);
-    $afspraakId = intval($_POST['afspraakId'] ?? 0);
+    $lodgeTypeId = intval($_POST['lodgetypeid'] ?? 0);
 
     $today = date('Y-m-d');
 
     // Alleen niet aanpassen client sided? (voor nu nog niet, kan nog worden aangepast) -Marijn
-    if ($item['starttijd'] < $today) {
+    if (!$currentItem) {
+        $message = "Afspraak niet gevonden.";
+    } elseif ($currentItem['starttijd'] < $today) {
         $message = "Mag niks aanpassen als de afspraak al is begonnen of voorbij is";
     }
     elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
+    } elseif ($lodgeTypeId <= 0) {
+        $message = "Selecteer een lodgetype.";
     } else {
-        // Kijkt of er een afspraak is op de lodge die overlapped met dezelfde datum
-        $conflictQuery = "SELECT COUNT(*) as count FROM afspraak
-                         WHERE lodgeid = $lodgeId
-                         AND afspraakId != $afspraakId
-                         AND ((starttijd <= '$beginTime' AND eindtijd > '$beginTime')
-                              OR (starttijd < '$endTime' AND eindtijd >= '$endTime')
-                              OR (starttijd >= '$beginTime' AND eindtijd <= '$endTime'))";
-        $conflictResult = $mysqli->query($conflictQuery);
-        $conflictRow = $conflictResult ? $conflictResult->fetch_assoc() : ['count' => 0];
+        // Zoek een beschikbare lodge binnen het gekozen lodgetype in de geselecteerde periode
+        $availableLodgeQuery = "SELECT l.lodgeid
+                                FROM lodge l
+                                WHERE l.typeid = $lodgeTypeId
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM afspraak a
+                                    WHERE a.lodgeid = l.lodgeid
+                                    AND a.afspraakId != $afspraakId
+                                    AND (
+                                        (a.starttijd <= '$beginTime' AND a.eindtijd > '$beginTime')
+                                        OR (a.starttijd < '$endTime' AND a.eindtijd >= '$endTime')
+                                        OR (a.starttijd >= '$beginTime' AND a.eindtijd <= '$endTime')
+                                    )
+                                )
+                                ORDER BY l.lodgeid ASC
+                                LIMIT 1";
 
-        if ($conflictRow['count'] > 0) {
-            $message = "Deze lodge heeft al een afspraak in deze periode.";
+        $availableLodgeResult = $mysqli->query($availableLodgeQuery);
+
+        if (!$availableLodgeResult || $availableLodgeResult->num_rows === 0) {
+            $message = "Geen beschikbare lodge gevonden voor dit lodgetype in deze periode.";
         } else {
+            $availableLodge = $availableLodgeResult->fetch_assoc();
+            $lodgeId = (int) $availableLodge['lodgeid'];
+
             $update = "UPDATE afspraak 
                    SET lodgeid = '$lodgeId', starttijd = '$beginTime',
                    eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
@@ -78,7 +107,7 @@ $afspraakQuery = "SELECT afspraakId, lodgeid, starttijd, eindtijd, status, toeli
                   FROM afspraak WHERE afspraakId = $afspraakId";
 if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
     // If user is customer, only show their own appointments
-    $afspraakQuery .= " AND gebruikerid = " . intval($_SESSION['gebruikerid']);
+    $afspraakQuery .= " AND gebruikerId = " . intval($_SESSION['gebruikerId']);
 }
 $afspraakQuery .= " LIMIT 1";
 $result = $mysqli->query($afspraakQuery);
@@ -94,7 +123,7 @@ $userData = [];
 $userQuery = "
     SELECT g.* 
     FROM afspraak a
-    INNER JOIN gebruiker g ON a.gebruikerid = g.gebruikerid
+    INNER JOIN gebruiker g ON a.gebruikerId = g.gebruikerId
     WHERE a.afspraakId = $afspraakId
     LIMIT 1";
 $user = $mysqli->query($userQuery);
@@ -102,29 +131,30 @@ if ($user && $user->num_rows > 0) {
     $userData = $user->fetch_assoc();
 }
 
-// Get all lodges for dropdown
-$lodges = [];
-$lodgeQuery = "SELECT l.lodgeid, lt.naam as lodgetype_naam 
-               FROM lodge l
-               LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
-               ORDER BY l.lodgeid ASC";
-$lodgeResult = $mysqli->query($lodgeQuery);
-if ($lodgeResult && $lodgeResult->num_rows > 0) {
-    while ($row = $lodgeResult->fetch_assoc()) {
-        $lodges[] = $row;
+// Get all lodge types for dropdown
+$lodgeTypes = [];
+$lodgeTypeQuery = "SELECT lodgetypeid, naam
+                   FROM lodgetype
+                   ORDER BY naam ASC";
+$lodgeTypeResult = $mysqli->query($lodgeTypeQuery);
+if ($lodgeTypeResult && $lodgeTypeResult->num_rows > 0) {
+    while ($row = $lodgeTypeResult->fetch_assoc()) {
+        $lodgeTypes[] = $row;
     }
 }
 
-// Get current lodge type name
+// Get current lodge type name and ID
 $lodgeTypeName = '';
+$currentLodgeTypeId = null;
 if (!empty($item['lodgeid'])) {
-    $ltQuery = "SELECT lt.naam FROM lodge l
+    $ltQuery = "SELECT lt.naam, lt.lodgetypeid FROM lodge l
                LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
                WHERE l.lodgeid = " . intval($item['lodgeid']);
     $ltResult = $mysqli->query($ltQuery);
     if ($ltResult && $ltResult->num_rows > 0) {
         $ltRow = $ltResult->fetch_assoc();
         $lodgeTypeName = $ltRow['naam'] ?? $item['lodgeid'];
+        $currentLodgeTypeId = $ltRow['lodgetypeid'] ?? null;
     }
 }
 ?>
@@ -209,16 +239,16 @@ if (!empty($item['lodgeid'])) {
                     <input type="text" value="<?php echo $afspraakId; ?>" disabled="true">
                 </div>
                 <div class="popup-field">
-                    <label>gebruikerid</label>
-                    <input type="number" name="gebruikerid" value="<?php echo htmlspecialchars($item['gebruikerid'] ?? ''); ?>" required disabled="true">
+                    <label>gebruikerId</label>
+                    <input type="number" name="gebruikerId" value="<?php echo htmlspecialchars($item['gebruikerId'] ?? ''); ?>" required disabled="true">
                 </div>
                 <div class="popup-field">
-                    <label>lodgeid</label>
-                    <select name="lodgeid" required>
-                        <option value="">-- Select Lodge --</option>
-                        <?php foreach ($lodges as $lodge): ?>
-                            <option value="<?php echo htmlspecialchars($lodge['lodgeid']); ?>" <?php echo ($item['lodgeid'] == $lodge['lodgeid']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($lodge['lodgetype_naam'] ?? $lodge['lodgeid']); ?>
+                    <label>lodgetype</label>
+                    <select name="lodgetypeid" required>
+                        <option value="">-- Select Lodgetype --</option>
+                        <?php foreach ($lodgeTypes as $lodgeType): ?>
+                            <option value="<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>" <?php echo ($currentLodgeTypeId == $lodgeType['lodgetypeid']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($lodgeType['naam']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -268,7 +298,7 @@ if (!empty($item['lodgeid'])) {
         
         <div class="popup-field">
             <label>Gebruiker ID</label>
-            <div class="popup-value"><?php echo htmlspecialchars($userData['gebruikerid']); ?></div>
+            <div class="popup-value"><?php echo htmlspecialchars($userData['gebruikerId']); ?></div>
         </div>
 
         <div class="popup-field">

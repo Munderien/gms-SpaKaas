@@ -1,8 +1,32 @@
 <?php
 session_start();
 
+// Language configuration
+$availableLanguages = ['nl', 'en'];
+$currentLang = $_SESSION['language'] ?? 'nl';
+
+// Validate language exists
+if (!in_array($currentLang, $availableLanguages)) {
+    $currentLang = 'nl';
+    $_SESSION['language'] = $currentLang;
+}
+
+// Load language file - Fixed path
+$langFile = __DIR__ . "/vertaling/{$currentLang}.php";
+
+if (file_exists($langFile)) {
+    $lang = require_once($langFile);
+} else {
+    die("Error: Language file not found at {$langFile}");
+}
+
+// Ensure $lang is an array
+if (!is_array($lang)) {
+    die("Error: Language file did not return an array");
+}
+
 // Fetch user data only if logged in
-$naam = 'Welkom';
+$naam = $lang['welcome'];
 $isLoggedIn = isset($_SESSION['gebruikerId']);
 
 if ($isLoggedIn) {
@@ -10,7 +34,7 @@ if ($isLoggedIn) {
     $stmt = $db->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
     $stmt->execute([$_SESSION['gebruikerId']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    $naam = $user ? $user['naam'] : 'Gast';
+    $naam = $user ? $user['naam'] : $lang['guest'];
 }
 
 // Setup for reviews
@@ -20,7 +44,7 @@ try {
     include("config.php");
     $pdo = $db;
 } catch (PDOException $e) {
-    die("Databaseverbinding mislukt: " . $e->getMessage());
+    die($lang['db_connection_failed'] . ": " . $e->getMessage());
 }
 
 // Fetch all reviews
@@ -32,7 +56,7 @@ $stmt = $pdo->query("
 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<?= $currentLang ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -51,49 +75,48 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="welcome-header">
                 <h1>
                     <?php 
-                    if ($isLoggedIn && $naam !== 'Gast') {
-                        echo "Welkom terug, <span class='user-name'>" . htmlspecialchars(ucfirst($naam)) . "</span>!";
+                    if ($isLoggedIn && $naam !== $lang['guest']) {
+                        echo $lang['welcome_back'] . ", <span class='user-name'>" . htmlspecialchars(ucfirst($naam)) . "</span>!";
                     } else {
-                        echo "<span class='user-name'>Welkom</span> bij SpaKaas";
+                        echo "<span class='user-name'>" . $lang['welcome_guest'] . "</span>";
                     }
                     ?>
                 </h1>
-                <p class="welcome-subtitle">Geniet van pure ontspanning en luxe</p>
+                <p class="welcome-subtitle"><?= $lang['welcome_subtitle'] ?></p>
             </div>
 
             <div class="welcome-content">
                 <p class="welcome-intro">
-                    Fijn dat je bij onze Luxe Spa Resort bent. Hier kun je volledig ontsnappen van het
-                    dagelijkse leven en jezelf verwennen met de beste behandelingen.
+                    <?= $lang['welcome_intro'] ?>
                 </p>
 
                 <div class="features-grid">
                     <div class="feature-item">
-                        <h3>Premium Behandelingen</h3>
-                        <p>Kies uit onze exclusieve wellness-aanbiedingen</p>
+                        <h3><?= $lang['premium_treatments'] ?></h3>
+                        <p><?= $lang['premium_treatments_desc'] ?></p>
                     </div>
                     <div class="feature-item">
-                        <h3>Makkelijk Boeken</h3>
-                        <p>Reserveer direct jouw favoriete behandeling</p>
+                        <h3><?= $lang['easy_booking'] ?></h3>
+                        <p><?= $lang['easy_booking_desc'] ?></p>
                     </div>
                     <div class="feature-item">
-                        <h3>Speciale Aanbiedingen</h3>
-                        <p>Exclusieve deals voor onze leden</p>
+                        <h3><?= $lang['special_offers'] ?></h3>
+                        <p><?= $lang['special_offers_desc'] ?></p>
                     </div>
                     <div class="feature-item">
-                        <h3>VIP Status</h3>
-                        <p>Geniet van extra voordelen en privileges</p>
+                        <h3><?= $lang['vip_status'] ?></h3>
+                        <p><?= $lang['vip_status_desc'] ?></p>
                     </div>
                 </div>
 
                 <div class="quick-stats">
                     <div class="stat">
-                        <span class="stat-number">24/7</span>
-                        <span class="stat-label">Beschikbaarheid</span>
+                        <span class="stat-number"><?= $lang['availability_24_7'] ?></span>
+                        <span class="stat-label"><?= $lang['availability_label'] ?></span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">Geweldige</span>
-                        <span class="stat-label">Beoordelingen</span>
+                        <span class="stat-number"><?= $lang['great_reviews'] ?></span>
+                        <span class="stat-label"><?= $lang['reviews_label'] ?></span>
                     </div>
                 </div>
             </div>
@@ -115,24 +138,24 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </section>
     </main>
 
-    <h2>Recente reviews</h2>
+    <h2><?= $lang['recent_reviews'] ?></h2>
 
     <?php if ($isLoggedIn): ?>
     <div class="reviews-button-container">
-        <a href="review.php" class="btn-reviews">Review maken</a>
+        <a href="review.php" class="btn-reviews"><?= $lang['create_review'] ?></a>
     </div>
     <?php else: ?>
     <div class="reviews-button-container">
         <p style="color: #666; font-style: italic;">
-            <a href="inlog.php" style="color: #3fa8a8; text-decoration: none; font-weight: 600;">Log in</a> om een review te schrijven
+            <a href="inlog.php" style="color: #3fa8a8; text-decoration: none; font-weight: 600;"><?= $lang['login_link'] ?></a> <?= $lang['login_to_review'] ?>
         </p>
     </div>
     <?php endif; ?>
 
     <?php foreach ($reviews as $r): ?>
         <div class="review-card">
-            <div class="rating">Beoordeling:
-                <?= htmlspecialchars($r['rating']) ?>/5
+            <div class="rating"><?= $lang['rating'] ?>:
+                <?= htmlspecialchars($r['rating']) ?><?= $lang['out_of_5'] ?>
             </div>
             <div>
                 <?= nl2br(htmlspecialchars($r['opmerking'])) ?>
@@ -150,7 +173,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </small>
 
             <?php if ($isLoggedIn && (int) $r['gebruikerid'] === $currentUserId): ?>
-                <div><a href="review.php?edit=<?= (int) $r['reviewid'] ?>">Bewerken</a></div>
+                <div><a href="review.php?edit=<?= (int) $r['reviewid'] ?>"><?= $lang['edit'] ?></a></div>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>

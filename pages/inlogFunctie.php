@@ -33,6 +33,7 @@ if ($d > 0) {
   $_SESSION['gebruikermail'] = $x['email'];
   $_SESSION['two_factor'] = $x['is2faingeschakeld'];
 
+  include('RecentlyViewed.php');
   echo "<script>window.location.href='../pages/home.php'</script>";
 } else {
   echo "u heeft verkeerde gegevens ingevoerd";
