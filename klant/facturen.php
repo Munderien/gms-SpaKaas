@@ -3,7 +3,7 @@ require '../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 
@@ -30,7 +30,7 @@ $result = $facturen->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Facturen – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .factuur-kaart {
             background: #fff;
@@ -143,7 +143,7 @@ $result = $facturen->fetchAll(PDO::FETCH_ASSOC);
                             <?php echo number_format($excl, 2, ',', '.'); ?>
                         </div>
                         <br>
-                        <a href="/dms-spakaas/gms-SpaKaas/factuur_manager/print.php?factuurid=<?php echo $f['factuurid']; ?>"
+                        <a href="../factuur_manager/print.php?factuurid=<?php echo $f['factuurid']; ?>"
                             class="btn-bekijk">Bekijken</a>
                     </div>
                 </div>

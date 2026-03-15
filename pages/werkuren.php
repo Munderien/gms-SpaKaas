@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch employees (role 1 and 2)
 $employees_array = [];
-$employees_result = $conn->query("SELECT gebruikerid, naam, rol FROM gebruiker WHERE rol IN (1, 2) AND isactief = 1 ORDER BY naam");
+$employees_result = $conn->query("SELECT gebruikerid, naam, rol FROM gebruiker WHERE rol IN (1, 2) ORDER BY naam");
 if ($employees_result) {
     while ($row = $employees_result->fetch_assoc()) {
         $employees_array[] = $row;

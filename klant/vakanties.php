@@ -3,7 +3,7 @@ require '../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 
@@ -29,7 +29,7 @@ $result = $vakanties->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Vakanties – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .vakantie-kaart {
             background: #fff;

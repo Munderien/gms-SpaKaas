@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 // Get all active cleaners (rol = 1)
-$sql_schoonmakers = "SELECT gebruikerid, naam FROM gebruiker WHERE rol = 1 AND isactief = 1 ORDER BY naam";
+$sql_schoonmakers = "SELECT gebruikerid, naam FROM gebruiker WHERE rol = 1 ORDER BY naam";
 $result_schoonmakers = $conn->query($sql_schoonmakers);
 $schoonmakers = $result_schoonmakers->fetch_all(MYSQLI_ASSOC);
 
