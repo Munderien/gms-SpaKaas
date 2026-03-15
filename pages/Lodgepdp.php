@@ -70,6 +70,20 @@ if (isset($_SESSION['gebruikerId'])) {
         $stmtView->close();
     }
 }
+
+// Check if current user has favourited this lodgetype
+$isFavourited = false;
+if (isset($_SESSION['gebruikerId'])) {
+    $favCheck = $conn->prepare("SELECT 1 FROM favoriete WHERE gebruikerid = ? AND lodgetypeid = ? LIMIT 1");
+    if ($favCheck) {
+        $favUserId = (int) $_SESSION['gebruikerId'];
+        $favCheck->bind_param('ii', $favUserId, $lodgetypeId);
+        $favCheck->execute();
+        $favCheck->store_result();
+        $isFavourited = $favCheck->num_rows > 0;
+        $favCheck->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -105,6 +119,9 @@ if (isset($_SESSION['gebruikerId'])) {
                     </div>
                 </div>
                 <button class="close-details" onclick="window.location.href='MaakAfspraak.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">Maak afspraak</button>
+                <button class="close-details" onclick="window.location.href='Favorite.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">
+                    <?php echo $isFavourited ? '&#128155; Unfavorite' : '&#129293; Favorite'; ?>
+                </button>
             </div>
         </div>
     </div>
