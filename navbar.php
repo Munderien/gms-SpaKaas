@@ -32,10 +32,12 @@ $userInitial = 'U';
 $profielfoto = null;
 
 if ($isLoggedIn) {
-    $navDb = new PDO("mysql:host=localhost;dbname=dms-spakaas", "root", "");
-    $navStmt = $navDb->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
+    include("config.php"); // Use existing connection
+    $navStmt = $db->prepare("SELECT naam, profielfoto FROM gebruiker WHERE gebruikerid = ?");
     $navStmt->execute([$_SESSION['gebruikerId']]);
-    $gebruikersnaam = $navStmt->fetchColumn();
+    $navUser = $navStmt->fetch(PDO::FETCH_ASSOC);
+    $gebruikersnaam = $navUser ? $navUser['naam'] : 'Gebruiker';
+    $profielfoto = $navUser && !empty($navUser['profielfoto']) ? $navUser['profielfoto'] : null;
     $userInitial = $gebruikersnaam ? strtoupper(substr($gebruikersnaam, 0, 1)) : 'U';
     $rol = $_SESSION['rol'] ?? -1;
 } else {
@@ -402,6 +404,38 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
             padding-top: 60px !important;
         }
     }
+
+    .spakaas-nav .user-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f4c5c;
+        font-weight: 700;
+        font-size: 1.05em;
+        flex-shrink: 0;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .spakaas-nav .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .spakaas-nav .user-avatar-initial {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
+    }
 </style>
 
 <nav class="spakaas-nav">
@@ -513,15 +547,18 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
                 <?php if ($isLoggedIn): ?>
                     <div class="user-avatar">
                         <?php if ($profielfoto): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>"
+                                alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
                         <?php else: ?>
                             <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
                         <?php endif; ?>
                     </div>
                     <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
-                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
+                    <a href="<?= $base ?>/pages/logout.php"
+                        class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
                 <?php else: ?>
-                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
+                    <a href="<?= $base ?>/pages/inlog.php"
+                        class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
                 <?php endif; ?>
             </div>
         </div>
@@ -536,10 +573,10 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
     }
 
     // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         const dropdown = document.getElementById('langDropdown');
         const switcher = document.querySelector('.language-switcher');
-        
+
         if (!switcher.contains(event.target)) {
             dropdown.classList.remove('active');
         }
@@ -547,7 +584,7 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 
     // Close dropdown when clicking a language option
     document.querySelectorAll('.lang-option').forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function () {
             document.getElementById('langDropdown').classList.remove('active');
         });
     });
