@@ -70,18 +70,12 @@ if ($result && $result->num_rows > 0) {
                     <div class="lodge-card-content">
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
                         <p class="description">
                             <?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?>
                         </p>
                         <div class="lodge-card-footer">
                             <span
                                 class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
-=======
-                        <p class="description"><?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?></p>
-                        <div class="lodge-card-footer">
-                            <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodge['prijs']); ?></span>
->>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
                         <p class="description"><?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?></p>
                         <div class="lodge-card-footer">
@@ -104,13 +98,9 @@ if ($result && $result->num_rows > 0) {
                                 <label><?= $lang['lodges_capacity'] ?>:</label>
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
                                 <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?>
                                     <?= $lang['lodges_persons'] ?>
                                 </p>
-=======
-                                <p><?php echo htmlspecialchars($lodge['capaciteit']); ?> <?= $lang['lodges_persons'] ?></p>
->>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
                                 <p><?php echo htmlspecialchars($lodge['capaciteit']); ?> <?= $lang['lodges_persons'] ?></p>
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
@@ -130,10 +120,6 @@ if ($result && $result->num_rows > 0) {
                         </div>
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                        <button class="close-details" onclick="bookAppointment(<?php echo htmlspecialchars($lodge['lodgeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
->>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
                         <button class="close-details" onclick="bookAppointment(<?php echo htmlspecialchars($lodge['lodgeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
