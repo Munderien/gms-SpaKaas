@@ -5,7 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Language configuration
 <<<<<<< HEAD
+<<<<<<< HEAD
 $availableLanguages = ['nl' => 'Nederlands', 'en' => 'English', 'de' => 'Deutsch', 'fr' => 'Français', 'tr' => 'Türkçe'];
+=======
+$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
+>>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
 $availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
@@ -20,7 +24,10 @@ if (!in_array($currentLang, array_keys($availableLanguages))) {
 // Load language file - Fixed path
 $langFile = __DIR__ . "/vertaling/{$currentLang}.php";
 <<<<<<< HEAD
+<<<<<<< HEAD
 $lang = file_exists($langFile) ? require $langFile : [];
+=======
+>>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 
@@ -475,7 +482,11 @@ if ($isLoggedIn) {
                         <a href="<?= $base ?>/pages/set-language.php?lang=<?= $code ?>" 
                            class="lang-option <?= $code === $currentLang ? 'active' : '' ?>">
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <span class="lang-flag"><?= strtoupper($code) ?></span>
+=======
+                            <span class="lang-flag"><?= $code === 'nl' ? 'NL' : 'EN' ?></span>
+>>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
                             <span class="lang-flag"><?= $code === 'nl' ? 'NL' : 'EN' ?></span>
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
@@ -528,9 +539,13 @@ if ($isLoggedIn) {
         });
     });
 <<<<<<< HEAD
+<<<<<<< HEAD
 </script>
 
 <?php require_once __DIR__ . '/cookieConsent.php'; ?>
+=======
+</script>
+>>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 =======
 </script>
 >>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
