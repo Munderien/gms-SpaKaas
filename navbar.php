@@ -3,36 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-<<<<<<< HEAD
-$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
-$currentLang = $_SESSION['language'] ?? 'nl';
-
-$langFile = __DIR__ . "/pages/vertaling/{$currentLang}.php";
-if (!isset($lang) || !is_array($lang)) {
-    if (file_exists($langFile)) {
-        $lang = include $langFile;
-    } else {
-        $lang = [];
-    }
-}
-
-$base = '/websites/gms-spakaas';
-$huidigePagina = basename($_SERVER['PHP_SELF']);
-$isLoggedIn = isset($_SESSION['gebruikerId']);
-
-if ($isLoggedIn) {
-    $navDb = new PDO("mysql:host=localhost;dbname=dms-spakaas", "root", "");
-    $navStmt = $navDb->prepare("SELECT naam FROM gebruiker WHERE gebruikerid = ?");
-    $navStmt->execute([$_SESSION['gebruikerId']]);
-    $gebruikersnaam = $navStmt->fetchColumn();
-    $userInitial = $gebruikersnaam ? strtoupper(substr($gebruikersnaam, 0, 1)) : 'U';
-    $rol = $_SESSION['rol'] ?? -1;
-=======
 // determine application root dynamically (up to gms-SpaKaas folder)
 $script = $_SERVER['SCRIPT_NAME'];
 if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
     $base = $m[1];
->>>>>>> parent of 81f3eea (Navbar CSS en rol-dropdowns opgelost, code cleanup)
 } else {
     // fallback to empty string so links become relative
     $base = '';
