@@ -75,8 +75,8 @@ $vrijeLodges = $db->query("SELECT l.lodgeid, l.huisnummer, lt.naam AS typename
                                    echo 'selected'; ?>>
                                 #
                                 <?php echo $a['afspraakid']; ?> –
-                                <?php echo htmlspecialchars($a['titel']); ?>
-                                (
+                               
+                                
                                 <?php echo htmlspecialchars($a['gebruikersnaam']); ?>,
                                 <?php echo date('d-m-Y', strtotime($a['starttijd'])); ?> t/m
                                 <?php echo date('d-m-Y', strtotime($a['eindtijd'])); ?>)
@@ -131,9 +131,6 @@ $vrijeLodges = $db->query("SELECT l.lodgeid, l.huisnummer, lt.naam AS typename
                     <tr>
                         <td>
                             <?php echo $a['afspraakid']; ?>
-                        </td>
-                        <td>
-                            <?php echo htmlspecialchars($a['titel']); ?>
                         </td>
                         <td>
                             <?php echo htmlspecialchars($a['gebruikersnaam']); ?>

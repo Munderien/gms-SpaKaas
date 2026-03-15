@@ -68,9 +68,12 @@ if ($result && $result->num_rows > 0) {
                         <h2><?php echo htmlspecialchars($lodgeType['naam']); ?></h2>
                     </div>
                     <div class="lodge-card-content">
-                        <p class="description"><?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?></p>
+                        <p class="description">
+                            <?php echo htmlspecialchars(substr($lodgeType['beschrijving'], 0, 100)) . '...'; ?>
+                        </p>
                         <div class="lodge-card-footer">
-                            <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
+                            <span
+                                class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
                         </div>
                     </div>
                     <div class="lodge-card-details">
@@ -81,35 +84,39 @@ if ($result && $result->num_rows > 0) {
                             </div>
                             <div class="detail-item">
                                 <label><?= $lang['lodges_capacity'] ?>:</label>
-                                <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?> <?= $lang['lodges_persons'] ?></p>
+                                <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?>
+                                    <?= $lang['lodges_persons'] ?>
+                                </p>
                             </div>
                             <div class="detail-item">
                                 <label><?= $lang['lodges_price'] ?>:</label>
-                                <p><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></p>
+                                <p><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?>
+                                </p>
                             </div>
+                            <button class="close-details"
+                                onclick="bookAppointment(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
+                            <button class="close-details"
+                                onclick="productLodge(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_details'] ?? 'Details' ?></button>
                         </div>
-                        <button class="close-details" onclick="bookAppointment(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_book_appointment'] ?></button>
-                        <button class="close-details" onclick="productLodge(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_details'] ?? 'Details' ?></button>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
 
-    <script>
-        function toggleDetails(card) {
-            card.classList.toggle("expanded");
-        }
+        <script>
+            function toggleDetails(card) {
+                card.classList.toggle("expanded");
+            }
 
-        function bookAppointment(lodgeTypeId) {
-            event.stopPropagation();
-            window.location.href = 'MaakAfspraak.php?lodgetypeid=' + lodgeTypeId;
-        }
-        function productLodge(lodgetypeId) {
-            event.stopPropagation();
-            window.location.href = 'Lodgepdp.php?lodgetypeid=' + lodgetypeId;
-        }
-    </script>
+            function bookAppointment(lodgeTypeId) {
+                event.stopPropagation();
+                window.location.href = 'MaakAfspraak.php?lodgetypeid=' + lodgeTypeId;
+            }
+            function productLodge(lodgetypeId) {
+                event.stopPropagation();
+                window.location.href = 'Lodgepdp.php?lodgetypeid=' + lodgetypeId;
+            }
+        </script>
 </body>
 
 </html>

@@ -85,10 +85,15 @@ $lodgetypes = $db->query("SELECT lodgetypeid, naam FROM lodgetype ORDER BY naam"
         <div class="top-bar-manager">
             <h1>Lodges Beheren</h1>
             <div class="top-bar-actions">
+                <a href="lodge_toevoegen.php" class="btn btn-success">+ Lodge toevoegen</a>
                 <a href="koppel_afspraak.php" class="btn btn-primary">Lodge koppelen aan afspraak</a>
                 <a href="type_overzicht.php" class="btn btn-secondary">Lodgetypes beheren</a>
             </div>
         </div>
+
+        <?php if (isset($_GET['toegevoegd'])): ?>
+            <p style="color:green; font-weight:bold;">Lodge succesvol toegevoegd!</p>
+        <?php endif; ?>
 
         <?php if ($melding != ''): ?>
             <p style="color:green; font-weight:bold;"><?php echo $melding; ?></p>
@@ -139,7 +144,7 @@ $lodgetypes = $db->query("SELECT lodgetypeid, naam FROM lodgetype ORDER BY naam"
                                     <input type="hidden" name="lodgeid" value="<?php echo $l['lodgeid']; ?>">
                                     <select name="lodgetypeid" class="compact">
                                         <?php foreach ($lodgetypes as $lt): ?>
-                                            <option value="<?php echo $lt['typeid']; ?>" <?php if ($lt['typetypeid'] == $l['lodgetypeid'])
+                                            <option value="<?php echo $lt['lodgetypeid']; ?>" <?php if ($lt['lodgetypeid'] == $l['typeid'])
                                                    echo 'selected'; ?>>
                                                 <?php echo htmlspecialchars($lt['naam']); ?>
                                             </option>
