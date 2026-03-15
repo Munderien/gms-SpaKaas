@@ -253,6 +253,29 @@ if ($isLoggedIn) {
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
+    .clickable-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: inherit;
+        border-radius: 25px;
+        padding: 4px 8px;
+        transition: background 0.2s ease, transform 0.2s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .clickable-area:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-1px);
+    }
+
+    .clickable-area:focus-visible {
+        outline: 2px solid #ffeb3b;
+        outline-offset: 2px;
+    }
+
     .user-avatar {
         width: 36px;
         height: 36px;
@@ -476,14 +499,16 @@ if ($isLoggedIn) {
 
             <div class="nav-user">
                 <?php if ($isLoggedIn): ?>
-                    <div class="user-avatar">
-                        <?php if ($profielfoto): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
-                        <?php else: ?>
-                            <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
-                        <?php endif; ?>
-                    </div>
-                    <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
+                    <a href="<?= $base ?>../pages/edit_user.php" class="clickable-area" aria-label="<?= $lang['nav_profile'] ?? 'Profiel' ?>">
+                        <div class="user-avatar">
+                            <?php if ($profielfoto): ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
+                            <?php else: ?>
+                                <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
+                            <?php endif; ?>
+                        </div>
+                        <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
+                    </a>
                     <a href="<?= $base ?>../pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
                 <?php else: ?>
                     <a href="<?= $base ?>../pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
