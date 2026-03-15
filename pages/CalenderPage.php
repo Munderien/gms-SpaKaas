@@ -277,7 +277,6 @@ foreach ($data as $events) {
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
 
     <div class="calendar">
         <h1>Plain PHP MVC Starter</h1>
@@ -330,6 +329,7 @@ foreach ($data as $events) {
                     .catch(console.error);
             }
         </script>
+    <?php include '../navbar.php'; ?>
 
 
 </body>

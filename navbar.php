@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English'];
+$availableLanguages = ['nl' => 'Nederlands', 'en' => 'English', 'de' => 'Deutsch', 'fr' => 'Français', 'tr' => 'Türkçe'];
 $currentLang = $_SESSION['language'] ?? 'nl';
 
 $langFile = __DIR__ . "/pages/vertaling/{$currentLang}.php";
@@ -15,9 +15,21 @@ if (!isset($lang) || !is_array($lang)) {
     }
 }
 
-$base = '/dms-spakaas/gms-SpaKaas';
+// Determine application root dynamically
+$script = $_SERVER['SCRIPT_NAME'];
+if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
+    $base = $m[1];
+} else {
+    $base = '';
+}
+
 $huidigePagina = basename($_SERVER['PHP_SELF']);
 $isLoggedIn = isset($_SESSION['gebruikerId']);
+
+// Get user name and profile picture from database if logged in
+$gebruikersnaam = 'Gebruiker';
+$userInitial = 'U';
+$profielfoto = null;
 
 if ($isLoggedIn) {
     $navDb = new PDO("mysql:host=localhost;dbname=dms-spakaas", "root", "");
@@ -398,19 +410,19 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 
         <div class="nav-links">
             <a href="<?= $base ?>/pages/home.php"
-                class="nav-link <?= $huidigePagina === 'home.php' ? 'active' : '' ?>">Home</a>
+                class="nav-link <?= $huidigePagina === 'home.php' ? 'active' : '' ?>"><?= $lang['nav_home'] ?></a>
 
             <?php if ($isLoggedIn): ?>
                 <a href="<?= $base ?>/pages/lodges.php"
-                    class="nav-link <?= ($huidigePagina === 'lodges.php' || $huidigePagina === 'Lodgepdp.php') ? 'active' : '' ?>">Boekingen</a>
+                    class="nav-link <?= ($huidigePagina === 'lodges.php' || $huidigePagina === 'Lodgepdp.php') ? 'active' : '' ?>"><?= $lang['nav_bookings'] ?></a>
                 <a href="<?= $base ?>/pages/edit_user.php"
-                    class="nav-link <?= $huidigePagina === 'edit_user.php' ? 'active' : '' ?>">Profiel</a>
+                    class="nav-link <?= $huidigePagina === 'edit_user.php' ? 'active' : '' ?>"><?= $lang['nav_profile'] ?></a>
             <?php endif; ?>
 
             <a href="<?= $base ?>/pages/overOns.php"
-                class="nav-link <?= $huidigePagina === 'overOns.php' ? 'active' : '' ?>">Over ons</a>
+                class="nav-link <?= $huidigePagina === 'overOns.php' ? 'active' : '' ?>"><?= $lang['nav_about'] ?></a>
             <a href="<?= $base ?>/pages/review.php"
-                class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>">Reviews</a>
+                class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>"><?= $lang['nav_reviews'] ?></a>
 
             <?php if ($isLoggedIn && ($rol == 1 || $rol == 3)): ?>
                 <span class="nav-divider"></span>
@@ -501,9 +513,9 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
                 <?php if ($isLoggedIn): ?>
                     <div class="user-initial"><?= $userInitial ?></div>
                     <span class="nav-username"><?= htmlspecialchars(ucfirst($gebruikersnaam)) ?></span>
-                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?></a>
                 <?php else: ?>
-                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
+                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?></a>
                 <?php endif; ?>
             </div>
         </div>
@@ -513,12 +525,24 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 <script>
     function toggleLanguageDropdown(event) {
         event.stopPropagation();
-        document.getElementById('langDropdown').classList.toggle('active');
+        const dropdown = document.getElementById('langDropdown');
+        dropdown.classList.toggle('active');
     }
-    document.addEventListener('click', function (event) {
-        var switcher = document.querySelector('.language-switcher');
-        if (switcher && !switcher.contains(event.target)) {
-            document.getElementById('langDropdown').classList.remove('active');
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('langDropdown');
+        const switcher = document.querySelector('.language-switcher');
+        
+        if (!switcher.contains(event.target)) {
+            dropdown.classList.remove('active');
         }
+    });
+
+    // Close dropdown when clicking a language option
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.getElementById('langDropdown').classList.remove('active');
+        });
     });
 </script>

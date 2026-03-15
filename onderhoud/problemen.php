@@ -140,7 +140,6 @@ foreach ($problemen as $p) {
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
     <div class="manager-container">
         <h1>Gemelde Problemen</h1>
 
@@ -242,6 +241,7 @@ foreach ($problemen as $p) {
             </table>
         <?php endif; ?>
     </div>
+    <?php include '../navbar.php'; ?>
 </body>
 
 </html>

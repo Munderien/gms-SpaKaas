@@ -67,7 +67,6 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
 
     <main class="home-container">
         <!-- Welcome Card -->
@@ -181,6 +180,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endforeach; ?>
 
     <?php require_once __DIR__ . '/RecentLodges.php'; ?>
+    <?php include '../navbar.php'; ?>
 </body>
 
 </html>
