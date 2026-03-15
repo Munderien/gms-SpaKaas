@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $endTime = $conn->real_escape_string($_POST['eindtijd']);
     $status = 'Vrij';
     $desc = $conn->real_escape_string($_POST['toelichting']);
-    $aantalmensen = $conn->real_escape_string($_POST['aantalmensen']);
+    $aantalmensen = intval($_POST['aantalmensen'] ?? 0);
     if ($isCustomer) {
         $userId = intval($_SESSION['gebruikerId'] ?? 0);
     } else {
@@ -75,11 +75,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $lodgeTypeId = intval($_POST['lodgetypeid'] ?? 0);
 
+    $capaciteit = 0;
+    if ($lodgeTypeId > 0) {
+        $capStmt = $conn->prepare("SELECT capaciteit FROM lodgetype WHERE lodgetypeid = ? LIMIT 1");
+        if ($capStmt) {
+            $capStmt->bind_param('i', $lodgeTypeId);
+            $capStmt->execute();
+            $capResult = $capStmt->get_result();
+            if ($capResult && $capResult->num_rows > 0) {
+                $capRow = $capResult->fetch_assoc();
+                $capaciteit = (int) ($capRow['capaciteit'] ?? 0);
+            }
+            $capStmt->close();
+        }
+    }
+
     $today = date('Y-m-d');
     if ($userId <= 0) {
         $message = "Selecteer een gebruiker.";
     } elseif ($lodgeTypeId <= 0) {
         $message = "Selecteer een lodgetype.";
+    } elseif ($aantalmensen <= 0) {
+        $message = "Aantal mensen moet groter zijn dan 0.";
+    } elseif ($capaciteit <= 0) {
+        $message = "Ongeldig lodgetype of capaciteit niet gevonden.";
+    } elseif ($aantalmensen > $capaciteit) {
+        $message = "Je kan niet meer dan $capaciteit personen boeken voor dit lodgetype.";
     } elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
     } elseif ($endTime <= $beginTime) {
