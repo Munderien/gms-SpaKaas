@@ -223,11 +223,11 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                 <form method="post">
                     <div class="popup-field">
                         <label for="starttijd">Begintijd:</label><br>
-                        <input type="date" id="starttijd" name="starttijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="starttijd" name="starttijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="eindtijd">Eindtijd:</label><br>
-                        <input type="date" id="eindtijd" name="eindtijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="eindtijd" name="eindtijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="toelichting">Beschrijving:</label><br>
