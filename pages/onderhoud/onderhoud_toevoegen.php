@@ -6,7 +6,6 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
     exit();
 }
 
-require_once __DIR__ . '/../../navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -95,6 +94,7 @@ input[type="submit"]:hover {
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <div class="container">
     <form class="form-card" action="onderhoud_toevoegen_functie.php" method="post">

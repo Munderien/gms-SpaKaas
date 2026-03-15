@@ -85,6 +85,7 @@ tr:nth-child(odd):hover {
 </head>
 
 <body>
+    <?php include '../navbar.php'; ?>
     <table>
         <tr>
             <th>Medewerker</th>
@@ -135,6 +136,5 @@ tr:nth-child(odd):hover {
     </table>
 
 </body>
-    <?php include '../navbar.php'; ?>
 
 </html>

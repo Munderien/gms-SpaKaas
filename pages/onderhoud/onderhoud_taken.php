@@ -4,7 +4,6 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] == 0) {
     header("Location: ../home.php");
     exit();
 }
-require_once __DIR__ . '/../../navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -20,6 +19,7 @@ require_once __DIR__ . '/../../navbar.php';
 </head>
 
 <body>
+    <?php require_once __DIR__ . '/../../navbar.php'; ?>
     <div class="container">
         <div class="top-bar-onderhoud">
             <h2>Onderhoud taken</h2>
