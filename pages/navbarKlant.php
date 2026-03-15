@@ -447,7 +447,7 @@ if ($isLoggedIn) {
 
         <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] != 0)): ?>
             <span class="nav-divider"></span>
-            <a href="<?= $base ?>/pages/onderhoud/onderhoud_taken.php"
+            <a href="<?= $base ?>../pages/onderhoud/onderhoud_taken.php"
                 class="nav-link <?php echo $huidigePagina === 'onderhoud_taken.php' ? 'active' : ''; ?>">
                 <?= $lang['nav_employee'] ?? 'Medewerkerpagina' ?>
             </a>
@@ -484,9 +484,9 @@ if ($isLoggedIn) {
                         <?php endif; ?>
                     </div>
                     <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
-                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
+                    <a href="<?= $base ?>../pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
                 <?php else: ?>
-                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
+                    <a href="<?= $base ?>../pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
                 <?php endif; ?>
             </div>
         </div>
