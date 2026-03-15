@@ -14,6 +14,19 @@ if (!isset($_SESSION['gebruikerId'])) {
     exit;
 }
 
+$rol = (int)($_SESSION['rol'] ?? 0);
+
+$gebruikers = [];
+$gebruikersQuery = ($rol === 0)
+    ? "SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId'])
+    : "SELECT gebruikerid, naam FROM gebruiker ORDER BY naam ASC";
+$gebruikersResult = $mysqli->query($gebruikersQuery);
+if ($gebruikersResult && $gebruikersResult->num_rows > 0) {
+    while ($row = $gebruikersResult->fetch_assoc()) {
+        $gebruikers[] = $row;
+    }
+}
+
 $message = '';
 // Handle update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
@@ -29,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
     $status = $mysqli->real_escape_string($_POST['status'] ?? '');
     $desc      = $mysqli->real_escape_string($_POST['toelichting'] ?? '');
     $aantalmensen = $mysqli->real_escape_string($_POST['aantalmensen'] ?? '');
+    $gebruikerId = ($rol === 0)
+        ? intval($_SESSION['gebruikerId'] ?? 0)
+        : intval($_POST['gebruikerid'] ?? 0);
     $lodgeTypeId = intval($_POST['lodgetypeid'] ?? 0);
 
     $today = date('Y-m-d');
@@ -38,6 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
         $message = "Afspraak niet gevonden.";
     } elseif ($currentItem['starttijd'] < $today) {
         $message = "Mag niks aanpassen als de afspraak al is begonnen of voorbij is";
+    }
+    elseif ($gebruikerId <= 0) {
+        $message = "Selecteer een gebruiker.";
     }
     elseif ($beginTime < $today) {
         $message = "Datum mag niet in het verleden liggen.";
@@ -73,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
             $lodgeId = (int) $availableLodge['lodgeid'];
 
             $update = "UPDATE afspraak 
-                   SET lodgeid = '$lodgeId', starttijd = '$beginTime',
+                     SET gebruikerid = '$gebruikerId', lodgeid = '$lodgeId', starttijd = '$beginTime',
                    eindtijd = '$endTime', status = '$status', toelichting = '$desc', aantalmensen = '$aantalmensen'
                    WHERE afspraakId=$afspraakId";
 
@@ -103,9 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 $afspraakId = isset($_GET['id']) ? intval($_GET['id']) : 1;
 
 // Get afspraak data - filter by gebruikerid if user is customer (rol 0)
-$afspraakQuery = "SELECT afspraakId, lodgeid, starttijd, eindtijd, status, toelichting, aantalmensen 
+$afspraakQuery = "SELECT afspraakId, gebruikerid, lodgeid, starttijd, eindtijd, status, toelichting, aantalmensen 
                   FROM afspraak WHERE afspraakId = $afspraakId";
-if (isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
+if ($rol === 0) {
     // If user is customer, only show their own appointments
     $afspraakQuery .= " AND gebruikerId = " . intval($_SESSION['gebruikerId']);
 }
@@ -114,7 +133,7 @@ $result = $mysqli->query($afspraakQuery);
 $item = $result ? $result->fetch_assoc() : [];
 
 // Kijkt of de gebruiker toegang heeft naar de afspraak
-if (empty($item) && isset($_SESSION['rol']) && $_SESSION['rol'] == 0) {
+if (empty($item) && $rol === 0) {
     die("Geen toegang tot deze afspraak.");
 }
 
@@ -133,7 +152,7 @@ if ($user && $user->num_rows > 0) {
 
 // Get all lodge types for dropdown
 $lodgeTypes = [];
-$lodgeTypeQuery = "SELECT lodgetypeid, naam
+$lodgeTypeQuery = "SELECT lodgetypeid, naam, beschrijving, capaciteit, prijs
                    FROM lodgetype
                    ORDER BY naam ASC";
 $lodgeTypeResult = $mysqli->query($lodgeTypeQuery);
@@ -223,6 +242,7 @@ if (!empty($item['lodgeid'])) {
 
     <script>
         const panel = document.getElementById('main-panel');
+        const lodgeTypesData = <?php echo json_encode($lodgeTypes); ?>;
 
         document.querySelector('.voltooid-btn').addEventListener('click', function() {
             panel.innerHTML = `
@@ -238,13 +258,28 @@ if (!empty($item['lodgeid'])) {
                     <label>afspraakid</label>
                     <input type="text" value="<?php echo $afspraakId; ?>" disabled="true">
                 </div>
+                <?php if ($rol !== 0): ?>
                 <div class="popup-field">
                     <label>gebruikerId</label>
-                    <input type="number" name="gebruikerId" value="<?php echo htmlspecialchars($item['gebruikerId'] ?? ''); ?>" required disabled="true">
+                    <select name="gebruikerid" required>
+                        <option value="">-- Select gebruiker --</option>
+                        <?php foreach ($gebruikers as $gebruiker): ?>
+                            <option value="<?php echo (int) $gebruiker['gebruikerid']; ?>" <?php echo ((int)($item['gebruikerid'] ?? 0) === (int)$gebruiker['gebruikerid']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($gebruiker['naam']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
+                <?php else: ?>
+                <input type="hidden" name="gebruikerid" value="<?php echo intval($_SESSION['gebruikerId'] ?? 0); ?>">
+                <div class="popup-field">
+                    <label>gebruikerId</label>
+                    <input type="number" value="<?php echo intval($_SESSION['gebruikerId'] ?? 0); ?>" disabled="true">
+                </div>
+                <?php endif; ?>
                 <div class="popup-field">
                     <label>lodgetype</label>
-                    <select name="lodgetypeid" required>
+                    <select id="updateLodgeTypeSelect" name="lodgetypeid" required>
                         <option value="">-- Select Lodgetype --</option>
                         <?php foreach ($lodgeTypes as $lodgeType): ?>
                             <option value="<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>" <?php echo ($currentLodgeTypeId == $lodgeType['lodgetypeid']) ? 'selected' : ''; ?>>
@@ -252,6 +287,14 @@ if (!empty($item['lodgeid'])) {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+
+                <div id="updateLodgeTypeInfo" class="lodge-info-card" style="display:none;">
+                    <div class="lodge-info-title">Geselecteerde lodge informatie</div>
+                    <div class="lodge-info-row"><strong>Naam:</strong> <span id="updateLodgeInfoName">-</span></div>
+                    <div class="lodge-info-row"><strong>Capaciteit:</strong> <span id="updateLodgeInfoCapacity">-</span> personen</div>
+                    <div class="lodge-info-row"><strong>Prijs:</strong> <span id="updateLodgeInfoPrice">-</span></div>
+                    <div class="lodge-info-row"><strong>Beschrijving:</strong> <span id="updateLodgeInfoDescription">-</span></div>
                 </div>
 
                 <div class="popup-field">
@@ -272,7 +315,7 @@ if (!empty($item['lodgeid'])) {
                 </div>
                 <div class="popup-field">
                     <label>aantal mensen</label>
-                    <input type="number" name="aantalmensen" value="<?php echo htmlspecialchars($item['aantalmensen'] ?? ''); ?>" required>
+                    <input type="number" id="updateAantalMensen" name="aantalmensen" value="<?php echo htmlspecialchars($item['aantalmensen'] ?? ''); ?>" min="1" required>
                 </div>
 
                 </div>
@@ -284,6 +327,51 @@ if (!empty($item['lodgeid'])) {
                 </div>
             </form>
         `;
+
+            const updateLodgeTypeSelect = document.getElementById('updateLodgeTypeSelect');
+            const updateLodgeTypeInfo = document.getElementById('updateLodgeTypeInfo');
+            const updateLodgeInfoName = document.getElementById('updateLodgeInfoName');
+            const updateLodgeInfoCapacity = document.getElementById('updateLodgeInfoCapacity');
+            const updateLodgeInfoPrice = document.getElementById('updateLodgeInfoPrice');
+            const updateLodgeInfoDescription = document.getElementById('updateLodgeInfoDescription');
+            const updateAantalMensen = document.getElementById('updateAantalMensen');
+
+            const renderSelectedLodgeInfo = () => {
+                if (!updateLodgeTypeSelect) {
+                    return;
+                }
+
+                const selectedId = updateLodgeTypeSelect.value;
+                const selectedLodgeType = lodgeTypesData.find(l => String(l.lodgetypeid) === String(selectedId));
+
+                if (!selectedLodgeType) {
+                    if (updateLodgeTypeInfo) {
+                        updateLodgeTypeInfo.style.display = 'none';
+                    }
+                    if (updateAantalMensen) {
+                        updateAantalMensen.removeAttribute('max');
+                    }
+                    return;
+                }
+
+                updateLodgeInfoName.textContent = selectedLodgeType.naam || '-';
+                updateLodgeInfoCapacity.textContent = selectedLodgeType.capaciteit || '-';
+                updateLodgeInfoPrice.textContent = selectedLodgeType.prijs ? '€' + selectedLodgeType.prijs : '-';
+                updateLodgeInfoDescription.textContent = selectedLodgeType.beschrijving || 'Geen beschrijving beschikbaar.';
+
+                if (updateAantalMensen && selectedLodgeType.capaciteit) {
+                    updateAantalMensen.max = parseInt(selectedLodgeType.capaciteit, 10);
+                }
+
+                if (updateLodgeTypeInfo) {
+                    updateLodgeTypeInfo.style.display = 'block';
+                }
+            };
+
+            if (updateLodgeTypeSelect) {
+                updateLodgeTypeSelect.addEventListener('change', renderSelectedLodgeInfo);
+                renderSelectedLodgeInfo();
+            }
         });
 
         document.querySelector('.patient-btn').addEventListener('click', function() {
