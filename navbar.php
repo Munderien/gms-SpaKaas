@@ -511,11 +511,17 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 
             <div class="nav-user">
                 <?php if ($isLoggedIn): ?>
-                    <div class="user-initial"><?= $userInitial ?></div>
-                    <span class="nav-username"><?= htmlspecialchars(ucfirst($gebruikersnaam)) ?></span>
-                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?></a>
+                    <div class="user-avatar">
+                        <?php if ($profielfoto): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($profielfoto); ?>" alt="<?php echo htmlspecialchars($gebruikersnaam); ?>">
+                        <?php else: ?>
+                            <div class="user-avatar-initial"><?php echo $userInitial; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <span class="nav-username"><?php echo htmlspecialchars(ucfirst($gebruikersnaam)); ?></span>
+                    <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out"><?= $lang['nav_logout'] ?? 'Uitloggen' ?></a>
                 <?php else: ?>
-                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?></a>
+                    <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in"><?= $lang['nav_login'] ?? 'Inloggen' ?></a>
                 <?php endif; ?>
             </div>
         </div>
