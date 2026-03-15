@@ -199,6 +199,7 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
     </script>
 </head>
 <body>
+    <?php include '../navbar.php'; ?>
     <div class="form-grid">
         <div class="popup-overlay" id="planneritem-popup">
             <div class="popup-panel" id="main-panel">

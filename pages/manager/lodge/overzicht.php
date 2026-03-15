@@ -144,7 +144,7 @@ $lodgetypes = $db->query("SELECT lodgetypeid, naam FROM lodgetype ORDER BY naam"
                                     <input type="hidden" name="lodgeid" value="<?php echo $l['lodgeid']; ?>">
                                     <select name="lodgetypeid" class="compact">
                                         <?php foreach ($lodgetypes as $lt): ?>
-                                            <option value="<?php echo $lt['typeid']; ?>" <?php if ($lt['lodgetypeid'] == $l['lodgetypeid'])
+                                            <option value="<?php echo $lt['lodgetypeid']; ?>" <?php if ($lt['lodgetypeid'] == $l['lodgetypeid'])
                                                    echo 'selected'; ?>>
                                                 <?php echo htmlspecialchars($lt['naam']); ?>
                                             </option>
