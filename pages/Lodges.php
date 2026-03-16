@@ -57,6 +57,7 @@ if ($result && $result->num_rows > 0) {
 </head>
 
 <body>
+    <?php include '../navbar.php'; ?>
 
     <div class="lodges-container">
         <h1><?= $lang['lodges_title'] ?></h1>
@@ -98,6 +99,7 @@ if ($result && $result->num_rows > 0) {
                                 onclick="productLodge(<?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?>)"><?= $lang['lodges_details'] ?? 'Details' ?></button>
                         </div>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -116,7 +118,6 @@ if ($result && $result->num_rows > 0) {
                 window.location.href = 'Lodgepdp.php?lodgetypeid=' + lodgetypeId;
             }
         </script>
-    <?php include '../navbar.php'; ?>
 </body>
 
 </html>
