@@ -115,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES ('$userId','$lodgeId','$beginTime','$endTime','$status','$desc','$aantalmensen')";
 
             if ($conn->query($sql) === TRUE) {
+                $conn->query("UPDATE lodge SET status = 'bezet' WHERE lodgeid = $lodgeId");
                 require_once __DIR__ . '/email/emailService.php';
 
                 $loggedInUser = null;
