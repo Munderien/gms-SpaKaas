@@ -2,7 +2,16 @@
 <?php
 include("config.php");
 session_start();
-
+$errorMsg = '';
+$showInputError = false;
+if (isset($_SESSION['error'])) {
+    $errorMsg = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
+if (isset($_SESSION['two_factor_input_error'])) {
+    $showInputError = true;
+    unset($_SESSION['two_factor_input_error']);
+}
 // Check if 2FA code exists and hasn't expired
 if (isset($_SESSION['2fa_code_time'])) {
     $codeAge = time() - $_SESSION['2fa_code_time'];
@@ -11,11 +20,10 @@ if (isset($_SESSION['2fa_code_time'])) {
         unset($_SESSION['2fa_code']);
         unset($_SESSION['2fa_code_time']);
         unset($_SESSION['2fa_email_sent']);
-        header('Location: login.php');
+        header('Location: inlog.php');
         exit();
     }
 }
-
 // Only generate and send code if it hasn't been sent yet
 if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false) {
     if (isset($_SESSION['gebruikermail']) && !empty(trim($_SESSION['gebruikermail']))) {
@@ -43,7 +51,7 @@ if (!isset($_SESSION['2fa_email_sent']) || $_SESSION['2fa_email_sent'] === false
 }   
 
 
-$error = $_SESSION['error'] ?? '';
+$errorMessage = $_SESSION['error'] ?? '';
 unset($_SESSION['error']);
 ?>
 <!DOCTYPE html>
@@ -77,14 +85,15 @@ unset($_SESSION['error']);
         </div>
 
         <div class="forms-container">
+            
             <div class="forms-wrapper">
-                <?php if (!empty($error)): ?>
-                    <div class="error-message" style="background-color: #fee; border: 1px solid #fcc; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                        <?= htmlspecialchars($error) ?>
-                    </div>
-                <?php endif; ?>
-
                 <form action='verwerk_2fa.php' method="post" class="form-card active" id="loginForm">
+                    <div id="error" class="error-message" style="display: <?php echo ($errorMsg !== '' ? 'block' : 'none'); ?>;">
+                        <?php echo htmlspecialchars($errorMsg); ?>
+                    </div>
+                    <div id="inputError" class="error-message" style="display: <?php echo ($showInputError ? 'block' : 'none'); ?>;">
+                        Voer alstublieft een geldig 6-cijferige 2FA code in.
+                    </div>
                     <h1>2FA Inloggen</h1>
 
                     <div class="form-group">

@@ -15,14 +15,14 @@ $userData = $selectStmt->fetch(PDO::FETCH_ASSOC);
 // Check if user data was found
 if (!$userData) {
     $_SESSION['error'] = 'Gebruiker niet gevonden';
-    header("Location: login.php");
+    header("Location: inlog.php");
     exit();
 }
 
 // Verify email exists
 if (empty($userData['email'])) {
     $_SESSION['error'] = 'Geen email adres gevonden voor deze gebruiker';
-    header("Location: login.php");
+    header("Location: inlog.php");
     exit();
 }
 
@@ -59,7 +59,7 @@ Deze code is geldig voor 10 minuten.';
     error_log('2FA Email Error: ' . $e->getMessage());
     
     $_SESSION['error'] = 'Email kon niet verzonden worden. Fout: ' . htmlspecialchars($e->getMessage());
-    header("Location: login.php");
+    header("Location: inlog.php");
     exit();
 }
 ?>

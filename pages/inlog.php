@@ -6,9 +6,14 @@ if (isset($_SESSION['gebruikermail'])) {
 }
 
 $errorMsg = '';
+$showInputError = false;
 if (isset($_SESSION['error'])) {
     $errorMsg = $_SESSION['error'];
     unset($_SESSION['error']);
+}
+if (isset($_SESSION['login_input_error'])) {
+    $showInputError = true;
+    unset($_SESSION['login_input_error']);
 }
 ?>
 <!DOCTYPE html>
@@ -52,7 +57,7 @@ if (isset($_SESSION['error'])) {
                     <div id="error" class="error-message" style="display: <?php echo ($errorMsg !== '' ? 'block' : 'none'); ?>;"><?php echo htmlspecialchars($errorMsg); ?></div>
                     <h1>Inloggen</h1>
 
-                    <div class="error-message" >voer alles in alstublieft.</div>
+                    <div id="inputError" class="error-message" style="display: <?php echo ($showInputError ? 'block' : 'none'); ?>;">voer alles in alstublieft.</div>
                     <div class="form-group">
                         <label for="inlogMail">Email</label>
                         <input type="email" id="inlogMail" class="inlogMail" name="inlogMail" placeholder="uw@email.com">
@@ -246,8 +251,7 @@ if (isset($_SESSION['error'])) {
                 emailEl.classList.add('error');
                 document.getElementById('loginEmailError').textContent = 'Email is verplicht.';
                 document.getElementById('loginEmailError').classList.add('show');
-                errorBox.textContent = 'Email is verplicht.';
-                errorBox.style.display = 'block';
+             
                 isValid = false;
             } else if (!isValidEmail(email)) {
                 emailEl.classList.add('error');

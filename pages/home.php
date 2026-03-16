@@ -54,6 +54,11 @@ $stmt = $pdo->query("
     ORDER BY datum DESC
 ");
 $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$reviews_average = $pdo->query("SELECT AVG(rating) as avg_rating FROM review")->fetch(PDO::FETCH_ASSOC)['avg_rating'] ?? 0;
+foreach ($reviews as &$review) {
+    $review['gebruikerid'] = (int)$review['gebruikerid'];
+    $review['reviewid'] = (int)$review['reviewid'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $currentLang ?>">
