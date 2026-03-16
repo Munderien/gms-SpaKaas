@@ -467,7 +467,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                                             '<?php echo htmlspecialchars($date_for_day); ?>',
                                             '<?php echo htmlspecialchars($schema_start); ?>',
                                             '<?php echo htmlspecialchars($schema_end); ?>'
-                                        )" style="background: #e7f3ff; border-left-color: #667eea; cursor: pointer;">
+                                        )" style="background: #e6f7f2; border-left-color: #3d8f8f; cursor: pointer;">
                                             <div class="workour-item-time">
                                                 <?php echo htmlspecialchars($schema_start . ' - ' . $schema_end); ?>
                                                 <div class="schedule-compare">(volgt schema)</div>

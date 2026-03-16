@@ -32,108 +32,74 @@ while ($row = $result->fetch_assoc()) {
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="nl">
 
 <head>
-    <style>
-        body {
-    font-family: Arial, Helvetica, sans-serif;
-    /*
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /*background-color: gray; */
-    margin: 0px;
-}
-/* Table */
-table {
-    width: 100%;
-    max-width: 900px;
-    border-collapse: collapse;
-    background: white;
-    box-shadow: 0 4px 8px rgb(0,0,0,0,1);
-    border-radius: 10px;
-    overflow: hidden;
-}
-th,td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-th {
-    background-color: #3498db;
-    color: white;
-}
-tr:hover {
-    background: #f1f1f1;
-
-}
-td {
-    color: #333;
-}
-tr:nth-child(odd) {
-    background-color: whitesmoke;
-}
-tr:nth-child(odd):hover {
-    background: white;
-}
-
-
-
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medewerkers Rooster - DMS Spakaas</title>
+    <link rel="stylesheet" href="../Style/medewerkers.css">
 </head>
 
 <body>
     <?php include '../navbar.php'; ?>
-    <table>
-        <tr>
-            <th>Medewerker</th>
-            <th></th>
-            <th>Maandag</th>
-            <th>Dinsdag</th>
-            <th>Woensdag</th>
-            <th>Donderdag</th>
-            <th>Vrijdag</th>
-            <th>Zaterdag</th>
-            <th>Zondag</th>
-        </tr>
 
-        <?php
-        $dagen = [
-            1 => 'Maandag',
-            2 => 'Dinsdag',
-            3 => 'Woensdag',
-            4 => 'Donderdag',
-            5 => 'Vrijdag',
-            6 => 'Zaterdag',
-            0 => 'Zondag'
-        ];
+    <div class="container">
+        <header>
+            <h1>Medewerkers Rooster</h1>
+            <p>Weekoverzicht van alle werkschema's</p>
+        </header>
 
-        foreach ($schema as $gebruikerid => $employee) {
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medewerker</th>
+                        <th>Maandag</th>
+                        <th>Dinsdag</th>
+                        <th>Woensdag</th>
+                        <th>Donderdag</th>
+                        <th>Vrijdag</th>
+                        <th>Zaterdag</th>
+                        <th>Zondag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $dagen = [
+                        0 => 'Maandag',
+                        1 => 'Dinsdag',
+                        2 => 'Woensdag',
+                        3 => 'Donderdag',
+                        4 => 'Vrijdag',
+                        5 => 'Zaterdag',
+                        6 => 'Zondag'
+                    ];
 
-            echo "<tr>";
+                    foreach ($schema as $gebruikerid => $employee) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($employee['naam']) . "</td>";
 
-            echo "<td>" . $employee['naam'] . "</td>";
-            echo "<td></td>";
+                        foreach ($dagen as $dagNummer => $dagNaam) {
+                            echo "<td>";
+                            if (isset($employee['dagen'][$dagNummer])) {
+                                $start = htmlspecialchars(substr($employee['dagen'][$dagNummer]['start'], 0, 5));
+                                $end   = htmlspecialchars(substr($employee['dagen'][$dagNummer]['end'],   0, 5));
+                                echo "<span class='shift'>{$start} &ndash; {$end}</span>";
+                            } else {
+                                echo "<span class='vrij'>vrij</span>";
+                            }
+                            echo "</td>";
+                        }
 
-            foreach ($dagen as $dagNummer => $dagNaam) {
-                echo "<td>";
-
-                if (isset($employee['dagen'][$dagNummer])) {
-                    echo $employee['dagen'][$dagNummer]['start'] . " - " .
-                        $employee['dagen'][$dagNummer]['end'];
-                } else {
-                    echo "VRIJ";
-                }
-
-                echo "</td>";
-            }
-
-            echo "</tr>";
-        }
-        ?>
-    </table>
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </body>
 
