@@ -16,7 +16,7 @@ $sql = "
         a.starttijd, a.eindtijd
     FROM factuur f
     INNER JOIN gebruiker g ON f.gebruikerid = g.gebruikerid
-    INNER JOIN lodgetype l ON f.lodgetypeid = l.typeid
+    INNER JOIN lodgetype l ON f.typeid = l.lodgetypeid
     INNER JOIN afspraak a  ON f.afspraakid  = a.afspraakid
     WHERE f.factuurid = :id
 ";

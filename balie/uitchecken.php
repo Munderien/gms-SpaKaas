@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
 
     $stmtAfspraak = $db->prepare("
         SELECT a.afspraakid, a.gebruikerid, a.starttijd, a.eindtijd, a.aantalmensen,
-               l.lodgetypeid, lt.prijs
+               l.typeid, lt.prijs
         FROM afspraak a
         JOIN lodge l ON l.lodgeid = a.lodgeid
-        JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+        JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
         WHERE a.lodgeid = ?
         ORDER BY a.starttijd DESC
         LIMIT 1
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
         $btwPercentage = 21;
 
         $stmtFactuur = $db->prepare("
-            INSERT INTO factuur (afspraakid, gebruikerid, lodgetypeid, factuurdatum,
+            INSERT INTO factuur (afspraakid, gebruikerid, typeid, factuurdatum,
                                  aantalmensen, totaalbedragexbtw, btwpercentage,
                                  betaalstatus, herinneringsmailstatus, toelichting)
             VALUES (?, ?, ?, CURDATE(), ?, ?, ?, 0, 0, ?)
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
         $stmtFactuur->execute([
             $afspraak['afspraakid'],
             $afspraak['gebruikerid'],
-            $afspraak['lodgetypeid'],
+            $afspraak['typeid'],
             $afspraak['aantalmensen'],
             $totaalExBtw,
             $btwPercentage,
@@ -88,7 +88,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
 
         $db->prepare("UPDATE lodge SET status = 'vrij' WHERE lodgeid = ?")->execute([$lodgeid]);
 
-        $melding = 'Lodge uitcheckt! Factuur #' . $nieuwFactuurId . ' is aangemaakt.';
+        // Fetch user email
+        $stmtEmail = $db->prepare("SELECT email FROM gebruiker WHERE gebruikerid = ?");
+        $stmtEmail->execute([$afspraak['gebruikerid']]);
+        $userEmail = $stmtEmail->fetchColumn();
+
+        // Send invoice email
+        if ($userEmail && !empty(trim($userEmail))) {
+            require_once __DIR__ . '/../pages/email/EmailService.php';
+            
+            try {
+                $emailService = new EmailService();
+                
+                $totaalMetBtw = $totaalExBtw * (1 + $btwPercentage / 100);
+                
+                $emailBody = 'Geachte klant,
+
+Bedankt voor uw verblijf bij SpaKaas!
+
+Uw factuur is aangemaakt met de volgende details:
+
+Factuurnummer: #' . $nieuwFactuurId . '
+Lodge: ' . $lodgeid . '
+Bedrag (excl. BTW): €' . number_format($totaalExBtw, 2, ',', '.') . '
+BTW (21%): €' . number_format($totaalMetBtw - $totaalExBtw, 2, ',', '.') . '
+Totaalbedrag: €' . number_format($totaalMetBtw, 2, ',', '.') . '
+
+Betaalstatus: Nog niet betaald
+
+Dank u wel en tot ziens!';
+                
+                $emailService->sendEmail(
+                    $userEmail,
+                    'Uw factuur #' . $nieuwFactuurId . ' van SpaKaas',
+                    $emailBody
+                );
+                
+                $melding = 'Lodge uitcheckt! Factuur #' . $nieuwFactuurId . ' is aangemaakt. E-mail verzonden naar ' . htmlspecialchars($userEmail) . '.';
+            } catch (Exception $e) {
+                $melding = 'Lodge uitcheckt! Factuur #' . $nieuwFactuurId . ' is aangemaakt. Email kon niet verzonden worden: ' . htmlspecialchars($e->getMessage());
+            }
+        } else {
+            $melding = 'Lodge uitcheckt! Factuur #' . $nieuwFactuurId . ' is aangemaakt. (Geen e-mailadres gevonden)';
+        }
+
         $factuurLink = '../factuur_manager/print.php?factuurid=' . $nieuwFactuurId;
     }
 }
