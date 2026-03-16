@@ -15,7 +15,7 @@ $facturen = $db->prepare("
            lt.naam AS lodgetype_naam,
            a.starttijd, a.eindtijd
     FROM factuur f
-    JOIN lodgetype lt ON f.lodgetypeid = lt.typeid
+    JOIN lodgetype lt ON f.typeid = lt.lodgetypeid
     JOIN afspraak a ON f.afspraakid = a.afspraakid
     WHERE f.gebruikerid = ?
     ORDER BY f.factuurdatum DESC

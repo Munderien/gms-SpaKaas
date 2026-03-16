@@ -10,12 +10,12 @@ if (!isset($_SESSION['gebruikerId'])) {
 $gebruikerId = $_SESSION['gebruikerId'];
 
 $vakanties = $db->prepare("
-    SELECT a.afspraakid, a.titel, a.starttijd, a.eindtijd, a.status,
+    SELECT a.afspraakid, a.starttijd, a.eindtijd, a.status,
            a.aantalmensen, a.toelichting,
            l.huisnummer, lt.naam AS typename
     FROM afspraak a
     JOIN lodge l ON l.lodgeid = a.lodgeid
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     WHERE a.gebruikerid = ?
     ORDER BY a.starttijd DESC
 ");
