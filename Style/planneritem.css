@@ -166,3 +166,36 @@
     background: #fdeaea;
     color: #b33a3a;
 }
+
+.lodge-info-card {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border: 1px solid #dbe8ec;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f6fbfd 0%, #f2f9f9 100%);
+    box-shadow: 0 4px 12px rgba(15, 76, 92, 0.06);
+}
+
+.lodge-info-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f4c5c;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dbe8ec;
+}
+
+.lodge-info-row {
+    font-size: 13px;
+    color: #2b5e5e;
+    margin-bottom: 6px;
+    line-height: 1.35;
+}
+
+.lodge-info-row strong {
+    color: #0f4c5c;
+}
+
+.lodge-info-row:last-child {
+    margin-bottom: 0;
+}

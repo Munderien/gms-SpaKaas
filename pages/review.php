@@ -306,7 +306,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
+    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
 
     <?php if ($isLoggedIn): ?>
         <h1><?= $editReview ? $lang['review_form_title_edit'] : $lang['review_form_title_new'] ?></h1>
@@ -343,16 +343,13 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="file" name="illustration" accept="image/*">
 
                 <?php if ($editReview): ?>
-                    <button type="submit"
-                        style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_update'] ?></button>
-                    <button type="submit" name="delete_review" value="1"
-                        onclick="return confirm('<?= $lang['review_form_delete_confirm'] ?>');"
+                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_update'] ?></button>
+                    <button type="submit" name="delete_review" value="1" onclick="return confirm('<?= $lang['review_form_delete_confirm'] ?>');"
                         style="background:#dc3545;color:#fff;margin-left:8px;margin-top: 15px;">
                         <?= $lang['review_form_delete'] ?>
                     </button>
                 <?php else: ?>
-                    <button type="submit"
-                        style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_submit'] ?></button>
+                    <button type="submit" style="background: linear-gradient(135deg, #3fa8a8 0%, #0f4c5c 100%); color: white; margin-top: 15px;"><?= $lang['review_form_submit'] ?></button>
                 <?php endif; ?>
             </form>
         </div>
@@ -368,8 +365,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php foreach ($reviews as $r): ?>
         <div class="review-card">
-            <div class="rating"><?= $lang['review_rating_label'] ?>:
-                <?= htmlspecialchars($r['rating']) ?>    <?= $lang['out_of_5'] ?></div>
+            <div class="rating"><?= $lang['review_rating_label'] ?>: <?= htmlspecialchars($r['rating']) ?><?= $lang['out_of_5'] ?></div>
             <div><?= nl2br(htmlspecialchars($r['opmerking'])) ?></div>
 
             <?php if (!empty($r['illustratie'])):

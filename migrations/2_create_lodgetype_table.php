@@ -14,7 +14,7 @@ return function (PDO $db) {
             naam VARCHAR(30),
             beschrijving VARCHAR(80),
             capaciteit INT(11),
-            prijs DECIMAL(20,0)
+            prijs DECIMAL(20,2)
         )
     ");
 };

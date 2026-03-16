@@ -22,7 +22,7 @@ if (file_exists($langFile)) {
 
 // Database connection
 $host = 'localhost';
-$db = 'dms-spakaas';
+$db   = 'dms-spakaas';
 $user = 'root';
 $pass = '';
 

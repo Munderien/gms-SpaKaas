@@ -1,28 +1,50 @@
 
 body{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f4f8;
+    color: #2a2f3a;
 }
 .taak-item{
-    border: 1px solid #004080;
-    border-radius: 8px;
-    width: 700px;
-     height:130px; 
-    margin: 5px 0; /* give some breathing room so the rounded corners are visible */
+    border: 1px solid #d6dee9;
+    border-radius: 12px;
+    width: 100%;
+    min-height: 150px;
+    margin: 8px 0;
     display: flex;
-    flex-direction: column; /* stack lodge header above details */
+    flex-direction: column;
     align-items: flex-start;
-    gap: 10px;           
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    background-color: #9e9e9e;
+    gap: 10px;
+    padding: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+    background-color: #ffffff;
 }
 
 /* lodge heading stretches full width */
 .taak-item .lodge-header {
-    margin: 0 0 5px 0;
+    margin: 0 0 10px 0;
     width: 100%;
-    font-size: 1.1em;
-    font-weight: bold;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #1f4d7a;
+}
+
+.taak-item .taak-details {
+    width: 100%;
+    gap: 16px;
+}
+
+.taak-item .clickable-description {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.taak-item .clickable-description:hover {
+    text-decoration: underline;
+}
+
+.taak-item .taak-actions button {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* clickable description style */
@@ -94,27 +116,33 @@ body{
     
 }
 .taken-container{
-    width: 720px;
-    height: 500px;
-    gap: 10px;
+    width: min(100%, 900px);
+    max-height: 650px;
+    gap: 12px;
     margin-top: 20px;
-    border: 2px solid black;
-    border-radius: 8px;
-   
+    border: 1px solid #d6dee9;
+    border-radius: 12px;
     display: flex;
-    overflow: visible; 
-   
-    padding: 10px;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 14px;
     background-color: #ffffff;
   
 }
 #add-task {
-    color: rgb(26, 26, 26);
+    color: #ffffff;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     font-size: 16px;
     border-radius: 6px;
+    background: linear-gradient(135deg, #0072ff 0%, #005fbd 100%);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#add-task:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
 }
 .container{
     display: flex;

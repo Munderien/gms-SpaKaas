@@ -24,7 +24,12 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
 }
 
 $huidigePagina = basename($_SERVER['PHP_SELF']);
-$isLoggedIn = isset($_SESSION['gebruikerId']);
+?>
+<nav class="spakaas-nav">
+    <div class="nav-inner">
+        <a href="<?= $base ?>/pages/home.php" class="nav-brand">
+            SpaKaas
+        </a>
 
 // Get user name and profile picture from database if logged in
 $gebruikersnaam = 'Gebruiker';
@@ -44,365 +49,164 @@ if ($isLoggedIn) {
     $rol = -1;
 }
 
-$baliePages = ['CalenderPage.php', 'list.php', 'schoonmaak.php', 'Medewerkers.php', 'uitchecken.php', 'lodge_overzicht.php', 'werkuren.php'];
-$onderhoudPages = ['onderhoud_taken.php', 'problemen.php', 'rapportage.php'];
-$beheerPages = ['addRole.php', 'type_overzicht.php', 'type_toevoegen.php', 'type_bewerken.php', 'overzicht.php', 'lodge_toevoegen.php', 'koppel_afspraak.php', 'rapportage_lodges.php', 'rapportage_omzet.php', 'rapportage_personeel.php'];
-$pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
-?>
+                <?php if (isset($_SESSION['rol']) && ($_SESSION['rol'] == 2 || $_SESSION['rol'] == 3)): ?>
+                    <span class="nav-divider"></span>
+                    <a href="<?= $base ?>/onderhoud/problemen.php"
+                        class="nav-link <?php echo $huidigePagina === 'problemen.php' ? 'active' : ''; ?>">
+                        Problemen
+                    </a>
+                    <a href="<?= $base ?>/onderhoud/rapportage.php"
+                        class="nav-link <?php echo $huidigePagina === 'rapportage.php' ? 'active' : ''; ?>">
+                        Onderhoudsrapport
+                    </a>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 3): ?>
+                    <span class="nav-divider"></span>
+                    <a href="<?= $base ?>/pages/manager/addRole.php"
+                        class="nav-link <?php echo $huidigePagina === 'addRole.php' ? 'active' : ''; ?>">
+                        Gebruikers
+                    </a>
+                    <a href="<?= $base ?>/pages/manager/lodge/type_overzicht.php"
+                        class="nav-link <?php echo $huidigePagina === 'type_overzicht.php' ? 'active' : ''; ?>">
+                        Lodgetypes
+                    </a>
+                    <a href="<?= $base ?>/pages/manager/lodge/overzicht.php"
+                        class="nav-link <?php echo $huidigePagina === 'overzicht.php' ? 'active' : ''; ?>">
+                        Lodges
+                    </a>
+                    <a href="<?= $base ?>/pages/manager/rapportage_lodges.php"
+                        class="nav-link <?php echo $huidigePagina === 'rapportage_lodges.php' ? 'active' : ''; ?>">
+                        Lodgerapport
+                    </a>
+                    <a href="<?= $base ?>/pages/manager/rapportage_omzet.php"
+                        class="nav-link <?php echo $huidigePagina === 'rapportage_omzet.php' ? 'active' : ''; ?>">
+                        Omzetrapport
+                    </a>
+                    <a href="<?= $base ?>/pages/manager/rapportage_personeel.php"
+                        class="nav-link <?php echo $huidigePagina === 'rapportage_personeel.php' ? 'active' : ''; ?>">
+                        Personeelrapport
+                    </a>
+                <?php endif; ?>
+        </div>
+
+        <div class="nav-user">
+            <?php if (isset($_SESSION['gebruikerId'])): ?>
+                <?php if (isset($_SESSION['naam'])): ?>
+                    <span class="nav-username"><?php echo htmlspecialchars($_SESSION['naam']); ?></span>
+                <?php endif; ?>
+                <a href="<?= $base ?>/pages/logout.php" class="nav-btn nav-btn-out">Uitloggen</a>
+            <?php else: ?>
+                <a href="<?= $base ?>/pages/inlog.php" class="nav-btn nav-btn-in">Inloggen</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</nav>
 
 <style>
-    .spakaas-nav,
-    .spakaas-nav * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
     .spakaas-nav {
-        background: linear-gradient(90deg, #0f4c5c, #3d8f8f) !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 1000 !important;
-        width: 100% !important;
-        height: 70px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #1a3c5e 0%, #2980b9 100%);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .2);
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
 
-    body {
-        padding-top: 70px !important;
-    }
-
-    .spakaas-nav .nav-inner {
-        max-width: 1400px;
+    .nav-inner {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 30px;
+        padding: 0 20px;
         display: flex;
         align-items: center;
         gap: 8px;
-        height: 70px;
+        height: 54px;
     }
 
-    .spakaas-nav .nav-brand {
-        font-size: 1.5rem;
-        font-weight: 800;
+    .nav-brand {
+        font-size: 1.15rem;
+        font-weight: 700;
         color: #fff;
         text-decoration: none;
-        margin-right: 15px;
-        letter-spacing: 2px;
-        border: none;
+        margin-right: 16px;
+        letter-spacing: .5px;
+        white-space: nowrap;
     }
 
-    .spakaas-nav .nav-brand span {
-        background: linear-gradient(135deg, #ffeb3b 0%, #ff9800 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .nav-brand:hover {
+        opacity: .85;
     }
 
-    .spakaas-nav .nav-brand:hover {
-        opacity: 0.85;
-    }
-
-    .spakaas-nav .nav-links {
+    .nav-links {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 2px;
         flex: 1;
         flex-wrap: wrap;
     }
 
-    .spakaas-nav .nav-link {
-        color: rgba(255, 255, 255, 0.85) !important;
-        text-decoration: none !important;
-        padding: 8px 14px !important;
-        border-radius: 8px;
-        font-size: 0.9rem;
+    .nav-link {
+        color: rgba(255, 255, 255, .82);
+        text-decoration: none;
+        padding: 6px 13px;
+        border-radius: 6px;
+        font-size: .88rem;
         font-weight: 500;
-        background: none;
-        border: none;
-        margin: 0;
+        transition: background .15s, color .15s;
+        white-space: nowrap;
     }
 
-    .spakaas-nav .nav-link:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #fff !important;
+    .nav-link:hover {
+        background: rgba(255, 255, 255, .18);
+        color: #fff;
     }
 
-    .spakaas-nav .nav-link.active {
-        background: rgba(255, 255, 255, 0.2) !important;
-        color: #ffeb3b !important;
+    .nav-link.active {
+        background: rgba(255, 255, 255, .22);
+        color: #fff;
         font-weight: 600;
     }
 
-    .spakaas-nav .nav-divider {
+    .nav-divider {
         width: 1px;
-        height: 24px;
-        background: rgba(255, 255, 255, 0.3);
-        margin: 0 6px;
-        display: inline-block;
+        height: 20px;
+        background: rgba(255, 255, 255, .3);
+        margin: 0 8px;
     }
 
-    .spakaas-nav .nav-dropdown {
-        position: relative;
-    }
-
-    .spakaas-nav .nav-dropdown-toggle {
-        color: rgba(255, 255, 255, 0.85) !important;
-        background: none !important;
-        border: none !important;
-        padding: 8px 14px !important;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-family: inherit;
-        margin: 0;
-        width: auto;
-    }
-
-    .spakaas-nav .nav-dropdown-toggle:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #fff !important;
-    }
-
-    .spakaas-nav .nav-dropdown-toggle.active {
-        background: rgba(255, 255, 255, 0.2) !important;
-        color: #ffeb3b !important;
-        font-weight: 600;
-    }
-
-    .spakaas-nav .nav-dropdown-toggle svg {
-        width: 12px;
-        height: 12px;
-    }
-
-    .spakaas-nav .nav-dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: #0f4c5c !important;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        min-width: 200px;
-        padding: 0 !important;
-        margin: 0 !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        display: none;
-        z-index: 2000;
-        overflow: hidden;
-    }
-
-    .spakaas-nav .nav-dropdown::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: 10px;
-    }
-
-    .spakaas-nav .nav-dropdown:hover .nav-dropdown-menu {
-        display: block;
-    }
-
-    .spakaas-nav .nav-dropdown-menu a {
-        color: rgba(255, 255, 255, 0.85) !important;
-        padding: 11px 16px !important;
-        text-decoration: none !important;
-        display: block !important;
-        font-size: 0.88rem;
-        border-left: 3px solid transparent;
-        margin: 0 !important;
-        background: none;
-    }
-
-    .spakaas-nav .nav-dropdown-menu a:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #fff !important;
-    }
-
-    .spakaas-nav .nav-dropdown-menu a.active {
-        background: rgba(255, 235, 59, 0.15) !important;
-        color: #ffeb3b !important;
-        border-left-color: #ffeb3b;
-        font-weight: 600;
-    }
-
-    .spakaas-nav .nav-controls {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-left: auto;
-    }
-
-    .spakaas-nav .language-switcher {
-        position: relative;
-    }
-
-    .spakaas-nav .lang-toggle {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border: 1px solid rgba(255, 255, 255, 0.25) !important;
-        color: #fff !important;
-        padding: 6px 12px !important;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin: 0;
-        width: auto;
-    }
-
-    .spakaas-nav .lang-toggle:hover {
-        background: rgba(255, 255, 255, 0.25) !important;
-    }
-
-    .spakaas-nav .lang-toggle svg {
-        width: 16px;
-        height: 16px;
-    }
-
-    .spakaas-nav .lang-dropdown {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: #0f4c5c !important;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        min-width: 170px;
-        margin-top: 6px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        display: none;
-        z-index: 2000;
-        overflow: hidden;
-        padding: 0 !important;
-    }
-
-    .spakaas-nav .lang-dropdown.active {
-        display: block;
-    }
-
-    .spakaas-nav .lang-option {
-        color: rgba(255, 255, 255, 0.85) !important;
-        padding: 10px 14px !important;
-        text-decoration: none !important;
-        display: flex !important;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .spakaas-nav .lang-option:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #fff !important;
-    }
-
-    .spakaas-nav .lang-option.active {
-        background: rgba(255, 235, 59, 0.15) !important;
-        color: #ffeb3b !important;
-        font-weight: 600;
-    }
-
-    .spakaas-nav .nav-user {
+    .nav-user {
         display: flex;
         align-items: center;
         gap: 10px;
-        background: rgba(255, 255, 255, 0.15);
-        padding: 6px 16px 6px 12px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-left: auto;
+        white-space: nowrap;
     }
 
-    .spakaas-nav .user-initial {
-        width: 32px;
-        height: 32px;
-        background: #ffeb3b;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #0f4c5c;
-        font-weight: 700;
-        font-size: 0.95rem;
+    .nav-username {
+        font-size: .82rem;
+        color: rgba(255, 255, 255, .75);
     }
 
-    .spakaas-nav .nav-username {
-        font-size: 0.88rem;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-    }
-
-    .spakaas-nav .nav-btn {
-        padding: 7px 16px !important;
+    .nav-btn {
+        padding: 6px 14px;
         border-radius: 20px;
-        font-size: 0.85rem;
+        font-size: .82rem;
         font-weight: 600;
-        text-decoration: none !important;
-        border: none;
-        margin: 0;
-        display: inline-block;
-        color: #fff !important;
+        text-decoration: none;
+        transition: background .15s;
     }
 
-    .spakaas-nav .nav-btn-out {
-        background: #e74c3c !important;
+    .nav-btn-out {
+        background: rgba(231, 76, 60, .8);
+        color: #fff;
     }
 
-    .spakaas-nav .nav-btn-out:hover {
-        background: #c0392b !important;
+    .nav-btn-out:hover {
+        background: #e74c3c;
     }
 
-    .spakaas-nav .nav-btn-in {
-        background: #3fa8a8 !important;
-    }
-
-    .spakaas-nav .nav-btn-in:hover {
-        background: #2d8a8a !important;
-    }
-
-    @media (max-width: 768px) {
-        .spakaas-nav {
-            height: 60px !important;
-        }
-
-        .spakaas-nav .nav-inner {
-            height: 60px;
-            padding: 0 12px;
-        }
-
-        .spakaas-nav .nav-brand {
-            font-size: 1.1rem;
-        }
-
-        .spakaas-nav .nav-link,
-        .spakaas-nav .nav-dropdown-toggle {
-            padding: 5px 8px !important;
-            font-size: 0.78rem;
-        }
-
-        .spakaas-nav .nav-username {
-            display: none;
-        }
-
-        .spakaas-nav .nav-btn {
-            padding: 5px 10px !important;
-            font-size: 0.75rem;
-        }
-
-        .spakaas-nav .lang-toggle {
-            padding: 5px 8px !important;
-            font-size: 0.75rem;
-        }
-
-        body {
-            padding-top: 60px !important;
-        }
+    .nav-btn-in {
+        background: rgba(255, 255, 255, .9);
+        color: #1a3c5e;
     }
 
     .spakaas-nav .user-avatar {
