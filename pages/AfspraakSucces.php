@@ -20,6 +20,8 @@ unset($_SESSION['appointmentDetails']);
     <link rel="stylesheet" href="../Style/afspraakSucces.css">
 </head>
 <body>
+    <?php include '../navbar.php'; ?>
+    <div class="page-wrapper">
     <div class="success-container">
         <div class="success-icon"></div>
         <h1>Afspraak Bevestigd!</h1>
@@ -57,6 +59,7 @@ unset($_SESSION['appointmentDetails']);
         </div>
 
         <p class="info-text">Een bevestigingsemail is naar u verzonden.</p>
+    </div>
     </div>
 </body>
 </html>

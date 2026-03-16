@@ -6,12 +6,16 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0f4c5c 0%, #3d8f8f 100%);
+    background: #f4f8f6;
     min-height: 100vh;
+}
+
+.page-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    min-height: calc(100vh - 70px);
+    padding: 40px 20px;
 }
 
 .success-container {
@@ -112,7 +116,8 @@ h1 {
 .action-buttons {
     display: flex;
     gap: 12px;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .btn {
@@ -165,6 +170,10 @@ h1 {
 
     .action-buttons {
         flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
     }
 
     .btn {
