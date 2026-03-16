@@ -185,7 +185,7 @@ if (!empty($item['lodgeid'])) {
 <head>
     <meta charset="UTF-8">
     <title>Planner Item Popup</title>
-    <link rel="stylesheet" type="text/css" href="/GMS-SPAKAAS/Style/planneritem.css">
+    <link rel="stylesheet" href="../Style/planneritem.css">
 </head>
 
 <body>
@@ -193,7 +193,7 @@ if (!empty($item['lodgeid'])) {
         <div class="popup-panel" id="main-panel">
             <?php if ($message) echo "<p>$message</p>"; ?>
             <span class="popup-close" title="Close"
-                onclick="window.location.href='Index.php'">
+                onclick="window.location.href='CalenderPage.php'">
                 &times;
             </span>
             <h2>View Planner Item</h2>
