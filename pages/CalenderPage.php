@@ -10,7 +10,7 @@ $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
 $stmt->execute([$_SESSION['gebruikerId']]);
 $_SESSION['rol'] = (int) $stmt->fetchColumn();
 
-if ($_SESSION['rol'] = 0) {
+if ($_SESSION['rol'] === 0) {
     die('Geen toegang');
 }
 if (!isset($_SESSION['calendar_date'])) {

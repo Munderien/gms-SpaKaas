@@ -339,7 +339,7 @@ if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php require_once __DIR__ . '/../navbar.php'; ?>
 
     <!-- Hero Section -->
     <div class="about-hero">
