@@ -115,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES ('$userId','$lodgeId','$beginTime','$endTime','$status','$desc','$aantalmensen')";
 
             if ($conn->query($sql) === TRUE) {
-                $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
                 require_once __DIR__ . '/email/emailService.php';
 
                 $loggedInUser = null;
@@ -135,6 +134,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } catch (Exception $e) {
                     echo 'Error: ' . htmlspecialchars($e->getMessage());
                 }
+
+                // Store appointment details in session and redirect to success page
+                $_SESSION['appointmentDetails'] = [
+                    'starttijd' => $beginTime,
+                    'eindtijd' => $endTime,
+                    'toelichting' => $desc,
+                    'aantalmensen' => $aantalmensen
+                ];
+                header('Location: AfspraakSucces.php');
+                exit;
             } else {
                 $message = "Fout bij toevoegen: " . $conn->error;
             }
