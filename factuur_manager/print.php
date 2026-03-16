@@ -332,15 +332,31 @@ if ($nachten < 1)
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
 
 
     <div class="no-print">
-        <button onclick="window.print();">Afdrukken / PDF</button>
+        <button onclick="window.print();">Afdrukken</button>
+        <button onclick="downloadPDF();" style="background:#27ae60;color:#fff;">⬇ Download als PDF</button>
         <a href="list.php">← Terug naar overzicht</a>
     </div>
+
+    <script>
+        function downloadPDF() {
+            const element = document.querySelector('.page');
+            const filename = 'Factuur_<?php echo str_pad($row['factuurid'], 5, '0', STR_PAD_LEFT); ?>.pdf';
+            html2pdf().set({
+                margin: 0,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(element).save();
+        }
+    </script>
 
     <div class="page">
 
