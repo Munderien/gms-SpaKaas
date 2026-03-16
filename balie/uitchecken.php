@@ -3,7 +3,7 @@ require '../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
         $db->prepare("UPDATE lodge SET status = 'vrij' WHERE lodgeid = ?")->execute([$lodgeid]);
 
         $melding = 'Lodge uitcheckt! Factuur #' . $nieuwFactuurId . ' is aangemaakt.';
-        $factuurLink = '/dms-spakaas/gms-SpaKaas/factuur_manager/print.php?factuurid=' . $nieuwFactuurId;
+        $factuurLink = '../factuur_manager/print.php?factuurid=' . $nieuwFactuurId;
     }
 }
 
@@ -112,7 +112,7 @@ $bezetteLodges = $db->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uitchecken – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .lodge-kaart {
             background: #fff;

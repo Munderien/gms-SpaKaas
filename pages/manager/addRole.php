@@ -4,7 +4,7 @@ session_start();
 
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -16,6 +16,9 @@ if ($_SESSION['rol'] != 3) {
 }
 
 $melding = '';
+if (isset($_GET['melding']) && $_GET['melding'] == 'aangemaakt') {
+    $melding = 'Account aangemaakt!';
+}
 
 
 if (isset($_POST['actie']) && $_POST['actie'] == 'rol') {
@@ -44,18 +47,27 @@ if (isset($_POST['actie']) && $_POST['actie'] == 'aanmaken') {
     if ($naam == '' || $email == '' || $ww == '') {
         $melding = 'Naam, e-mail en wachtwoord zijn verplicht.';
     } else {
-        $hash = md5($ww);
-        $stmt = $db->prepare("INSERT INTO gebruiker
-            (email, wachtwoord, rol, isactief, is2faingeschakeld, adres, naam, plaats, telefoonnummer)
-            VALUES (?, ?, ?, 1, 0, ?, ?, ?, ?)");
-        $stmt->execute([$email, $hash, $_POST['nieuw_rol'], $_POST['adres'], $naam, $_POST['plaats'], $_POST['telefoonnummer']]);
-        $melding = 'Account aangemaakt!';
+        try {
+            $hash = md5($ww);
+            $stmt = $db->prepare("INSERT INTO gebruiker
+                (email, wachtwoord, rol, is2faingeschakeld, adres, naam, plaats, telefoonnummer)
+                VALUES (?, ?, ?, 0, ?, ?, ?, ?)");
+            $stmt->execute([$email, $hash, $_POST['nieuw_rol'], $_POST['adres'], $naam, $_POST['plaats'], $_POST['telefoonnummer']]);
+            header('Location: addRole.php?melding=aangemaakt');
+            exit;
+        } catch (PDOException $e) {
+            if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                $melding = 'Dit e-mailadres bestaat al!';
+            } else {
+                $melding = 'Fout bij aanmaken: ' . $e->getMessage();
+            }
+        }
     }
 }
 
 $rolnamen = [0 => 'Klant', 1 => 'Baliemedewerker', 2 => 'Onderhoudsmonteur', 3 => 'Manager'];
 
-$gebruikers = $db->query("SELECT gebruikerid, email, naam, rol, isactief FROM gebruiker ORDER BY gebruikerid")->fetchAll(PDO::FETCH_ASSOC);
+$gebruikers = $db->query("SELECT gebruikerid, email, naam, rol FROM gebruiker ORDER BY gebruikerid")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="nl">

@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: inlog.php');
     exit;
 }
 
@@ -202,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
+    <?php include '../navbar.php'; ?>
     <div class="form-grid">
         <div class="popup-overlay" id="planneritem-popup">
             <div class="popup-panel" id="main-panel">
@@ -218,11 +219,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form method="post">
                     <div class="popup-field">
                         <label for="starttijd">Begintijd:</label><br>
-                        <input type="date" id="starttijd" name="starttijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="starttijd" name="starttijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="eindtijd">Eindtijd:</label><br>
-                        <input type="date" id="eindtijd" name="eindtijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="eindtijd" name="eindtijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="toelichting">Beschrijving:</label><br>

@@ -51,7 +51,6 @@ return [
     'nav_reviews' => 'Reviews',
     'nav_logout' => 'Logout',
     'nav_login' => 'Login',
-    'nav_employee' => 'Employee Page',
     
     // ==================== LODGES PAGE ====================
     'lodges_title' => 'Our Lodges',

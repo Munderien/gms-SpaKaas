@@ -17,14 +17,15 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
     <link rel="stylesheet" href="./onderhoud_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
-<div class="container">
-<div class="top-bar-onderhoud">
-    <h2>Onderhoud taken</h2>
-    <button id="add-task" onClick="window.location.href='onderhoud_toevoegen.php'">Taak toevoegen</button>
-</div>
-<div class="taken-container">
-<?php
-include("../config.php");
+    <?php require_once __DIR__ . '/../../navbar.php'; ?>
+    <div class="container">
+        <div class="top-bar-onderhoud">
+            <h2>Onderhoud taken</h2>
+            <button id="add-task" onClick="window.location.href='onderhoud_toevoegen.php'">Taak toevoegen</button>
+        </div>
+        <div class="taken-container">
+            <?php
+            include("../config.php");
 
 $sql = "
     SELECT onderhoud.*, 

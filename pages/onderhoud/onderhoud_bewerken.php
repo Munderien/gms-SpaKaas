@@ -109,6 +109,7 @@ input[type="submit"]:hover {
 </style>
 </head>
 <body>
+<?php include __DIR__ . '/../../navbar.php'; ?>
 
 <div class="container">
 <form class="form-card" action="onderhoud_bewerk_functie.php" method="post">

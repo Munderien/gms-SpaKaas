@@ -10,7 +10,7 @@ try {
 }
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: inlog.php');
     exit;
 }
 

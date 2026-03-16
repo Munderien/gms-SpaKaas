@@ -3,7 +3,7 @@ session_start();
 include('config.php');
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -273,7 +273,6 @@ foreach ($data as $events) {
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
 
     <div class="calendar">
         <h1>Plain PHP MVC Starter</h1>
@@ -327,6 +326,7 @@ foreach ($data as $events) {
                     .catch(console.error);
             }
         </script>
+    <?php include '../navbar.php'; ?>
 
         
 </body>

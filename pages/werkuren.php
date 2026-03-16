@@ -21,7 +21,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 // Initialize variables
-$employee_id = $_POST['employee_id'] ?? $_GET['employee_id'] ?? '';
+$gebruikerid = $_POST['gebruikerid'] ?? $_GET['gebruikerid'] ?? '';
 $week_offset = isset($_GET['week']) ? intval($_GET['week']) : 0;
 $message = '';
 $error = '';
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Begintijd moet voor eindtijd liggen.";
             } else {
                 $stmt = $conn->prepare("INSERT INTO werkuur (gebruikerid, begintijd, eindtijd) VALUES (?, ?, ?)");
-                $stmt->bind_param("iss", $employee_id, $begintijd_full, $eindtijd_full);
+                $stmt->bind_param("iss", $gebruikerid, $begintijd_full, $eindtijd_full);
                 
                 if ($stmt->execute()) {
                     $message = "Werkuur succesvol toegevoegd.";
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Get original date from database
             $date_stmt = $conn->prepare("SELECT begintijd FROM werkuur WHERE werkuurid = ? AND gebruikerid = ?");
-            $date_stmt->bind_param("ii", $werkuur_id, $employee_id);
+            $date_stmt->bind_param("ii", $werkuur_id, $gebruikerid);
             $date_stmt->execute();
             $date_result = $date_stmt->get_result()->fetch_assoc();
             $date_stmt->close();
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $error = "Begintijd moet voor eindtijd liggen.";
                 } else {
                     $stmt = $conn->prepare("UPDATE werkuur SET begintijd = ?, eindtijd = ? WHERE werkuurid = ? AND gebruikerid = ?");
-                    $stmt->bind_param("ssii", $begintijd_full, $eindtijd_full, $werkuur_id, $employee_id);
+                    $stmt->bind_param("ssii", $begintijd_full, $eindtijd_full, $werkuur_id, $gebruikerid);
                     
                     if ($stmt->execute()) {
                         $message = "Werkuur succesvol bijgewerkt.";
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($werkuur_id) {
             $stmt = $conn->prepare("DELETE FROM werkuur WHERE werkuurid = ? AND gebruikerid = ?");
-            $stmt->bind_param("ii", $werkuur_id, $employee_id);
+            $stmt->bind_param("ii", $werkuur_id, $gebruikerid);
             
             if ($stmt->execute()) {
                 $message = "Werkuur succesvol verwijderd. Schema geldt weer voor deze dag.";
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Check if schedule already exists for this day
             $check_stmt = $conn->prepare("SELECT weekschemaid FROM weekschema WHERE gebruikerid = ? AND dag_van_week = ?");
-            $check_stmt->bind_param("ii", $employee_id, $day_of_week);
+            $check_stmt->bind_param("ii", $gebruikerid, $day_of_week);
             $check_stmt->execute();
             $check_result = $check_stmt->get_result();
             $existing = $check_result->fetch_assoc();
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // Insert new
                 $stmt = $conn->prepare("INSERT INTO weekschema (gebruikerid, dag_van_week, starttijd, eindtijd) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("iiss", $employee_id, $day_of_week, $start_time, $end_time);
+                $stmt->bind_param("iiss", $gebruikerid, $day_of_week, $start_time, $end_time);
             }
             
             if ($stmt->execute()) {
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($schedule_id) {
             $stmt = $conn->prepare("DELETE FROM weekschema WHERE weekschemaid = ? AND gebruikerid = ?");
-            $stmt->bind_param("ii", $schedule_id, $employee_id);
+            $stmt->bind_param("ii", $schedule_id, $gebruikerid);
             
             if ($stmt->execute()) {
                 $message = "Weekschema verwijderd.";
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch employees (role 1 and 2)
 $employees_array = [];
-$employees_result = $conn->query("SELECT gebruikerid, naam, rol FROM gebruiker WHERE rol IN (1, 2) AND isactief = 1 ORDER BY naam");
+$employees_result = $conn->query("SELECT gebruikerid, naam, rol FROM gebruiker WHERE rol IN (1, 2) ORDER BY naam");
 if ($employees_result) {
     while ($row = $employees_result->fetch_assoc()) {
         $employees_array[] = $row;
@@ -179,10 +179,10 @@ if ($employees_result) {
 $schedules = [];
 $work_hours_by_day = [];
 
-if ($employee_id) {
+if ($gebruikerid) {
     // Get all weekly schedules for this employee
     $stmt = $conn->prepare("SELECT weekschemaid, dag_van_week, starttijd, eindtijd FROM weekschema WHERE gebruikerid = ? ORDER BY dag_van_week");
-    $stmt->bind_param("i", $employee_id);
+    $stmt->bind_param("i", $gebruikerid);
     $stmt->execute();
     $schedule_result = $stmt->get_result();
     while ($row = $schedule_result->fetch_assoc()) {
@@ -192,7 +192,7 @@ if ($employee_id) {
     
     // Get work hours for this week
     $stmt = $conn->prepare("SELECT werkuurid, begintijd, eindtijd FROM werkuur WHERE gebruikerid = ? AND DATE(begintijd) >= ? AND DATE(begintijd) <= ? ORDER BY begintijd");
-    $stmt->bind_param("iss", $employee_id, $start_date, $end_date);
+    $stmt->bind_param("iss", $gebruikerid, $start_date, $end_date);
     $stmt->execute();
     $work_hours_result = $stmt->get_result();
     
@@ -227,7 +227,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                 <span class="close" onclick="closeWorkuurModal()">&times;</span>
             </div>
             <form method="POST" action="" id="editWorkuurForm">
-                <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                 <input type="hidden" name="werkuur_id" id="edit_werkuur_id">
                 <div class="modal-body">
                     <div id="editDateInfo" class="modal-info"></div>
@@ -258,7 +258,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                 <span class="close" onclick="closeAddWorkuurModal()">&times;</span>
             </div>
             <form method="POST" action="" id="addWorkuurForm">
-                <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                 <div class="modal-body">
                     <div id="schemaInfo" class="modal-info" style="display: none;"></div>
                     
@@ -291,7 +291,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                 <span class="close" onclick="closeScheduleModal()">&times;</span>
             </div>
             <form method="POST" action="" id="scheduleForm">
-                <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                 <input type="hidden" name="schedule_id" id="edit_schedule_id">
                 <div class="modal-body">
                     <div class="form-group">
@@ -340,11 +340,11 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                 <div class="form-group">
                     <label for="employee_select">Selecteer Werknemer:</label>
                     <form method="GET" action="" id="employeeForm" style="margin: 0;">
-                        <select name="employee_id" id="employee_select" onchange="document.getElementById('employeeForm').submit()">
+                        <select name="gebruikerid" id="employee_select" onchange="document.getElementById('employeeForm').submit()">
                             <option value="">-- Kies een werknemer --</option>
                             <?php foreach ($employees_array as $employee): ?>
                                 <option value="<?php echo htmlspecialchars($employee['gebruikerid']); ?>" 
-                                        <?php echo ($employee_id == $employee['gebruikerid']) ? 'selected' : ''; ?>>
+                                        <?php echo ($gebruikerid == $employee['gebruikerid']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($employee['naam']); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -352,10 +352,10 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                     </form>
                 </div>
 
-                <?php if ($employee_id): ?>
+                <?php if ($gebruikerid): ?>
                     <div>
                         <form method="GET" action="" class="week-navigation">
-                            <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                            <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                             <button type="submit" name="week" value="<?php echo $week_offset - 1; ?>">Vorige</button>
                             <div class="week-info">
                                 <?php echo 'Week van ' . date('d-m-Y', strtotime($start_date)) . ' t/m ' . date('d-m-Y', strtotime($end_date)); ?>
@@ -366,7 +366,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                 <?php endif; ?>
             </div>
 
-            <?php if ($employee_id): ?>
+            <?php if ($gebruikerid): ?>
                 <!-- WEEKSCHEMA MANAGEMENT FORM -->
                 <div class="schedule-form">
                     <h3>Weekschema Beheren (Standaard Rooster)</h3>
@@ -425,7 +425,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                                             <div style="margin-top: 8px;">
                                                 <button type="button" class="btn-small btn-edit" onclick="openScheduleEditModal(<?php echo $schedules[$day_num]['weekschemaid']; ?>, '<?php echo $day_num; ?>', '<?php echo htmlspecialchars($schema_start); ?>', '<?php echo htmlspecialchars($schema_end); ?>')">Bewerk</button>
                                                 <form method="POST" action="" style="display: inline;">
-                                                    <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                                                    <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                                                     <input type="hidden" name="schedule_id" value="<?php echo $schedules[$day_num]['weekschemaid']; ?>">
                                                     <button type="submit" name="delete_schedule" class="btn-small btn-delete" onclick="return confirm('Schema verwijderen?')">Verwijder</button>
                                                 </form>
@@ -454,7 +454,7 @@ $days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', '
                                                 </div>
                                                 <div style="display: flex; gap: 5px;">
                                                     <form method="POST" action="" style="display: inline;">
-                                                        <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee_id); ?>">
+                                                        <input type="hidden" name="gebruikerid" value="<?php echo htmlspecialchars($gebruikerid); ?>">
                                                         <input type="hidden" name="werkuur_id" value="<?php echo $hour['werkuurid']; ?>">
                                                         <button type="submit" name="delete_workuur" class="btn-small btn-delete" onclick="event.stopPropagation(); return confirm('Verwijderen?')">Verwijder</button>
                                                     </form>

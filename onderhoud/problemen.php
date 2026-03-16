@@ -3,7 +3,7 @@ require '../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -67,7 +67,7 @@ foreach ($problemen as $p) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemelde Problemen – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .stat-grid {
             display: grid;
@@ -140,7 +140,6 @@ foreach ($problemen as $p) {
 </head>
 
 <body>
-    <?php include '../navbar.php'; ?>
     <div class="manager-container">
         <h1>Gemelde Problemen</h1>
 
@@ -242,6 +241,7 @@ foreach ($problemen as $p) {
             </table>
         <?php endif; ?>
     </div>
+    <?php include '../navbar.php'; ?>
 </body>
 
 </html>

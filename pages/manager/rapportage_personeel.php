@@ -3,7 +3,7 @@ require '../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -24,7 +24,7 @@ $volgendeWeek = date('Y-m-d', strtotime('+7 days', strtotime($weekStart)));
 $medewerkers = $db->query("
     SELECT gebruikerid, naam, rol
     FROM gebruiker
-    WHERE rol IN (1, 2, 3) AND isactief = 1
+    WHERE rol IN (1, 2, 3)
     ORDER BY naam
 ")->fetchAll(PDO::FETCH_ASSOC);
 
