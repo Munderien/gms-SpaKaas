@@ -3,7 +3,7 @@ require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../../pages/inlog.php');
     exit;
 }
 $stmt = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
@@ -144,7 +144,7 @@ $lodgetypes = $db->query("SELECT lodgetypeid, naam FROM lodgetype ORDER BY naam"
                                     <input type="hidden" name="lodgeid" value="<?php echo $l['lodgeid']; ?>">
                                     <select name="lodgetypeid" class="compact">
                                         <?php foreach ($lodgetypes as $lt): ?>
-                                            <option value="<?php echo $lt['lodgetypeid']; ?>" <?php if ($lt['lodgetypeid'] == $l['typeid'])
+                                            <option value="<?php echo $lt['lodgetypeid']; ?>" <?php if ($lt['lodgetypeid'] == $l['lodgetypeid'])
                                                    echo 'selected'; ?>>
                                                 <?php echo htmlspecialchars($lt['naam']); ?>
                                             </option>

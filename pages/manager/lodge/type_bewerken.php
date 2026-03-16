@@ -3,14 +3,14 @@ require '../../config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../../pages/inlog.php');
     exit;
 }
 $rolCheck = $db->prepare("SELECT rol FROM gebruiker WHERE gebruikerid = ?");
 $rolCheck->execute([$_SESSION['gebruikerId']]);
 $_SESSION['rol'] = (int) $rolCheck->fetchColumn();
 if ($_SESSION['rol'] != 3) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../../pages/inlog.php');
     exit;
 }
 

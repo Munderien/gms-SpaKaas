@@ -20,7 +20,7 @@ return function (PDO $db) {
 
             CONSTRAINT fk_favoriete_lodgetype
                 FOREIGN KEY (lodgetypeid)
-                REFERENCES lodgetype(typeid)
+                REFERENCES lodgetype(lodgetypeid)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
         )

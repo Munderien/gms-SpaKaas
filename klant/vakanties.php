@@ -3,19 +3,19 @@ require '../pages/config.php';
 session_start();
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: ../pages/inlog.php');
     exit;
 }
 
 $gebruikerId = $_SESSION['gebruikerId'];
 
 $vakanties = $db->prepare("
-    SELECT a.afspraakid, a.titel, a.starttijd, a.eindtijd, a.status,
+    SELECT a.afspraakid, a.starttijd, a.eindtijd, a.status,
            a.aantalmensen, a.toelichting,
            l.huisnummer, lt.naam AS typename
     FROM afspraak a
     JOIN lodge l ON l.lodgeid = a.lodgeid
-    JOIN lodgetype lt ON lt.typeid = l.lodgetypeid
+    JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
     WHERE a.gebruikerid = ?
     ORDER BY a.starttijd DESC
 ");
@@ -29,7 +29,7 @@ $result = $vakanties->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Vakanties – SpaKaas</title>
-    <link rel="stylesheet" href="/dms-spakaas/gms-SpaKaas/Style/manager.css">
+    <link rel="stylesheet" href="../Style/manager.css">
     <style>
         .vakantie-kaart {
             background: #fff;

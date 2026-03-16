@@ -72,7 +72,6 @@ foreach ($reviews as &$review) {
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
 
     <main class="home-container">
         <!-- Welcome Card -->
@@ -185,6 +184,7 @@ foreach ($reviews as &$review) {
 
     <?php require_once __DIR__ . '/FavoriteLodges.php'; ?>
     <?php require_once __DIR__ . '/RecentLodges.php'; ?>
+    <?php include '../navbar.php'; ?>
 </body>
 
 </html>

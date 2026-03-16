@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 $host = 'localhost';
 $db = 'dms-spakaas';
@@ -12,24 +12,21 @@ if ($conn->connect_error) {
 }
 
 if (!isset($_SESSION['gebruikerId'])) {
-    header('Location: /dms-spakaas/gms-SpaKaas/pages/inlog.php');
+    header('Location: inlog.php');
     exit;
 }
 
-// Kijk hier later naar hier -Marijn
-$isCustomer = isset($_SESSION['rol']) && $_SESSION['rol'] != 0;
+$rol = (int)($_SESSION['rol'] ?? 0);
 
 $message = '';
 // get all klanten
 $gebruikers = [];
 $result = false;
-if ($isCustomer) {
-    // Als gebruiker krijg je alleen de ingelogde gebruiker
-    if (isset($_SESSION['gebruikerId'])) {
-        $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']));
-    }
+if ($rol === 0) {
+    // Klant: alleen eigen account
+    $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']));
 } else {
-    // Anders alle gebruikers 
+    // Medewerker/manager: alle gebruikers
     $result = $conn->query("SELECT gebruikerid, naam FROM gebruiker ORDER BY naam ASC");
 }
 if ($result && $result->num_rows > 0) {
@@ -40,35 +37,21 @@ if ($result && $result->num_rows > 0) {
 
 // get all lodge types
 $lodgeTypes = [];
-$lodgeTypeQuery = "SELECT lodgetypeid, naam
-                   FROM lodgetype
-                   ORDER BY naam ASC";
-$lodgeTypeResult = $conn->query($lodgeTypeQuery);
+$lodgeTypeResult = $conn->query("SELECT lodgetypeid, naam, beschrijving, capaciteit, prijs FROM lodgetype ORDER BY naam ASC");
 if ($lodgeTypeResult && $lodgeTypeResult->num_rows > 0) {
     while ($row = $lodgeTypeResult->fetch_assoc()) {
         $lodgeTypes[] = $row;
     }
 }
 
-$lodgeTypeName = '';
-if (!empty($item['lodgeid'])) {
-    $ltQuery = "SELECT lt.naam FROM lodge l
-               LEFT JOIN lodgetype lt ON l.lodgetypeid = lt.typeid
-               WHERE l.lodgeid = " . intval($item['lodgeid']);
-    $ltResult = $conn->query($ltQuery);
-    if ($ltResult && $ltResult->num_rows > 0) {
-        $ltRow = $ltResult->fetch_assoc();
-        $lodgeTypeName = $ltRow['naam'] ?? $item['lodgeid'];
-    }
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $beginTime = $conn->real_escape_string($_POST['starttijd']);
-    $endTime = $conn->real_escape_string($_POST['eindtijd']);
-    $status = 'Vrij';
-    $desc = $conn->real_escape_string($_POST['toelichting']);
+    $endTime   = $conn->real_escape_string($_POST['eindtijd']);
+    $status    = 'Vrij';
+    $desc      = $conn->real_escape_string($_POST['toelichting']);
     $aantalmensen = intval($_POST['aantalmensen'] ?? 0);
-    if ($isCustomer) {
+
+    if ($rol === 0) {
         $userId = intval($_SESSION['gebruikerId'] ?? 0);
     } else {
         $userId = intval($_POST['gebruikerid'] ?? 0);
@@ -83,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capStmt->execute();
             $capResult = $capStmt->get_result();
             if ($capResult && $capResult->num_rows > 0) {
-                $capRow = $capResult->fetch_assoc();
-                $capaciteit = (int) ($capRow['capaciteit'] ?? 0);
+                $capRow     = $capResult->fetch_assoc();
+                $capaciteit = (int)($capRow['capaciteit'] ?? 0);
             }
             $capStmt->close();
         }
@@ -106,22 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($endTime <= $beginTime) {
         $message = "Eindtijd moet later zijn dan begintijd.";
     } else {
-        // Zoek een beschikbare lodge binnen het gekozen lodgetype in de geselecteerde periode
         $availableLodgeQuery = "SELECT l.lodgeid
                                 FROM lodge l
                                 WHERE l.typeid = $lodgeTypeId
                                 AND NOT EXISTS (
-                                    SELECT 1
-                                    FROM afspraak a
+                                    SELECT 1 FROM afspraak a
                                     WHERE a.lodgeid = l.lodgeid
                                     AND (
                                         (a.starttijd <= '$beginTime' AND a.eindtijd > '$beginTime')
-                                        OR (a.starttijd < '$endTime' AND a.eindtijd >= '$endTime')
+                                        OR (a.starttijd < '$endTime'  AND a.eindtijd >= '$endTime')
                                         OR (a.starttijd >= '$beginTime' AND a.eindtijd <= '$endTime')
                                     )
                                 )
-                                ORDER BY l.lodgeid ASC
-                                LIMIT 1";
+                                ORDER BY l.lodgeid ASC LIMIT 1";
 
         $availableLodgeResult = $conn->query($availableLodgeQuery);
 
@@ -129,23 +109,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "Geen beschikbare lodge gevonden voor dit lodgetype in deze periode.";
         } else {
             $availableLodge = $availableLodgeResult->fetch_assoc();
-            $lodgeId = (int) $availableLodge['lodgeid'];
+            $lodgeId        = (int)$availableLodge['lodgeid'];
 
-            $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, starttijd, eindtijd,
-            status, toelichting, aantalmensen)
-                    VALUES ('$userId', '$lodgeId', '$beginTime', '$endTime', 
-                    '$status', '$desc', '$aantalmensen')";
+            $sql = "INSERT INTO afspraak (gebruikerid, lodgeid, starttijd, eindtijd, status, toelichting, aantalmensen)
+                    VALUES ('$userId','$lodgeId','$beginTime','$endTime','$status','$desc','$aantalmensen')";
+
             if ($conn->query($sql) === TRUE) {
-                $message = "Afspraak succesvol toegevoegd en iedereen is gekoppeld!";
                 require_once __DIR__ . '/email/emailService.php';
 
                 $loggedInUser = null;
-                if (isset($_SESSION['gebruikerId'])) {
-                    $userQuery = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']);
-                    $userResult = $conn->query($userQuery);
-                    if ($userResult && $userResult->num_rows > 0) {
-                        $loggedInUser = $userResult->fetch_assoc();
-                    }
+                $userQuery    = "SELECT gebruikerid, naam, email FROM gebruiker WHERE gebruikerid = " . intval($_SESSION['gebruikerId']);
+                $userResult   = $conn->query($userQuery);
+                if ($userResult && $userResult->num_rows > 0) {
+                    $loggedInUser = $userResult->fetch_assoc();
                 }
 
                 try {
@@ -153,22 +129,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $emailService->sendEmail(
                         $loggedInUser['email'],
                         'Bevestiging boeking',
-                        'Beste ' . $loggedInUser['naam'] . '
-
-Uw afspraak is succesvol aangemaakt.
-
-Details:
-- Naam: ' . $titel . '
-- Starttijd: ' . $beginTime . '
-- Eindtijd: ' . $endTime . '
-- Toelichting: ' . $desc . '
-- Aantal mensen: ' . $aantalmensen . '
-
-Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
+                        'Beste ' . $loggedInUser['naam'] . "\n\nUw afspraak is succesvol aangemaakt.\n\nDetails:\n- Starttijd: $beginTime\n- Eindtijd: $endTime\n- Toelichting: $desc\n- Aantal mensen: $aantalmensen\n\nWij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!"
                     );
                 } catch (Exception $e) {
                     echo 'Error: ' . htmlspecialchars($e->getMessage());
                 }
+
+                // Store appointment details in session and redirect to success page
+                $_SESSION['appointmentDetails'] = [
+                    'starttijd' => $beginTime,
+                    'eindtijd' => $endTime,
+                    'toelichting' => $desc,
+                    'aantalmensen' => $aantalmensen
+                ];
+                header('Location: AfspraakSucces.php');
+                exit;
             } else {
                 $message = "Fout bij toevoegen: " . $conn->error;
             }
@@ -176,34 +151,24 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Afspraak toevoegen</title>
     <link rel="stylesheet" href="../Style/MaakAfspraak.css">
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const gebruikers = <?php echo json_encode($gebruikers); ?>;
-            const lodgeTypes = <?php echo json_encode($lodgeTypes); ?>;
-
-            const gebruikerSelect = document.getElementById('gebruikerSelect');
+            const lodgeTypes     = <?php echo json_encode($lodgeTypes); ?>;
             const lodgeTypeSelect = document.getElementById('lodgeTypeSelect');
+            const lodgeTypeInfo = document.getElementById('lodgeTypeInfo');
+            const lodgeInfoName = document.getElementById('lodgeInfoName');
+            const lodgeInfoCapacity = document.getElementById('lodgeInfoCapacity');
+            const lodgeInfoPrice = document.getElementById('lodgeInfoPrice');
+            const lodgeInfoDescription = document.getElementById('lodgeInfoDescription');
+            const aantalMensenInput = document.getElementById('aantalmensen');
 
-            // krijgt lodgetypeid van Lodges.php
-            const params = new URLSearchParams(window.location.search);
-            const urlLodgeTypeId = params.get('lodgetypeid');
-
-            // Only populate gebruiker dropdown if it's actually a select element (not hidden input)
-            if (gebruikerSelect && gebruikerSelect.tagName === 'SELECT') {
-                gebruikers.forEach(g => {
-                    const opt = document.createElement('option');
-                    opt.value = g.gebruikerid;
-                    opt.textContent = g.naam;
-                    gebruikerSelect.appendChild(opt);
-                });
-            }
+            // Pre-select lodgetypeid if passed via URL (e.g. from Lodges.php)
+            const urlLodgeTypeId = new URLSearchParams(window.location.search).get('lodgetypeid');
 
             lodgeTypes.forEach(l => {
                 const opt = document.createElement('option');
@@ -212,59 +177,82 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                 lodgeTypeSelect.appendChild(opt);
             });
 
-            // als er een lodgetypeid is geselecteerd voordat je de pagina opent, dan wordt die automatisch gekozen
+            const renderSelectedLodgeInfo = () => {
+                const selectedId = lodgeTypeSelect.value;
+                const selectedLodgeType = lodgeTypes.find(l => String(l.lodgetypeid) === String(selectedId));
+
+                if (!selectedLodgeType) {
+                    lodgeTypeInfo.style.display = 'none';
+                    if (aantalMensenInput) {
+                        aantalMensenInput.removeAttribute('max');
+                    }
+                    return;
+                }
+
+                lodgeInfoName.textContent = selectedLodgeType.naam || '-';
+                lodgeInfoCapacity.textContent = selectedLodgeType.capaciteit || '-';
+                lodgeInfoPrice.textContent = selectedLodgeType.prijs ? '€' + selectedLodgeType.prijs : '-';
+                lodgeInfoDescription.textContent = selectedLodgeType.beschrijving || 'Geen beschrijving beschikbaar.';
+
+                if (aantalMensenInput && selectedLodgeType.capaciteit) {
+                    aantalMensenInput.max = parseInt(selectedLodgeType.capaciteit, 10);
+                }
+
+                lodgeTypeInfo.style.display = 'block';
+            };
+
             if (urlLodgeTypeId) {
                 lodgeTypeSelect.value = urlLodgeTypeId;
             }
+
+            lodgeTypeSelect.addEventListener('change', renderSelectedLodgeInfo);
+            renderSelectedLodgeInfo();
         });
     </script>
 </head>
 <body>
+    <?php include '../navbar.php'; ?>
     <div class="form-grid">
         <div class="popup-overlay" id="planneritem-popup">
             <div class="popup-panel" id="main-panel">
-                <h1>Nieuwe afspraak toevoegen test</h1>
-                <!-- Debug info -->
-                <div style="background: #f0f0f0; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 12px;">
-                    <strong>Debug:</strong> 
-                    rol = <?php echo isset($_SESSION['rol']) ? $_SESSION['rol'] : 'NOT SET'; ?>, 
-                    gebruikerId = <?php echo isset($_SESSION['gebruikerId']) ? $_SESSION['gebruikerId'] : 'NOT SET'; ?>,
-                    isCustomer = <?php echo $isCustomer ? 'true' : 'false'; ?>,
-                    gebruikers count = <?php echo count($gebruikers); ?>
-                </div>
+                <h1>Nieuwe afspraak toevoegen</h1>
+
                 <?php if ($message): ?>
-                    <p class="<?php echo (str_contains($message, 'succesvol')) ? 'success-message' : 'error-message'; ?>">
+                    <p class="<?php echo str_contains($message, 'succesvol') ? 'success-message' : 'error-message'; ?>">
                         <?php echo $message; ?>
                     </p>
                 <?php endif; ?>
-                <span class="popup-close" title="Close" onclick="window.location.href='Lodges.php'">
-                    &times;
-                </span>
+
+                <span class="popup-close" title="Close" onclick="window.location.href='Lodges.php'">&times;</span>
+
                 <form method="post">
                     <div class="popup-field">
                         <label for="starttijd">Begintijd:</label><br>
-                        <input type="date" id="starttijd" name="starttijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="starttijd" name="starttijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="eindtijd">Eindtijd:</label><br>
-                        <input type="date" id="eindtijd" name="eindtijd" required>
+                        <input min="<?php echo date('Y-m-d'); ?>" type="date" id="eindtijd" name="eindtijd" required>
                     </div>
                     <div class="popup-field">
                         <label for="toelichting">Beschrijving:</label><br>
                         <input type="text" id="toelichting" name="toelichting" required>
                     </div>
 
-                    <!--Als je ingelogd ben als gebruiker, laat de hidden inout type zien, anders de dropdown met alle gebruikers -->
-                    <?php if (!$isCustomer): ?>
+                    <?php if ($rol !== 0): ?>
+                        <!-- Medewerker/manager: dropdown met alle gebruikers -->
                         <div class="popup-field">
                             <label for="gebruikerSelect">Select gebruiker:</label>
                             <select id="gebruikerSelect" name="gebruikerid" required>
                                 <option value="">-- Select --</option>
+                                <?php foreach ($gebruikers as $g): ?>
+                                    <option value="<?= (int)$g['gebruikerid'] ?>"><?= htmlspecialchars($g['naam']) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     <?php else: ?>
-                        <input type="hidden" id="gebruikerSelect" name="gebruikerid"
-                            value="<?php echo intval($_SESSION['gebruikerId'] ?? 0); ?>">
+                        <!-- Klant: eigen account als hidden input -->
+                        <input type="hidden" name="gebruikerid" value="<?= intval($_SESSION['gebruikerId'] ?? 0) ?>">
                     <?php endif; ?>
 
                     <div class="popup-field">
@@ -274,9 +262,17 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
                         </select>
                     </div>
 
+                    <div id="lodgeTypeInfo" class="lodge-info-card" style="display:none;">
+                        <div class="lodge-info-title">Geselecteerde lodge informatie</div>
+                        <div class="lodge-info-row"><strong>Naam:</strong> <span id="lodgeInfoName">-</span></div>
+                        <div class="lodge-info-row"><strong>Capaciteit:</strong> <span id="lodgeInfoCapacity">-</span> personen</div>
+                        <div class="lodge-info-row"><strong>Prijs:</strong> <span id="lodgeInfoPrice">-</span></div>
+                        <div class="lodge-info-row"><strong>Beschrijving:</strong> <span id="lodgeInfoDescription">-</span></div>
+                    </div>
+
                     <div class="popup-field">
-                        <label for="aantalmensen">aantal mensen:</label><br>
-                        <input type="number" id="aantalmensen" name="aantalmensen" required><br><br>
+                        <label for="aantalmensen">Aantal mensen:</label><br>
+                        <input type="number" id="aantalmensen" name="aantalmensen" min="1" required><br><br>
                     </div>
 
                     <input type="submit" value="Toevoegen">
@@ -285,5 +281,4 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
         </div>
     </div>
 </body>
-
 </html>

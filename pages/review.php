@@ -306,7 +306,7 @@ $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php require_once __DIR__ . '/../navbar.php'; ?>
 
     <?php if ($isLoggedIn): ?>
         <h1><?= $editReview ? $lang['review_form_title_edit'] : $lang['review_form_title_new'] ?></h1>

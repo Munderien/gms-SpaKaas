@@ -22,7 +22,7 @@ if (file_exists($langFile)) {
 }
 
 // include navigation bar for consistency
-require_once __DIR__ . '/navbarKlant.php';
+require_once __DIR__ . '/../navbar.php';
 
 $sql = "select * from gebruiker where gebruikerId = ?";
 $stmt = $db->prepare($sql);
