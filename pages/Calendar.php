@@ -31,10 +31,11 @@ class getDataCalendar
                 return [];
             }
 
-            $sql = "SELECT a.*, lt.naam AS lodgetype
+            $sql = "SELECT a.*, lt.naam AS lodgetype, g.naam AS gebruiker_naam, l.huisnummer
                     FROM afspraak a
                     INNER JOIN lodge l ON l.lodgeid = a.lodgeid
                     INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
+                    INNER JOIN gebruiker g ON g.gebruikerid = a.gebruikerid
                     WHERE a.gebruikerid = :gebruikerid";
             $params[':gebruikerid'] = $userId;
 
@@ -43,10 +44,11 @@ class getDataCalendar
                 $params[':lodgetype'] = $lodgeType;
             }
         } else {
-            $sql = "SELECT a.*, lt.naam AS lodgetype
+            $sql = "SELECT a.*, lt.naam AS lodgetype, g.naam AS gebruiker_naam, l.huisnummer
                     FROM afspraak a
                     INNER JOIN lodge l ON l.lodgeid = a.lodgeid
-                    INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid";
+                    INNER JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
+                    INNER JOIN gebruiker g ON g.gebruikerid = a.gebruikerid";
 
             if (!empty($lodgeType) && $lodgeType !== 'all') {
                 $sql .= " WHERE lt.naam = :lodgetype";
@@ -96,11 +98,10 @@ class Calendar
 
     // Adds everything to the event from the database + some default values
 
-    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $aantalMensen, $color = ' ', $days = 1)
+    public function addEvent($afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status = false, $toelichting, $aantalMensen, $color = ' ', $days = 1, $gebruikerNaam = '', $lodgeTypeNaam = '', $huisnummer = '')
     {
         $color = $color ? ' ' . $color : $color;
-        //$this->events[] = [$txt, $date, $time, $days, $color];
-        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $aantalMensen, $days];
+        $this->events[] = [$afspraakId, $gebruikerId, $lodgeId, $startDatumTijd, $eindDatumTijd, $status, $toelichting, $aantalMensen, $aantalMensen, $days, $gebruikerNaam, $lodgeTypeNaam, $huisnummer];
     }
 
     public function __toString()
@@ -162,8 +163,8 @@ class Calendar
                     // afspraakId, titel, toelichting, begintijd, eindtijd
                     $html .= "<a href='planneritem.php?id={$event[0]}'>
                     <div class='event'>
-                        {$event[3]}<br> 
-                        {$event[4]}
+                        <strong>Naam: {$event[10]}</strong><br>
+                        Lodgetype: {$event[11]} <br>  Huisnummer: {$event[12]}
                     </div>
                   </a>";
                 }

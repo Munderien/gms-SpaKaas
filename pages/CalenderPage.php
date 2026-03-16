@@ -42,6 +42,11 @@ foreach ($data as $events) {
         $events['status'],
         $events['toelichting'],
         $events['aantalmensen'],
+        ' ',
+        1,
+        $events['gebruiker_naam'] ?? '',
+        $events['lodgetype'] ?? '',
+        $events['huisnummer'] ?? '',
     );
 }
 ?>
