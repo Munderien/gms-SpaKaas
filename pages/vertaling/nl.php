@@ -49,6 +49,7 @@ return [
     'nav_profile' => 'Profiel',
     'nav_about' => 'Over ons',
     'nav_reviews' => 'Reviews',
+    'nav_agenda' => 'Agenda',
     'nav_logout' => 'Uitloggen',
     'nav_login' => 'Inloggen',
     'nav_employee' => 'Medewerkerpagina',

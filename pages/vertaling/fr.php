@@ -48,6 +48,7 @@ return [
     'nav_profile' => 'Profil',
     'nav_about' => 'À Propos',
     'nav_reviews' => 'Avis',
+    'nav_agenda' => 'Agenda',
     'nav_logout' => 'Déconnexion',
     'nav_login' => 'Connexion',
     'nav_employee' => 'Page Employé',

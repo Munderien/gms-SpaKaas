@@ -460,7 +460,7 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
             <?php if ($isLoggedIn && $rol == 0): ?>
                 <?php $agendaActive = in_array($huidigePagina, ['MijnAfspraken.php'], true); ?>
                 <a href="<?= $base ?>/pages/MijnAfspraken.php"
-                    class="nav-link <?= $agendaActive ? 'active' : '' ?>">Agenda</a>
+                    class="nav-link <?= $agendaActive ? 'active' : '' ?>"><?= $lang['nav_agenda'] ?></a>
             <?php endif; ?>
             <?php if ($isLoggedIn && ($rol == 1 || $rol == 3)): ?>
                 <span class="nav-divider"></span>

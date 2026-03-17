@@ -48,6 +48,7 @@ return [
     'nav_profile' => 'Profil',
     'nav_about' => 'Hakkımızda',
     'nav_reviews' => 'Yorumlar',
+    'nav_agenda' => 'Takvim',
     'nav_logout' => 'Çıkış Yap',
     'nav_login' => 'Giriş Yap',
     'nav_employee' => 'Çalışan Sayfası',

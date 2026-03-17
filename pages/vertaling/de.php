@@ -48,6 +48,7 @@ return [
     'nav_profile' => 'Profil',
     'nav_about' => 'Über uns',
     'nav_reviews' => 'Bewertungen',
+    'nav_agenda' => 'Tagesordnung',
     'nav_logout' => 'Abmelden',
     'nav_login' => 'Anmelden',
     'nav_employee' => 'Mitarbeiterseite',
