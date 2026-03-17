@@ -51,6 +51,7 @@ return [
     'nav_reviews' => 'Reviews',
     'nav_logout' => 'Logout',
     'nav_login' => 'Login',
+    'nav_employee' => 'Employee Page',
     
     // ==================== LODGES PAGE ====================
     'lodges_title' => 'Our Lodges',
@@ -60,6 +61,60 @@ return [
     'lodges_persons' => 'people',
     'lodges_book_appointment' => 'Make Appointment',
     'lodges_currency' => '€',
+    
+    // ==================== LODGE PDP (Product Detail Page) ====================
+    'lodge_pdp_invalid' => 'Invalid lodge type.',
+    'lodge_pdp_not_found' => 'Lodge type not found.',
+    'lodge_pdp_capacity_label' => 'Capacity:',
+    'lodge_pdp_capacity_unit' => 'people',
+    'lodge_pdp_id_label' => 'Lodge Type ID:',
+    'lodge_pdp_book_btn' => 'Make Appointment',
+    'lodge_pdp_favorite_btn' => 'Favorite',
+    'lodge_pdp_unfavorite_btn' => 'Unfavorite',
+    
+    // ==================== MAKE APPOINTMENT PAGE ====================
+    'appointment_title' => 'Add New Appointment',
+    'appointment_start_time' => 'Start Time:',
+    'appointment_end_time' => 'End Time:',
+    'appointment_description' => 'Description:',
+    'appointment_select_user' => 'Select User:',
+    'appointment_select_lodgetype' => 'Select Lodge Type:',
+    'appointment_select_lodgetype_placeholder' => '-- Select Lodge Type --',
+    'appointment_lodge_info_title' => 'Selected Lodge Information',
+    'appointment_lodge_info_name' => 'Name:',
+    'appointment_lodge_info_capacity' => 'Capacity:',
+    'appointment_lodge_info_price' => 'Price:',
+    'appointment_lodge_info_description' => 'Description:',
+    'appointment_select_users' => '-- Select --',
+    'appointment_number_of_people' => 'Number of People:',
+    'appointment_submit_btn' => 'Add',
+    'appointment_connection_failed' => 'Connection failed:',
+    'appointment_not_logged_in' => 'You are not logged in.',
+    
+    // Appointment error messages
+    'appointment_error_no_user' => 'Please select a user.',
+    'appointment_error_no_lodgetype' => 'Please select a lodge type.',
+    'appointment_error_invalid_people_count' => 'Number of people must be greater than 0.',
+    'appointment_error_invalid_capacity' => 'Invalid lodge type or capacity not found.',
+    'appointment_error_capacity_exceeded' => 'You cannot book more than :capacity people for this lodge type.',
+    'appointment_error_past_date' => 'Date cannot be in the past.',
+    'appointment_error_invalid_time' => 'End time must be after start time.',
+    'appointment_error_no_availability' => 'No available lodge found for this lodge type in this period.',
+    'appointment_error_db' => 'Error adding appointment:',
+    
+    // Appointment success messages
+    'appointment_success_title' => 'Booking Confirmation',
+    'appointment_success_message' => 'Dear :name,
+
+Your appointment has been successfully created.
+
+Details:
+- Start Time: :startTime
+- End Time: :endTime
+- Description: :description
+- Number of People: :numberOfPeople
+
+We look forward to seeing you on the scheduled date and wish you a wonderful time!',
     
     // ==================== PROFILE/EDIT USER PAGE ====================
     'edit_user_title' => 'Update Information',

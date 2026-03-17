@@ -1,5 +1,6 @@
 <?php
 require '../pages/config.php';
+session_start();
 
 if (!isset($_GET['factuurid'])) {
     die('Geen factuur opgegeven.');
@@ -10,7 +11,7 @@ $factuurid = (int) $_GET['factuurid'];
 $sql = "
     SELECT
         f.factuurid, f.factuurdatum, f.totaalbedragexbtw, f.btwpercentage,
-        f.betaalstatus, f.aantalmensen, f.toelichting,
+        f.betaalstatus, f.aantalmensen, f.toelichting, f.gebruikerid,
         g.naam AS klantnaam, g.adres AS klantadres, g.plaats AS klantplaats, g.email AS klantemail,
         l.naam AS lodgetype_naam,
         a.starttijd, a.eindtijd
@@ -26,6 +27,23 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$row) {
     die('Factuur niet gevonden.');
+}
+
+// Check if accessed from email link (without login)
+$fromEmail = isset($_GET['from_email']) && $_GET['from_email'] == 1;
+
+// If from email, allow access without session check
+if (!$fromEmail) {
+    // Check if user is logged in
+    if (!isset($_SESSION['gebruikerId'])) {
+        header('Location: ../pages/inlog.php');
+        exit;
+    }
+    
+    // Check if the factuur belongs to the logged-in user
+    if ($row['gebruikerid'] !== $_SESSION['gebruikerId']) {
+        die('U hebt geen toegang tot deze factuur.');
+    }
 }
 
 $excl = (float) $row['totaalbedragexbtw'];
@@ -355,7 +373,21 @@ if ($nachten < 1)
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             }).from(element).save();
+            
+            // If opened from email, redirect to home after download
+            <?php if ($fromEmail): ?>
+            setTimeout(function() {
+                window.location.href = '../pages/home.php';
+            }, 1500);
+            <?php endif; ?>
         }
+
+        // Auto-trigger PDF download if opened from email
+        <?php if ($fromEmail): ?>
+        window.addEventListener('load', function() {
+            setTimeout(downloadPDF, 500);
+        });
+        <?php endif; ?>
     </script>
 
     <div class="page">

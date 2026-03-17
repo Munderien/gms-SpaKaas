@@ -61,6 +61,60 @@ return [
     'lodges_book_appointment' => 'Termin vereinbaren',
     'lodges_currency' => '€',
 
+    // ==================== LODGE PDP (Product Detail Page) ====================
+    'lodge_pdp_invalid' => 'Ungültiger Lodgetyp.',
+    'lodge_pdp_not_found' => 'Lodgetyp nicht gefunden.',
+    'lodge_pdp_capacity_label' => 'Kapazität:',
+    'lodge_pdp_capacity_unit' => 'Personen',
+    'lodge_pdp_id_label' => 'Lodgetyp-ID:',
+    'lodge_pdp_book_btn' => 'Termin vereinbaren',
+    'lodge_pdp_favorite_btn' => 'Favorit',
+    'lodge_pdp_unfavorite_btn' => 'Aus Favoriten entfernen',
+
+    // ==================== MAKE APPOINTMENT PAGE ====================
+    'appointment_title' => 'Neuen Termin hinzufügen',
+    'appointment_start_time' => 'Startzeit:',
+    'appointment_end_time' => 'Endzeit:',
+    'appointment_description' => 'Beschreibung:',
+    'appointment_select_user' => 'Benutzer auswählen:',
+    'appointment_select_lodgetype' => 'Lodgetyp auswählen:',
+    'appointment_select_lodgetype_placeholder' => '-- Lodgetyp auswählen --',
+    'appointment_lodge_info_title' => 'Informationen der ausgewählten Lodge',
+    'appointment_lodge_info_name' => 'Name:',
+    'appointment_lodge_info_capacity' => 'Kapazität:',
+    'appointment_lodge_info_price' => 'Preis:',
+    'appointment_lodge_info_description' => 'Beschreibung:',
+    'appointment_select_users' => '-- Auswählen --',
+    'appointment_number_of_people' => 'Anzahl der Personen:',
+    'appointment_submit_btn' => 'Hinzufügen',
+    'appointment_connection_failed' => 'Verbindung fehlgeschlagen:',
+    'appointment_not_logged_in' => 'Sie sind nicht angemeldet.',
+
+    // Appointment error messages
+    'appointment_error_no_user' => 'Bitte wählen Sie einen Benutzer aus.',
+    'appointment_error_no_lodgetype' => 'Bitte wählen Sie einen Lodgetyp aus.',
+    'appointment_error_invalid_people_count' => 'Die Anzahl der Personen muss größer als 0 sein.',
+    'appointment_error_invalid_capacity' => 'Ungültiger Lodgetyp oder Kapazität nicht gefunden.',
+    'appointment_error_capacity_exceeded' => 'Sie können nicht mehr als :capacity Personen für diesen Lodgetyp buchen.',
+    'appointment_error_past_date' => 'Datum darf nicht in der Vergangenheit liegen.',
+    'appointment_error_invalid_time' => 'Endzeit muss nach der Startzeit liegen.',
+    'appointment_error_no_availability' => 'Keine verfügbare Lodge für diesen Lodgetyp in diesem Zeitraum gefunden.',
+    'appointment_error_db' => 'Fehler beim Hinzufügen des Termins:',
+
+    // Appointment success messages
+    'appointment_success_title' => 'Buchungsbestätigung',
+    'appointment_success_message' => 'Sehr geehrte(r) :name,
+
+Ihr Termin wurde erfolgreich erstellt.
+
+Details:
+- Startzeit: :startTime
+- Endzeit: :endTime
+- Beschreibung: :description
+- Anzahl der Personen: :numberOfPeople
+
+Wir freuen uns auf Sie am vereinbarten Datum und wünschen Ihnen bereits jetzt eine schöne Zeit!',
+
     // ==================== PROFILE/EDIT USER PAGE ====================
     'edit_user_title' => 'Informationen aktualisieren',
     'edit_user_email' => 'E-Mail',
@@ -152,7 +206,7 @@ return [
     'about_facility_pool' => 'Spa-Pool',
     'about_facility_pool_desc' => 'Beheizter 500 m² großer Pool mit Wassertumult und Hydrotherapie-Düsen',
     'about_facility_sauna' => 'Saunakomplex',
-    'about_facility_sauna_desc' => 'Vier verschiedene Saunen: finnisch, Infrarot und Dampfsauna',
+    'about_facility_sauna_desc' => 'Vier verschiedene Saunas: finnisch, Infrarot und Dampfsauna',
     'about_facility_yoga' => 'Yoga & Meditationsstudio',
     'about_facility_yoga_desc' => 'Ruhiger Raum mit Bambus-Interieur und natürlichem Licht',
     'about_facility_lounge' => 'Wellness-Lounge',

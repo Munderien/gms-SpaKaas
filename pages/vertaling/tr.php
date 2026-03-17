@@ -61,6 +61,60 @@ return [
     'lodges_book_appointment' => 'Randevu Alın',
     'lodges_currency' => '€',
 
+    // ==================== LODGE PDP (Product Detail Page) ====================
+    'lodge_pdp_invalid' => 'Geçersiz lodge türü.',
+    'lodge_pdp_not_found' => 'Lodge türü bulunamadı.',
+    'lodge_pdp_capacity_label' => 'Kapasite:',
+    'lodge_pdp_capacity_unit' => 'kişi',
+    'lodge_pdp_id_label' => 'Lodge Türü ID:',
+    'lodge_pdp_book_btn' => 'Randevu Alın',
+    'lodge_pdp_favorite_btn' => 'Favorilere Ekle',
+    'lodge_pdp_unfavorite_btn' => 'Favorilerden Çıkar',
+
+    // ==================== MAKE APPOINTMENT PAGE ====================
+    'appointment_title' => 'Yeni Randevu Ekle',
+    'appointment_start_time' => 'Başlangıç Saati:',
+    'appointment_end_time' => 'Bitiş Saati:',
+    'appointment_description' => 'Açıklama:',
+    'appointment_select_user' => 'Kullanıcı Seçin:',
+    'appointment_select_lodgetype' => 'Lodge Türü Seçin:',
+    'appointment_select_lodgetype_placeholder' => '-- Lodge Türü Seçin --',
+    'appointment_lodge_info_title' => 'Seçilen Lodge Bilgileri',
+    'appointment_lodge_info_name' => 'Ad:',
+    'appointment_lodge_info_capacity' => 'Kapasite:',
+    'appointment_lodge_info_price' => 'Fiyat:',
+    'appointment_lodge_info_description' => 'Açıklama:',
+    'appointment_select_users' => '-- Seçin --',
+    'appointment_number_of_people' => 'Kişi Sayısı:',
+    'appointment_submit_btn' => 'Ekle',
+    'appointment_connection_failed' => 'Bağlantı başarısız:',
+    'appointment_not_logged_in' => 'Giriş yapmadınız.',
+
+    // Appointment error messages
+    'appointment_error_no_user' => 'Lütfen bir kullanıcı seçin.',
+    'appointment_error_no_lodgetype' => 'Lütfen bir lodge türü seçin.',
+    'appointment_error_invalid_people_count' => 'Kişi sayısı 0\'dan büyük olmalıdır.',
+    'appointment_error_invalid_capacity' => 'Geçersiz lodge türü veya kapasite bulunamadı.',
+    'appointment_error_capacity_exceeded' => 'Bu lodge türü için :capacity kişiden fazla rezervasyon yapamazsınız.',
+    'appointment_error_past_date' => 'Tarih geçmişte olamaz.',
+    'appointment_error_invalid_time' => 'Bitiş saati başlangıç saatinden sonra olmalıdır.',
+    'appointment_error_no_availability' => 'Bu dönem için bu lodge türüne uygun lodge bulunamadı.',
+    'appointment_error_db' => 'Randevu eklenirken hata:',
+
+    // Appointment success messages
+    'appointment_success_title' => 'Rezervasyon Onayı',
+    'appointment_success_message' => 'Sayın :name,
+
+Randevunuz başarıyla oluşturulmuştur.
+
+Detaylar:
+- Başlangıç Saati: :startTime
+- Bitiş Saati: :endTime
+- Açıklama: :description
+- Kişi Sayısı: :numberOfPeople
+
+Sizi belirlenen tarihte görmeyi dört gözle bekliyoruz ve şimdiden güzel bir zaman geçirmenizi diliyoruz!',
+
     // ==================== PROFILE/EDIT USER PAGE ====================
     'edit_user_title' => 'Bilgileri Güncelle',
     'edit_user_email' => 'E-posta',

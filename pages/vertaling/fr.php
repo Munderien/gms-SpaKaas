@@ -61,6 +61,60 @@ return [
     'lodges_book_appointment' => 'Prendre Rendez-vous',
     'lodges_currency' => '€',
 
+    // ==================== LODGE PDP (Product Detail Page) ====================
+    'lodge_pdp_invalid' => 'Type de lodge invalide.',
+    'lodge_pdp_not_found' => 'Type de lodge non trouvé.',
+    'lodge_pdp_capacity_label' => 'Capacité:',
+    'lodge_pdp_capacity_unit' => 'personnes',
+    'lodge_pdp_id_label' => 'ID du Type de Lodge:',
+    'lodge_pdp_book_btn' => 'Prendre Rendez-vous',
+    'lodge_pdp_favorite_btn' => 'Ajouter aux Favoris',
+    'lodge_pdp_unfavorite_btn' => 'Retirer des Favoris',
+
+    // ==================== MAKE APPOINTMENT PAGE ====================
+    'appointment_title' => 'Ajouter un Nouveau Rendez-vous',
+    'appointment_start_time' => 'Heure de Début:',
+    'appointment_end_time' => 'Heure de Fin:',
+    'appointment_description' => 'Description:',
+    'appointment_select_user' => 'Sélectionner Utilisateur:',
+    'appointment_select_lodgetype' => 'Sélectionner Type de Lodge:',
+    'appointment_select_lodgetype_placeholder' => '-- Sélectionner Type de Lodge --',
+    'appointment_lodge_info_title' => 'Informations de Lodge Sélectionnée',
+    'appointment_lodge_info_name' => 'Nom:',
+    'appointment_lodge_info_capacity' => 'Capacité:',
+    'appointment_lodge_info_price' => 'Prix:',
+    'appointment_lodge_info_description' => 'Description:',
+    'appointment_select_users' => '-- Sélectionner --',
+    'appointment_number_of_people' => 'Nombre de Personnes:',
+    'appointment_submit_btn' => 'Ajouter',
+    'appointment_connection_failed' => 'Connexion échouée:',
+    'appointment_not_logged_in' => 'Vous n\'êtes pas connecté.',
+
+    // Appointment error messages
+    'appointment_error_no_user' => 'Veuillez sélectionner un utilisateur.',
+    'appointment_error_no_lodgetype' => 'Veuillez sélectionner un type de lodge.',
+    'appointment_error_invalid_people_count' => 'Le nombre de personnes doit être supérieur à 0.',
+    'appointment_error_invalid_capacity' => 'Type de lodge invalide ou capacité non trouvée.',
+    'appointment_error_capacity_exceeded' => 'Vous ne pouvez pas réserver plus de :capacity personnes pour ce type de lodge.',
+    'appointment_error_past_date' => 'La date ne peut pas être dans le passé.',
+    'appointment_error_invalid_time' => 'L\'heure de fin doit être après l\'heure de début.',
+    'appointment_error_no_availability' => 'Aucune lodge disponible pour ce type de lodge dans cette période.',
+    'appointment_error_db' => 'Erreur lors de l\'ajout du rendez-vous:',
+
+    // Appointment success messages
+    'appointment_success_title' => 'Confirmation de Réservation',
+    'appointment_success_message' => 'Chère :name,
+
+Votre rendez-vous a été créé avec succès.
+
+Détails:
+- Heure de Début: :startTime
+- Heure de Fin: :endTime
+- Description: :description
+- Nombre de Personnes: :numberOfPeople
+
+Nous vous attendons à la date prévue et vous souhaitons une excellente visite!',
+
     // ==================== PROFILE/EDIT USER PAGE ====================
     'edit_user_title' => 'Mettre à jour les Informations',
     'edit_user_email' => 'Email',
@@ -135,7 +189,7 @@ return [
     'about_value_excellence_desc' => 'Nous nous efforçons de la perfection dans tout ce que nous faisons. De nos thérapeutes à nos installations, nous maintenons les normes les plus élevées.',
     'about_value_sustainability' => 'Durabilité',
     'about_value_sustainability_desc' => 'Nous nous engageons pour l\'environnement. Notre station fonctionne à 100% sur l\'énergie renouvelable et maintient une politique de zéro déchet.',
-    'about_team_heading' => '�� Notre Équipe',
+    'about_team_heading' => '👥 Notre Équipe',
     'about_team_intro' => 'Notre équipe se compose de plus de 50 professionnels qualifiés, chacun passionné par son domaine et dévoué au service client.',
     'about_team_director' => 'Directeur & Fondateur',
     'about_team_director_bio' => 'Avec plus de 20 ans d\'expérience dans l\'industrie hôtelière, Oskar a réalisé la vision de SpaKaas du rêve à la réalité.',

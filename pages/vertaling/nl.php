@@ -62,6 +62,60 @@ return [
     'lodges_book_appointment' => 'Maak afspraak',
     'lodges_currency' => '€',
     
+    // ==================== LODGE PDP (Product Detail Page) ====================
+    'lodge_pdp_invalid' => 'Ongeldig lodgetype.',
+    'lodge_pdp_not_found' => 'Lodgetype niet gevonden.',
+    'lodge_pdp_capacity_label' => 'Capaciteit:',
+    'lodge_pdp_capacity_unit' => 'personen',
+    'lodge_pdp_id_label' => 'Lodgetype ID:',
+    'lodge_pdp_book_btn' => 'Maak afspraak',
+    'lodge_pdp_favorite_btn' => 'Favorite',
+    'lodge_pdp_unfavorite_btn' => 'Unfavorite',
+    
+    // ==================== MAKE APPOINTMENT PAGE ====================
+    'appointment_title' => 'Nieuwe afspraak toevoegen',
+    'appointment_start_time' => 'Begintijd:',
+    'appointment_end_time' => 'Eindtijd:',
+    'appointment_description' => 'Beschrijving:',
+    'appointment_select_user' => 'Select gebruiker:',
+    'appointment_select_lodgetype' => 'Select Lodgetype:',
+    'appointment_select_lodgetype_placeholder' => '-- Select Lodgetype --',
+    'appointment_lodge_info_title' => 'Geselecteerde lodge informatie',
+    'appointment_lodge_info_name' => 'Naam:',
+    'appointment_lodge_info_capacity' => 'Capaciteit:',
+    'appointment_lodge_info_price' => 'Prijs:',
+    'appointment_lodge_info_description' => 'Beschrijving:',
+    'appointment_select_users' => '-- Select --',
+    'appointment_number_of_people' => 'Aantal mensen:',
+    'appointment_submit_btn' => 'Toevoegen',
+    'appointment_connection_failed' => 'Connection failed:',
+    'appointment_not_logged_in' => 'Je bent niet ingelogd.',
+    
+    // Appointment error messages
+    'appointment_error_no_user' => 'Selecteer een gebruiker.',
+    'appointment_error_no_lodgetype' => 'Selecteer een lodgetype.',
+    'appointment_error_invalid_people_count' => 'Aantal mensen moet groter zijn dan 0.',
+    'appointment_error_invalid_capacity' => 'Ongeldig lodgetype of capaciteit niet gevonden.',
+    'appointment_error_capacity_exceeded' => 'Je kan niet meer dan :capacity personen boeken voor dit lodgetype.',
+    'appointment_error_past_date' => 'Datum mag niet in het verleden liggen.',
+    'appointment_error_invalid_time' => 'Eindtijd moet later zijn dan begintijd.',
+    'appointment_error_no_availability' => 'Geen beschikbare lodge gevonden voor dit lodgetype in deze periode.',
+    'appointment_error_db' => 'Fout bij toevoegen:',
+    
+    // Appointment success messages
+    'appointment_success_title' => 'Bevestiging boeking',
+    'appointment_success_message' => 'Beste :name,
+
+Uw afspraak is succesvol aangemaakt.
+
+Details:
+- Starttijd: :startTime
+- Eindtijd: :endTime
+- Toelichting: :description
+- Aantal mensen: :numberOfPeople
+
+Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!',
+    
     // ==================== PROFILE/EDIT USER PAGE ====================
     'edit_user_title' => 'Gegevens bijwerken',
     'edit_user_email' => 'Email',

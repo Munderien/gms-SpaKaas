@@ -23,10 +23,88 @@ if (isset($_GET['action']) && isset($_GET['factuurid'])) {
     } elseif ($_GET['action'] == 'markeer_open') {
         $db->prepare("UPDATE factuur SET betaalstatus = 0 WHERE factuurid = ?")->execute([$id]);
     } elseif ($_GET['action'] == 'herinnering_verstuurd') {
-        $db->prepare("UPDATE factuur SET herinneringsmailstatus = 1 WHERE factuurid = ?")->execute([$id]);
+        // Fetch invoice details for email
+        $stmtInvoice = $db->prepare("
+            SELECT f.factuurid, f.totaalbedragexbtw, f.btwpercentage,
+                   g.naam AS klantnaam, g.email AS klantemail,
+                   l.naam AS lodgetype_naam,
+                   a.starttijd, a.eindtijd
+            FROM factuur f
+            JOIN gebruiker g ON f.gebruikerid = g.gebruikerid
+            JOIN lodgetype l ON f.typeid = l.lodgetypeid
+            JOIN afspraak a ON f.afspraakid = a.afspraakid
+            WHERE f.factuurid = ?
+        ");
+        $stmtInvoice->execute([$id]);
+        $invoice = $stmtInvoice->fetch(PDO::FETCH_ASSOC);
 
-        // gebruik $id om in de database emailadres en huisnummer te zoeken met select en join
-        // maak hier mailfunctie aan om de herinnering te sturen
+        if ($invoice && $invoice['klantemail'] && !empty(trim($invoice['klantemail']))) {
+            require_once __DIR__ . '/../pages/email/EmailService.php';
+            
+            try {
+                $emailService = new EmailService();
+                
+                $totaalMetBtw = $invoice['totaalbedragexbtw'] * (1 + $invoice['btwpercentage'] / 100);
+                $btwBedrag = $invoice['totaalbedragexbtw'] * ($invoice['btwpercentage'] / 100);
+                
+                $start = new DateTime($invoice['starttijd']);
+                $eind = new DateTime($invoice['eindtijd']);
+                $nachten = (int) $start->diff($eind)->days;
+                if ($nachten < 1)
+                    $nachten = 1;
+                
+                $emailBody = 'BETAALHERINNERING - SPAKAAS RESORT
+
+Geachte ' . htmlspecialchars($invoice['klantnaam']) . ',
+
+Dit is een vriendelijke herinnering dat uw factuur nog niet is betaald.
+
+================================================
+
+FACTUUR #' . str_pad($id, 5, '0', STR_PAD_LEFT) . '
+Factuurdatum: ' . date('d-m-Y') . '
+
+KLANTGEGEVENS:
+' . htmlspecialchars($invoice['klantnaam']) . '
+
+VERBLIJFSGEGEVENS:
+Lodgetype: ' . htmlspecialchars($invoice['lodgetype_naam']) . '
+Inchecken: ' . date('d-m-Y', strtotime($invoice['starttijd'])) . '
+Uitchecken: ' . date('d-m-Y', strtotime($invoice['eindtijd'])) . '
+Aantal nachten: ' . $nachten . '
+
+================================================
+
+FACTUURDETAILS:
+
+Bedrag excl. BTW: €' . number_format($invoice['totaalbedragexbtw'], 2, ',', '.') . '
+BTW (' . $invoice['btwpercentage'] . '%): €' . number_format($btwBedrag, 2, ',', '.') . '
+
+TOTAALBEDRAG (incl. BTW): €' . number_format($totaalMetBtw, 2, ',', '.') . '
+
+================================================
+
+STATUS: NOG NIET BETAALD
+
+Wij verzoeken u het bovenstaande bedrag van €' . number_format($totaalMetBtw, 2, ',', '.') . ' zo spoedig mogelijk over te maken.
+
+Heeft u deze factuur al betaald? Dan kunt u dit bericht negeren.
+
+================================================';
+                
+                $emailService->sendEmail(
+                    $invoice['klantemail'],
+                    'Betaalherinnering - Factuur #' . str_pad($id, 5, '0', STR_PAD_LEFT) . ' SpaKaas',
+                    $emailBody
+                );
+                
+                // Only update status if email was sent successfully
+                $db->prepare("UPDATE factuur SET herinneringsmailstatus = 1 WHERE factuurid = ?")->execute([$id]);
+            } catch (Exception $e) {
+                // Email failed, don't update status
+                $_SESSION['error'] = 'Herinnering kon niet verzonden worden: ' . htmlspecialchars($e->getMessage());
+            }
+        }
 
     } elseif ($_GET['action'] == 'herinnering_reset') {
         $db->prepare("UPDATE factuur SET herinneringsmailstatus = 0 WHERE factuurid = ?")->execute([$id]);
@@ -166,6 +244,14 @@ foreach ($result as $r) {
         .actions a.print:hover {
             background: #a9dfbf;
         }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -175,6 +261,12 @@ foreach ($result as $r) {
     <div class="manager-container">
         <h1>Factuuroverzicht</h1>
 
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($_SESSION['error']); ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
 
         <div class="stat-grid">
             <div class="stat-card">
@@ -259,7 +351,7 @@ foreach ($result as $r) {
                                                 resetten</a>
                                         <?php else: ?>
                                             <a href="?action=herinnering_verstuurd&factuurid=<?php echo $row['factuurid']; ?>">Herinnering
-                                                markeren</a>
+                                                versturen</a>
                                         <?php endif; ?>
                                         <a href="print.php?factuurid=<?php echo $row['factuurid']; ?>" target="_blank"
                                             class="print">Afdrukken</a>

@@ -443,19 +443,19 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 
         <div class="nav-links">
             <a href="<?= $base ?>/pages/home.php"
-                class="nav-link <?= $huidigePagina === 'home.php' ? 'active' : '' ?>">Home</a>
+                class="nav-link <?= $huidigePagina === 'home.php' ? 'active' : '' ?>"><?= $lang['nav_home'] ?></a>
 
             <?php if ($isLoggedIn): ?>
                 <a href="<?= $base ?>/pages/lodges.php"
-                    class="nav-link <?= ($huidigePagina === 'lodges.php' || $huidigePagina === 'Lodgepdp.php') ? 'active' : '' ?>">Boekingen</a>
+                    class="nav-link <?= ($huidigePagina === 'lodges.php' || $huidigePagina === 'Lodgepdp.php') ? 'active' : '' ?>"><?= $lang['nav_bookings'] ?></a>
                 <a href="<?= $base ?>/pages/edit_user.php"
-                    class="nav-link <?= $huidigePagina === 'edit_user.php' ? 'active' : '' ?>">Profiel</a>
+                    class="nav-link <?= $huidigePagina === 'edit_user.php' ? 'active' : '' ?>"><?= $lang['nav_profile'] ?></a>
             <?php endif; ?>
 
             <a href="<?= $base ?>/pages/overOns.php"
-                class="nav-link <?= $huidigePagina === 'overOns.php' ? 'active' : '' ?>">Over ons</a>
+                class="nav-link <?= $huidigePagina === 'overOns.php' ? 'active' : '' ?>"><?= $lang['nav_about'] ?></a>
             <a href="<?= $base ?>/pages/review.php"
-                class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>">Reviews</a>
+                class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>"><?= $lang['nav_reviews'] ?></a>
 
             <?php if ($isLoggedIn && ($rol == 1 || $rol == 3)): ?>
                 <span class="nav-divider"></span>

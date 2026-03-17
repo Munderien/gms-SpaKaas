@@ -1,5 +1,30 @@
 <?php
 session_start();
+
+// Language configuration
+$availableLanguages = ['nl', 'en', 'de', 'fr', 'tr'];
+$currentLang = $_SESSION['language'] ?? 'nl';
+
+// Validate language exists
+if (!in_array($currentLang, $availableLanguages)) {
+    $currentLang = 'nl';
+    $_SESSION['language'] = $currentLang;
+}
+
+// Load language file
+$langFile = __DIR__ . "/vertaling/{$currentLang}.php";
+
+if (file_exists($langFile)) {
+    $lang = require($langFile);
+} else {
+    die("Error: Language file not found at {$langFile}");
+}
+
+// Ensure $lang is an array
+if (!is_array($lang)) {
+    $lang = [];
+}
+
 $host = 'localhost';
 $db   = 'dms-spakaas';
 $user = 'root';
@@ -13,7 +38,7 @@ if ($conn->connect_error) {
 
 $lodgetypeId = isset($_GET['lodgetypeid']) ? (int) $_GET['lodgetypeid'] : 0;
 if ($lodgetypeId <= 0) {
-    die('Ongeldig lodgetype.');
+    die($lang['lodge_pdp_invalid'] ?? 'Invalid lodge type.');
 }
 
 // Get specific lodge type
@@ -28,7 +53,7 @@ $result = $stmt->get_result();
 $lodgeType = $result ? $result->fetch_assoc() : null;
 
 if (!$lodgeType) {
-    die('Lodgetype niet gevonden.');
+    die($lang['lodge_pdp_not_found'] ?? 'Lodge type not found.');
 }
 
 // Track recently viewed lodge types in cookie (only if consent given)
@@ -87,16 +112,16 @@ if (isset($_SESSION['gebruikerId'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?= $currentLang ?>">
 
 <head>
     <meta charset="UTF-8">
-    <title>Lodgetype details</title>
+    <title><?= htmlspecialchars($lodgeType['naam']) ?> - Luxe Spa Resort</title>
     <link rel="stylesheet" href="../Style/Lodges.css">
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php require_once __DIR__ . '/../navbar.php'; ?>
 
     <div class="lodges-container">
         <h1><?php echo htmlspecialchars($lodgeType['naam']); ?></h1>
@@ -104,23 +129,23 @@ if (isset($_SESSION['gebruikerId'])) {
             <div class="lodge-card-content">
                 <p class="description"><?php echo htmlspecialchars($lodgeType['beschrijving']); ?></p>
                 <div class="lodge-card-footer">
-                    <span class="price">€<?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
+                    <span class="price"><?= $lang['lodges_currency'] ?><?php echo htmlspecialchars($lodgeType['prijs']); ?></span>
                 </div>
             </div>
             <div class="lodge-card-details" style="max-height:none; opacity:1; margin-top:12px;">
                 <div class="details-content">
                     <div class="detail-item">
-                        <label>Capaciteit:</label>
-                        <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?> personen</p>
+                        <label><?= $lang['lodge_pdp_capacity_label'] ?></label>
+                        <p><?php echo htmlspecialchars($lodgeType['capaciteit']); ?> <?= $lang['lodge_pdp_capacity_unit'] ?></p>
                     </div>
                     <div class="detail-item">
-                        <label>Lodgetype ID:</label>
+                        <label><?= $lang['lodge_pdp_id_label'] ?></label>
                         <p><?php echo htmlspecialchars($lodgeType['lodgetypeid']); ?></p>
                     </div>
                 </div>
-                <button class="close-details" onclick="window.location.href='MaakAfspraak.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">Maak afspraak</button>
+                <button class="close-details" onclick="window.location.href='MaakAfspraak.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'"><?= $lang['lodge_pdp_book_btn'] ?></button>
                 <button class="close-details" onclick="window.location.href='Favorite.php?lodgetypeid=<?php echo (int) $lodgeType['lodgetypeid']; ?>'">
-                    <?php echo $isFavourited ? '&#128155; Unfavorite' : '&#129293; Favorite'; ?>
+                    <?php echo $isFavourited ? '&#128155; ' . $lang['lodge_pdp_unfavorite_btn'] : '&#129293; ' . $lang['lodge_pdp_favorite_btn']; ?>
                 </button>
             </div>
         </div>

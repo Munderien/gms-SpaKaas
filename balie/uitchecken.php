@@ -102,6 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['lodgeid'])) {
                 
                 $totaalMetBtw = $totaalExBtw * (1 + $btwPercentage / 100);
                 
+                $factuurUrl = 'http://localhost/websites/gms-SpaKaas/factuur_manager/print.php?factuurid=' . $nieuwFactuurId . '&from_email=1';
+                
                 $emailBody = 'Geachte klant,
 
 Bedankt voor uw verblijf bij SpaKaas!
@@ -115,6 +117,9 @@ BTW (21%): €' . number_format($totaalMetBtw - $totaalExBtw, 2, ',', '.') . '
 Totaalbedrag: €' . number_format($totaalMetBtw, 2, ',', '.') . '
 
 Betaalstatus: Nog niet betaald
+
+Klik hier om uw factuur te bekijken en download:
+' . $factuurUrl . '
 
 Dank u wel en tot ziens!';
                 
