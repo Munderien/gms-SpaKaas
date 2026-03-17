@@ -1,10 +1,4 @@
-<?php
-require_once __DIR__ . '/../../navbar.php'; 
-if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
-    header("Location: ../home.php");
-    exit();
-}
-?>
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -13,11 +7,10 @@ if(!isset($_SESSION['rol']) || $_SESSION['rol'] ==0) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onderhoud taken</title>
-    <!-- make sure we load the correct stylesheet and bust caches -->
     <link rel="stylesheet" href="./onderhoud_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
-    <?php require_once __DIR__ . '/../../navbar.php'; ?>
+    <?php include '../../navbar.php'; ?>
     <div class="container">
         <div class="top-bar-onderhoud">
             <h2>Onderhoud taken</h2>
