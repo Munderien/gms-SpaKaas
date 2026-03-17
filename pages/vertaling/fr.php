@@ -270,5 +270,28 @@ Nous vous attendons à la date prévue et vous souhaitons une excellente visite!
     'review_heading_recent' => 'Avis Récents',
     'review_rating_label' => 'Évaluation',
     'review_edit_link' => 'Modifier',
+
+        // ==================== MY APPOINTMENTS PAGE ====================
+    'my_appointments_title' => 'Mes Rendez-vous',
+    'my_appointments_subtitle' => 'Consultez tous vos rendez-vous et ouvrez les détails',
+    'my_appointments_no_appointments' => 'Vous n\'avez pas encore de rendez-vous.',
+    'my_appointments_make_appointment' => 'Prendre un rendez-vous',
+    'my_appointments_lodge_type' => 'Type de Lodge',
+    'my_appointments_lodge_number' => 'Numéro de Lodge:',
+    'my_appointments_date' => 'Date:',
+    'my_appointments_time' => 'Heure:',
+    'my_appointments_people' => 'Nombre de Personnes:',
+    'my_appointments_open_planner' => 'Ouvrir dans le planificateur',
+    
+    // Appointment status translations
+    'appointment_status_gepland' => 'Planifié',
+    'appointment_status_bezig' => 'En Cours',
+    'appointment_status_voltooid' => 'Terminé',
+    'appointment_status_geannuleerd' => 'Annulé',
+    'appointment_status_bevestigd' => 'Confirmé',
+    'appointment_status_verplaatst' => 'Replanifié',
+    'appointment_status_niet_verschenen' => 'Non Venu',
+    'appointment_status_in_afwachting' => 'En Attente',
+    'appointment_status_unknown' => 'Inconnu',
 ];
 ?>

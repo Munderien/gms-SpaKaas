@@ -270,5 +270,28 @@ Sizi belirlenen tarihte görmeyi dört gözle bekliyoruz ve şimdiden güzel bir
     'review_heading_recent' => 'Son Yorumlar',
     'review_rating_label' => 'Değerlendirme',
     'review_edit_link' => 'Düzenle',
+
+        // ==================== MY APPOINTMENTS PAGE ====================
+    'my_appointments_title' => 'Benim Randevularım',
+    'my_appointments_subtitle' => 'Tüm randevularınızı görüntüleyin ve detayları açın',
+    'my_appointments_no_appointments' => 'Henüz herhangi bir randevunuz yok.',
+    'my_appointments_make_appointment' => 'Randevu alın',
+    'my_appointments_lodge_type' => 'Lodge Türü',
+    'my_appointments_lodge_number' => 'Lodge Numarası:',
+    'my_appointments_date' => 'Tarih:',
+    'my_appointments_time' => 'Saat:',
+    'my_appointments_people' => 'Kişi Sayısı:',
+    'my_appointments_open_planner' => 'Planlayıcıda Aç',
+    
+    // Appointment status translations
+    'appointment_status_gepland' => 'Planlandı',
+    'appointment_status_bezig' => 'Devam Ediyor',
+    'appointment_status_voltooid' => 'Tamamlandı',
+    'appointment_status_geannuleerd' => 'İptal Edildi',
+    'appointment_status_bevestigd' => 'Onaylandı',
+    'appointment_status_verplaatst' => 'Yeniden Planlandı',
+    'appointment_status_niet_verschenen' => 'Gelmedi',
+    'appointment_status_in_afwachting' => 'Beklemede',
+    'appointment_status_unknown' => 'Bilinmiyor',
 ];
 ?>

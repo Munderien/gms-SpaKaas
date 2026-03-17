@@ -279,5 +279,28 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
     'review_heading_recent' => 'Recente reviews',
     'review_rating_label' => 'Beoordeling',
     'review_edit_link' => 'Bewerken',
+
+    // ==================== MY APPOINTMENTS PAGE ====================
+    'my_appointments_title' => 'Mijn Afspraken',
+    'my_appointments_subtitle' => 'Bekijk al je afspraken en open details',
+    'my_appointments_no_appointments' => 'Je hebt nog geen afspraken.',
+    'my_appointments_make_appointment' => 'Maak een afspraak',
+    'my_appointments_lodge_type' => 'Lodgetype',
+    'my_appointments_lodge_number' => 'Lodge huisnummer:',
+    'my_appointments_date' => 'Datum:',
+    'my_appointments_time' => 'Tijd:',
+    'my_appointments_people' => 'Aantal mensen:',
+    'my_appointments_open_planner' => 'Open in planneritem',
+    
+    // Appointment status translations
+    'appointment_status_gepland' => 'Gepland',
+    'appointment_status_bezig' => 'Bezig',
+    'appointment_status_voltooid' => 'Voltooid',
+    'appointment_status_geannuleerd' => 'Geannuleerd',
+    'appointment_status_bevestigd' => 'Bevestigd',
+    'appointment_status_verplaatst' => 'Verplaatst',
+    'appointment_status_niet_verschenen' => 'Niet verschenen',
+    'appointment_status_in_afwachting' => 'In afwachting',
+    'appointment_status_unknown' => 'Onbekend',
 ];
 ?>

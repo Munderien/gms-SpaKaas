@@ -279,5 +279,28 @@ We look forward to seeing you on the scheduled date and wish you a wonderful tim
     'review_heading_recent' => 'Recent Reviews',
     'review_rating_label' => 'Rating',
     'review_edit_link' => 'Edit',
+
+        // ==================== MY APPOINTMENTS PAGE ====================
+    'my_appointments_title' => 'My Appointments',
+    'my_appointments_subtitle' => 'View all your appointments and open details',
+    'my_appointments_no_appointments' => 'You don\'t have any appointments yet.',
+    'my_appointments_make_appointment' => 'Make an appointment',
+    'my_appointments_lodge_type' => 'Lodge Type',
+    'my_appointments_lodge_number' => 'Lodge Number:',
+    'my_appointments_date' => 'Date:',
+    'my_appointments_time' => 'Time:',
+    'my_appointments_people' => 'Number of People:',
+    'my_appointments_open_planner' => 'Open in planner',
+    
+    // Appointment status translations
+    'appointment_status_gepland' => 'Scheduled',
+    'appointment_status_bezig' => 'In Progress',
+    'appointment_status_voltooid' => 'Completed',
+    'appointment_status_geannuleerd' => 'Cancelled',
+    'appointment_status_bevestigd' => 'Confirmed',
+    'appointment_status_verplaatst' => 'Rescheduled',
+    'appointment_status_niet_verschenen' => 'No Show',
+    'appointment_status_in_afwachting' => 'Pending',
+    'appointment_status_unknown' => 'Unknown',
 ];
 ?>

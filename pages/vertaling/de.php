@@ -270,5 +270,28 @@ Wir freuen uns auf Sie am vereinbarten Datum und wünschen Ihnen bereits jetzt e
     'review_heading_recent' => 'Aktuelle Bewertungen',
     'review_rating_label' => 'Bewertung',
     'review_edit_link' => 'Bearbeiten',
+
+        // ==================== MY APPOINTMENTS PAGE ====================
+    'my_appointments_title' => 'Meine Termine',
+    'my_appointments_subtitle' => 'Sehen Sie alle Ihre Termine und öffnen Sie Details',
+    'my_appointments_no_appointments' => 'Sie haben noch keine Termine.',
+    'my_appointments_make_appointment' => 'Termin vereinbaren',
+    'my_appointments_lodge_type' => 'Lodgetyp',
+    'my_appointments_lodge_number' => 'Lodge-Nummer:',
+    'my_appointments_date' => 'Datum:',
+    'my_appointments_time' => 'Zeit:',
+    'my_appointments_people' => 'Anzahl der Personen:',
+    'my_appointments_open_planner' => 'Im Planer öffnen',
+    
+    // Appointment status translations
+    'appointment_status_gepland' => 'Geplant',
+    'appointment_status_bezig' => 'In Bearbeitung',
+    'appointment_status_voltooid' => 'Abgeschlossen',
+    'appointment_status_geannuleerd' => 'Abgesagt',
+    'appointment_status_bevestigd' => 'Bestätigt',
+    'appointment_status_verplaatst' => 'Verschoben',
+    'appointment_status_niet_verschenen' => 'Nicht erschienen',
+    'appointment_status_in_afwachting' => 'Ausstehend',
+    'appointment_status_unknown' => 'Unbekannt',
 ];
 ?>
