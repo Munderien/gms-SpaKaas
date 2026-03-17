@@ -9,9 +9,27 @@ if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
 
-$sql = "SELECT lodgeid, starttijd, eindtijd, status 
-        FROM afspraak 
-        ORDER BY lodgeid, starttijd";
+$sql = "
+    SELECT
+        a.lodgeid,
+        a.starttijd,
+        a.eindtijd,
+        'afspraak' AS afspraak_type
+    FROM afspraak a
+
+    UNION ALL
+
+    SELECT
+        s.lodgeid,
+        s.datum AS starttijd,
+        DATE_ADD(s.datum, INTERVAL CEIL(lt.capaciteit * 7.5) MINUTE) AS eindtijd,
+        'schoonmaak' AS afspraak_type
+    FROM schoonmaak s
+    INNER JOIN lodge l ON l.lodgeid = s.lodgeid
+    LEFT JOIN lodgetype lt ON lt.lodgetypeid = l.typeid
+
+    ORDER BY lodgeid, starttijd
+";
 
 $result = $db->query($sql);
 
@@ -32,7 +50,6 @@ while($row = $result->fetch_assoc()) {
 
     $lodgeId = $row['lodgeid'];
 
-    // Als de lodge nog geen row heeft, wordt er een row aangemaakt voor de lodge
     if(!isset($lodgeRows[$lodgeId])) {
         $lodgeRows[$lodgeId] = $currentRow;
         $currentRow++;
@@ -47,19 +64,17 @@ while($row = $result->fetch_assoc()) {
 
     $bar = new GanttBar($rowIndex, $lodgeName, $startDate, $endDate);
 
-    // Op basis van status (van de afspraak), wordt de bar veranderd van kleur
-    switch($row['status']) {
-        case "Vrij":
+    // Op basis van type afspraak wordt de bar kleur bepaald 
+    // BELANGRIJK: onderhoud werkt niet omdat er geen datum is gekoppeld bij de onderhoud table, zit erin voor scaling 
+    switch($row['afspraak_type']) {
+        case "afspraak":
             $bar->SetFillColor("green");
             break;
-        case "Bezet":
+        case "onderhoud":
             $bar->SetFillColor("red");
             break;
-        case "Onderhoud":
+        case "schoonmaak":
             $bar->SetFillColor("yellow");
-            break;
-        case "Aan de schoonmaak":
-            $bar->SetFillColor("violet");
             break;
         default:
             $bar->SetFillColor("gray");
