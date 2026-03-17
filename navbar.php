@@ -456,6 +456,14 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
                 class="nav-link <?= $huidigePagina === 'overOns.php' ? 'active' : '' ?>">Over ons</a>
             <a href="<?= $base ?>/pages/review.php"
                 class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>">Reviews</a>
+            <?php
+            $agendaHref = ($isLoggedIn && (int)$rol === 0)
+                ? $base . '/pages/MijnAfspraken.php'
+                : $base . '/pages/CalenderPage.php';
+            $agendaActive = in_array($huidigePagina, ['CalenderPage.php', 'calendarPage.php', 'calenderPage.php', 'MijnAfspraken.php'], true);
+            ?>
+            <a href="<?= $agendaHref ?>"
+                class="nav-link <?= $agendaActive ? 'active' : '' ?>">Agenda</a>
 
             <?php if ($isLoggedIn && ($rol == 1 || $rol == 3)): ?>
                 <span class="nav-divider"></span>

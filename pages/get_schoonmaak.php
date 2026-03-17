@@ -25,7 +25,7 @@ $sql = "SELECT
             lt.capaciteit
         FROM schoonmaak s
         LEFT JOIN lodge l ON s.lodgeid = l.lodgeid
-        LEFT JOIN lodgetype lt ON l.typeid = lt.typeid
+        LEFT JOIN lodgetype lt ON l.typeid = lt.lodgetypeid
         WHERE s.schoonmaakid = ?";
 
 $stmt = $conn->prepare($sql);
