@@ -15,7 +15,6 @@ if (!isset($lang) || !is_array($lang)) {
     }
 }
 
-// Determine application root dynamically
 $script = $_SERVER['SCRIPT_NAME'];
 if (preg_match('#^(.*?/gms-SpaKaas)#', $script, $m)) {
     $base = $m[1];
@@ -31,7 +30,7 @@ $userInitial = 'U';
 $profielfoto = null;
 
 if ($isLoggedIn) {
-    include("config.php"); // Use existing connection
+    include("config.php"); 
     $navStmt = $db->prepare("SELECT naam, profielfoto FROM gebruiker WHERE gebruikerid = ?");
     $navStmt->execute([$_SESSION['gebruikerId']]);
     $navUser = $navStmt->fetch(PDO::FETCH_ASSOC);
@@ -43,9 +42,9 @@ if ($isLoggedIn) {
     $rol = -1;
 }
 
-$baliePages = ['CalenderPage.php', 'list.php', 'schoonmaak.php', 'Medewerkers.php', 'uitchecken.php', 'lodge_overzicht.php', 'werkuren.php'];
+$baliePages = ['CalenderPage.php', 'list.php', 'schoonmaak.php', 'Medewerkers.php', 'uitchecken.php', 'lodge_overzicht.php'];
 $onderhoudPages = ['onderhoud_taken.php', 'problemen.php', 'rapportage.php'];
-$beheerPages = ['addRole.php', 'type_overzicht.php', 'type_toevoegen.php', 'type_bewerken.php', 'overzicht.php', 'lodge_toevoegen.php', 'koppel_afspraak.php', 'rapportage_lodges.php', 'rapportage_omzet.php', 'rapportage_personeel.php'];
+$beheerPages = ['addRole.php', 'type_overzicht.php', 'type_toevoegen.php', 'type_bewerken.php', 'overzicht.php', 'lodge_toevoegen.php', 'koppel_afspraak.php', 'rapportage_lodges.php', 'rapportage_omzet.php', 'rapportage_personeel.php', 'werkuren.php'];
 $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
 ?>
 
