@@ -457,6 +457,11 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
             <a href="<?= $base ?>/pages/review.php"
                 class="nav-link <?= $huidigePagina === 'review.php' ? 'active' : '' ?>"><?= $lang['nav_reviews'] ?></a>
 
+            <?php if ($isLoggedIn && $rol == 0): ?>
+                <?php $agendaActive = in_array($huidigePagina, ['MijnAfspraken.php'], true); ?>
+                <a href="<?= $base ?>/pages/MijnAfspraken.php"
+                    class="nav-link <?= $agendaActive ? 'active' : '' ?>">Agenda</a>
+            <?php endif; ?>
             <?php if ($isLoggedIn && ($rol == 1 || $rol == 3)): ?>
                 <span class="nav-divider"></span>
                 <div class="nav-dropdown">
@@ -475,8 +480,6 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
                             class="<?= $huidigePagina === 'uitchecken.php' ? 'active' : '' ?>">Uitchecken</a>
                         <a href="<?= $base ?>/balie/lodge_overzicht.php"
                             class="<?= $huidigePagina === 'lodge_overzicht.php' ? 'active' : '' ?>">Beschikbaarheid</a>
-                        <a href="<?= $base ?>/pages/werkuren.php"
-                            class="<?= $huidigePagina === 'werkuren.php' ? 'active' : '' ?>">Werkuren</a>
                     </div>
                 </div>
             <?php endif; ?>
@@ -515,6 +518,8 @@ $pijl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
                             class="<?= $huidigePagina === 'rapportage_omzet.php' ? 'active' : '' ?>">Omzetrapport</a>
                         <a href="<?= $base ?>/pages/manager/rapportage_personeel.php"
                             class="<?= $huidigePagina === 'rapportage_personeel.php' ? 'active' : '' ?>">Personeelrapport</a>
+                        <a href="<?= $base ?>/pages/werkuren.php"
+                            class="<?= $huidigePagina === 'werkuren.php' ? 'active' : '' ?>">Werkuren</a>
                     </div>
                 </div>
             <?php endif; ?>
