@@ -29,21 +29,15 @@ if (!$row) {
     die('Factuur niet gevonden.');
 }
 
-// Check if accessed from email link (without login)
-$fromEmail = isset($_GET['from_email']) && $_GET['from_email'] == 1;
+// Check if user is logged in
+if (!isset($_SESSION['gebruikerId'])) {
+    header('Location: ../pages/inlog.php');
+    exit;
+}
 
-// If from email, allow access without session check
-if (!$fromEmail) {
-    // Check if user is logged in
-    if (!isset($_SESSION['gebruikerId'])) {
-        header('Location: ../pages/inlog.php');
-        exit;
-    }
-    
-    // Check if the factuur belongs to the logged-in user
-    if ($row['gebruikerid'] !== $_SESSION['gebruikerId']) {
-        die('U hebt geen toegang tot deze factuur.');
-    }
+// Check if the factuur belongs to the logged-in user
+if ((int)$row['gebruikerid'] !== (int)$_SESSION['gebruikerId']) {
+    die('U hebt geen toegang tot deze factuur.');
 }
 
 $excl = (float) $row['totaalbedragexbtw'];
@@ -56,6 +50,9 @@ $eind = new DateTime($row['eindtijd']);
 $nachten = (int) $start->diff($eind)->days;
 if ($nachten < 1)
     $nachten = 1;
+
+// Check if opened from email (via GET parameter)
+$fromEmail = isset($_GET['from_email']) && $_GET['from_email'] == 1;
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -377,7 +374,7 @@ if ($nachten < 1)
             // If opened from email, redirect to home after download
             <?php if ($fromEmail): ?>
             setTimeout(function() {
-                window.location.href = '../pages/home.php';
+                window.location.href = '../index.php';
             }, 1500);
             <?php endif; ?>
         }
@@ -496,7 +493,7 @@ if ($nachten < 1)
 
 
         <div class="factuur-footer">
-            SpaKaas Resort · Teststraat 123 · 1234 AB SpaKaas · info@spakaas.nl · KVK 12345678 · BTW NL123456789B01
+            SpaKaas Resort · Superweg 420 · 6769 CP Urk · SpaKaasBV@gmail.com · KVK 12345678 · BTW NL123456789B01
         </div>
 
     </div>

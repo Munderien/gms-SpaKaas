@@ -294,5 +294,19 @@ Nous vous attendons à la date prévue et vous souhaitons une excellente visite!
     'appointment_status_niet_verschenen' => 'Non Venu',
     'appointment_status_in_afwachting' => 'En Attente',
     'appointment_status_unknown' => 'Inconnu',
+
+        // ==================== APPOINTMENT SUCCESS PAGE ====================
+    'appointment_success_page_title' => 'Rendez-vous Confirmé',
+    'appointment_success_heading' => 'Rendez-vous Confirmé!',
+    'appointment_success_subtitle_p1' => 'Votre rendez-vous a été créé avec succès.',
+    'appointment_success_subtitle_p2' => 'Nous nous réjouissons de vous voir à la date prévue!',
+    'appointment_success_start_date' => 'Date de Début:',
+    'appointment_success_end_date' => 'Date de Fin:',
+    'appointment_success_number_of_people' => 'Nombre de Personnes:',
+    'appointment_success_notes' => 'Remarques:',
+    'appointment_success_back_to_lodges' => 'Retour aux Lodges',
+    'appointment_success_to_dashboard' => 'Aller au Tableau de Bord',
+    'appointment_success_confirmation_email' => 'Un email de confirmation vous a été envoyé.',
+    'appointment_success_no_details' => 'Pas d\'accès!',
 ];
 ?>

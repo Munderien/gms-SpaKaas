@@ -303,5 +303,19 @@ Wij zien u graag op de afgesproken datum en wensen u alvast een fijne tijd toe!'
     'appointment_status_niet_verschenen' => 'Niet verschenen',
     'appointment_status_in_afwachting' => 'In afwachting',
     'appointment_status_unknown' => 'Onbekend',
+
+    // ==================== APPOINTMENT SUCCESS PAGE ====================
+    'appointment_success_page_title' => 'Afspraak Bevestigd',
+    'appointment_success_heading' => 'Afspraak Bevestigd!',
+    'appointment_success_subtitle_p1' => 'Uw afspraak is succesvol aangemaakt.',
+    'appointment_success_subtitle_p2' => 'Wij zien u graag op de afgesproken datum!',
+    'appointment_success_start_date' => 'Begindatum:',
+    'appointment_success_end_date' => 'Einddatum:',
+    'appointment_success_number_of_people' => 'Aantal personen:',
+    'appointment_success_notes' => 'Opmerkingen:',
+    'appointment_success_back_to_lodges' => 'Terug naar Lodges',
+    'appointment_success_to_dashboard' => 'Naar Dashboard',
+    'appointment_success_confirmation_email' => 'Een bevestigingsemail is naar u verzonden.',
+    'appointment_success_no_details' => 'Geen toegang!',
 ];
 ?>

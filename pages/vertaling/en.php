@@ -303,5 +303,19 @@ We look forward to seeing you on the scheduled date and wish you a wonderful tim
     'appointment_status_niet_verschenen' => 'No Show',
     'appointment_status_in_afwachting' => 'Pending',
     'appointment_status_unknown' => 'Unknown',
+
+        // ==================== APPOINTMENT SUCCESS PAGE ====================
+    'appointment_success_page_title' => 'Appointment Confirmed',
+    'appointment_success_heading' => 'Appointment Confirmed!',
+    'appointment_success_subtitle_p1' => 'Your appointment has been successfully created.',
+    'appointment_success_subtitle_p2' => 'We look forward to seeing you on the scheduled date!',
+    'appointment_success_start_date' => 'Start Date:',
+    'appointment_success_end_date' => 'End Date:',
+    'appointment_success_number_of_people' => 'Number of People:',
+    'appointment_success_notes' => 'Notes:',
+    'appointment_success_back_to_lodges' => 'Back to Lodges',
+    'appointment_success_to_dashboard' => 'Go to Dashboard',
+    'appointment_success_confirmation_email' => 'A confirmation email has been sent to you.',
+    'appointment_success_no_details' => 'No access!',
 ];
 ?>

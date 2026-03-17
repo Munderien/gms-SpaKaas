@@ -294,5 +294,19 @@ Sizi belirlenen tarihte görmeyi dört gözle bekliyoruz ve şimdiden güzel bir
     'appointment_status_niet_verschenen' => 'Gelmedi',
     'appointment_status_in_afwachting' => 'Beklemede',
     'appointment_status_unknown' => 'Bilinmiyor',
+
+        // ==================== APPOINTMENT SUCCESS PAGE ====================
+    'appointment_success_page_title' => 'Randevu Onaylandı',
+    'appointment_success_heading' => 'Randevu Onaylandı!',
+    'appointment_success_subtitle_p1' => 'Randevunuz başarıyla oluşturulmuştur.',
+    'appointment_success_subtitle_p2' => 'Sizi belirlenen tarihte görmeyi dört gözle bekliyoruz!',
+    'appointment_success_start_date' => 'Başlangıç Tarihi:',
+    'appointment_success_end_date' => 'Bitiş Tarihi:',
+    'appointment_success_number_of_people' => 'Kişi Sayısı:',
+    'appointment_success_notes' => 'Notlar:',
+    'appointment_success_back_to_lodges' => 'Kulübelere Geri Dön',
+    'appointment_success_to_dashboard' => 'Kontrol Paneline Git',
+    'appointment_success_confirmation_email' => 'Size bir onay e-postası gönderilmiştir.',
+    'appointment_success_no_details' => 'Erişim yok!',
 ];
 ?>

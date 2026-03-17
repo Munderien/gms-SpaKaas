@@ -103,7 +103,7 @@ return [
     'appointment_error_db' => 'Fehler beim Hinzufügen des Termins:',
 
     // Appointment success messages
-    'appointment_success_title' => 'Buchungsbestätigung',
+    'appointment_success_title' => 'Buchungsbestatigung',
     'appointment_success_message' => 'Sehr geehrte(r) :name,
 
 Ihr Termin wurde erfolgreich erstellt.
@@ -294,5 +294,19 @@ Wir freuen uns auf Sie am vereinbarten Datum und wünschen Ihnen bereits jetzt e
     'appointment_status_niet_verschenen' => 'Nicht erschienen',
     'appointment_status_in_afwachting' => 'Ausstehend',
     'appointment_status_unknown' => 'Unbekannt',
+
+        // ==================== APPOINTMENT SUCCESS PAGE ====================
+    'appointment_success_page_title' => 'Termin Bestätigt',
+    'appointment_success_heading' => 'Termin Bestätigt!',
+    'appointment_success_subtitle_p1' => 'Ihr Termin wurde erfolgreich erstellt.',
+    'appointment_success_subtitle_p2' => 'Wir freuen uns, Sie am vereinbarten Datum zu sehen!',
+    'appointment_success_start_date' => 'Startdatum:',
+    'appointment_success_end_date' => 'Enddatum:',
+    'appointment_success_number_of_people' => 'Anzahl der Personen:',
+    'appointment_success_notes' => 'Notizen:',
+    'appointment_success_back_to_lodges' => 'Zurück zu Lodges',
+    'appointment_success_to_dashboard' => 'Zum Dashboard',
+    'appointment_success_confirmation_email' => 'Eine Bestätigungsemail wurde an Sie gesendet.',
+    'appointment_success_no_details' => 'Kein Zugriff!',
 ];
 ?>
