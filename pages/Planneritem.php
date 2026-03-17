@@ -193,7 +193,7 @@ if (!empty($item['lodgeid'])) {
         <div class="popup-panel" id="main-panel">
             <?php if ($message) echo "<p>$message</p>"; ?>
             <span class="popup-close" title="Close"
-                onclick="window.location.href='CalenderPage.php'">
+                onclick="window.location.href='MijnAfspraken.php'">
                 &times;
             </span>
             <h2>View Planner Item</h2>

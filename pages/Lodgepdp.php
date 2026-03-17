@@ -96,7 +96,7 @@ if (isset($_SESSION['gebruikerId'])) {
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarKlant.php'; ?>
+    <?php require_once __DIR__ . '/../navbar.php'; ?>
 
     <div class="lodges-container">
         <h1><?php echo htmlspecialchars($lodgeType['naam']); ?></h1>
