@@ -5,7 +5,7 @@ Gebruikers kunnen eenvoudig spa-arrangementen bekijken, reserveringen maken en g
 
 ## Functionaliteiten
 
-Hier zijn de basis functionaliteiten wat in dit programma zit.
+Hier zijn de basis functionaliteiten wat in dit programma zit:
 
 - Overzicht van spa-arrangementen en lodges
 - Inlog/registratie functionaliteit, inclusief 2FA
